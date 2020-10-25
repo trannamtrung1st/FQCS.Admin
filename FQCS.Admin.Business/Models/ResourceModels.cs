@@ -19,10 +19,6 @@ namespace FQCS.Admin.Business.Models
 
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonProperty("code")]
-        public string Code { get; set; }
-        [JsonProperty("description")]
-        public string Description { get; set; }
     }
 
     public class UpdateResourceModel : MappingModel<Resource>
@@ -38,10 +34,6 @@ namespace FQCS.Admin.Business.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("code")]
-        public string Code { get; set; }
-        [JsonProperty("description")]
-        public string Description { get; set; }
     }
 
     #region Query

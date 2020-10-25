@@ -86,7 +86,7 @@ namespace FQCS.Admin.Business.Services
             var query = Users;
             #region General
             if (filter != null) query = query.Filter(filter);
-            int? totalCount = null; Task<int> countTask = null;
+            int? totalCount = null;
             if (options.count_total) totalCount = query.Count();
             #endregion
             if (!options.single_only)
@@ -108,7 +108,6 @@ namespace FQCS.Admin.Business.Services
                     Single = singleResult
                 };
             }
-            if (options.count_total) totalCount = await countTask;
             var entities = query.ToList();
             var list = GetAppUserDynamic(entities, projection, options);
             var result = new QueryResult<IDictionary<string, object>>();
