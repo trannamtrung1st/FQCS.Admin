@@ -119,7 +119,7 @@
             model.name = $('[name=name]').val();
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@ApiEndpoint.RESOURCE_API',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.RESOURCE_API',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify(model),

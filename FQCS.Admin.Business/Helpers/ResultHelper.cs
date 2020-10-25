@@ -15,13 +15,13 @@ namespace FQCS.Admin.Business
             var validationData = new ValidationData();
             if (modelState.ContainsKey("password")
                 && modelState["password"].ValidationState == ModelValidationState.Invalid)
-                validationData.Fail(mess: "Invalid password", code: AppResultCode.FailValidation);
+                validationData.Fail(mess: "Invalid password", code: Constants.AppResultCode.FailValidation);
             if (modelState.ContainsKey("confirm_password")
                 && modelState["confirm_password"].ValidationState == ModelValidationState.Invalid)
-                validationData.Fail(mess: "The password and confirm password are not matched", code: AppResultCode.FailValidation);
+                validationData.Fail(mess: "The password and confirm password are not matched", code: Constants.AppResultCode.FailValidation);
             if (modelState.ContainsKey("username")
                 && modelState["username"].ValidationState == ModelValidationState.Invalid)
-                validationData.Fail(mess: "Invalid username", code: AppResultCode.FailValidation);
+                validationData.Fail(mess: "Invalid username", code: Constants.AppResultCode.FailValidation);
             if (modelState.ContainsKey("DuplicateUserName")
                 && modelState["DuplicateUserName"].ValidationState == ModelValidationState.Invalid)
                 return AppResult.DuplicatedUsername();

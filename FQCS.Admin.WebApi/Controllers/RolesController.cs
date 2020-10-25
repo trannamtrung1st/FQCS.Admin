@@ -16,7 +16,7 @@ using TNT.Core.Http.DI;
 
 namespace FQCS.Admin.WebApi.Controllers
 {
-    [Route(ApiEndpoint.ROLE_API)]
+    [Route(Business.Constants.ApiEndpoint.ROLE_API)]
     [ApiController]
     [InjectionFilter]
     public class RolesController : BaseController

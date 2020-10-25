@@ -113,7 +113,7 @@
         function getData() {
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@ApiEndpoint.RESOURCE_API',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.RESOURCE_API',
                 type: 'get',
                 data: {
                     id: @Model.Id,
@@ -151,7 +151,7 @@
             model.name = $('[name=name]').val();
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@ApiEndpoint.RESOURCE_API/@Model.Id',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.RESOURCE_API/@Model.Id',
                 type: 'patch',
                 contentType: 'application/json',
                 data: JSON.stringify(model),

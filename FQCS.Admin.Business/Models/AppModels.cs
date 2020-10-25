@@ -16,14 +16,14 @@ namespace FQCS.Admin.Business.Models
         [JsonProperty("data")]
         public object Data { get; set; }
         [JsonProperty("code")]
-        public AppResultCode? Code { get; set; }
+        public Constants.AppResultCode? Code { get; set; }
 
         public static AppResult Success(object data = null, string mess = null)
         {
             return new AppResult
             {
-                Code = AppResultCode.Success,
-                Message = mess ?? AppResultCode.Success.DisplayName(),
+                Code = Constants.AppResultCode.Success,
+                Message = mess ?? Constants.AppResultCode.Success.DisplayName(),
                 Data = data,
             };
         }
@@ -32,8 +32,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.UnknownError,
-                Message = mess ?? AppResultCode.UnknownError.DisplayName(),
+                Code = Constants.AppResultCode.UnknownError,
+                Message = mess ?? Constants.AppResultCode.UnknownError.DisplayName(),
                 Data = data,
             };
         }
@@ -42,8 +42,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.DependencyDeleteFail,
-                Message = mess ?? AppResultCode.DependencyDeleteFail.DisplayName(),
+                Code = Constants.AppResultCode.DependencyDeleteFail,
+                Message = mess ?? Constants.AppResultCode.DependencyDeleteFail.DisplayName(),
                 Data = data,
             };
         }
@@ -52,8 +52,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.FailValidation,
-                Message = mess ?? AppResultCode.FailValidation.DisplayName(),
+                Code = Constants.AppResultCode.FailValidation,
+                Message = mess ?? Constants.AppResultCode.FailValidation.DisplayName(),
                 Data = data,
             };
         }
@@ -62,8 +62,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.NotFound,
-                Message = mess ?? AppResultCode.NotFound.DisplayName(),
+                Code = Constants.AppResultCode.NotFound,
+                Message = mess ?? Constants.AppResultCode.NotFound.DisplayName(),
                 Data = data,
             };
         }
@@ -72,8 +72,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.Unsupported,
-                Message = mess ?? AppResultCode.Unsupported.DisplayName(),
+                Code = Constants.AppResultCode.Unsupported,
+                Message = mess ?? Constants.AppResultCode.Unsupported.DisplayName(),
                 Data = data,
             };
         }
@@ -82,8 +82,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.Unauthorized,
-                Message = mess ?? AppResultCode.Unauthorized.DisplayName(),
+                Code = Constants.AppResultCode.Unauthorized,
+                Message = mess ?? Constants.AppResultCode.Unauthorized.DisplayName(),
                 Data = data,
             };
         }
@@ -92,8 +92,8 @@ namespace FQCS.Admin.Business.Models
         {
             return new AppResult
             {
-                Code = AppResultCode.DuplicatedUsername,
-                Message = mess ?? AppResultCode.DuplicatedUsername.DisplayName(),
+                Code = Constants.AppResultCode.DuplicatedUsername,
+                Message = mess ?? Constants.AppResultCode.DuplicatedUsername.DisplayName(),
                 Data = data,
             };
         }
@@ -124,7 +124,7 @@ namespace FQCS.Admin.Business.Models
             return default;
         }
 
-        public ValidationData Fail(string mess = null, AppResultCode? code = null, object data = null)
+        public ValidationData Fail(string mess = null, Constants.AppResultCode? code = null, object data = null)
         {
             Results.Add(new AppResult
             {

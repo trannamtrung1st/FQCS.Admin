@@ -54,7 +54,7 @@ namespace FQCS.Admin.Business.Helpers
         private DateTime? ParseDate(ModelBindingContext bindingContext, string dateStr)
         {
             var attribute = GetBinderAttribute(bindingContext);
-            var dateFormat = attribute?.DateFormat ?? AppDateTimeFormat.DEFAULT_DATE_FORMAT;
+            var dateFormat = attribute?.DateFormat ?? Constants.AppDateTimeFormat.DEFAULT_DATE_FORMAT;
             var toUtc = attribute?.ToUtc;
 
             DateTime dateTime;

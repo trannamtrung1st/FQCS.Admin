@@ -17,7 +17,7 @@ using FQCS.Admin.Business.Helpers;
 
 namespace FQCS.Admin.WebApi.Controllers
 {
-    [Route(ApiEndpoint.RESOURCE_API)]
+    [Route(Business.Constants.ApiEndpoint.RESOURCE_API)]
     [ApiController]
     [InjectionFilter]
     public class ResourcesController : BaseController
@@ -54,7 +54,7 @@ namespace FQCS.Admin.WebApi.Controllers
                 return BadRequest(AppResult.FailValidation(data: validationData));
             var entity = _service.CreateResource(model);
             context.SaveChanges();
-            return Created($"/{ApiEndpoint.RESOURCE_API}?id={entity.Id}",
+            return Created($"/{Business.Constants.ApiEndpoint.RESOURCE_API}?id={entity.Id}",
                 AppResult.Success(entity.Id));
         }
 

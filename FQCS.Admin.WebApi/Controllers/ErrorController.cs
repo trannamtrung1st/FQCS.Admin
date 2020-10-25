@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Diagnostics;
 namespace FQCS.Admin.WebApi.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
-    [Route(ApiEndpoint.ERROR)]
+    [Route(Business.Constants.ApiEndpoint.ERROR)]
     [ApiController]
     [InjectionFilter]
     public class ErrorController : BaseController

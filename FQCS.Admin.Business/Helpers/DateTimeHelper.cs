@@ -10,7 +10,7 @@ namespace FQCS.Admin.Business.Helpers
     {
         public static bool TryConvertToDateTime(this string str, string dateFormat, out DateTime dateTime)
         {
-            if (dateFormat == null) dateFormat = AppDateTimeFormat.DEFAULT_DATE_FORMAT;
+            if (dateFormat == null) dateFormat = Constants.AppDateTimeFormat.DEFAULT_DATE_FORMAT;
             return DateTime.TryParseExact(s: str,
                     format: dateFormat,
                     provider: CultureInfo.InvariantCulture, style: DateTimeStyles.None, out dateTime);
@@ -54,12 +54,12 @@ namespace FQCS.Admin.Business.Helpers
 
         public static DateTime ToUtc(this DateTime localDate)
         {
-            return TimeZoneInfo.ConvertTimeToUtc(localDate, AppTimeZone.Default);
+            return TimeZoneInfo.ConvertTimeToUtc(localDate, Constants.AppTimeZone.Default);
         }
 
         public static DateTime ToDefaultTimeZone(this DateTime dateTime)
         {
-            return dateTime.ToTimeZone(AppTimeZone.Default);
+            return dateTime.ToTimeZone(Constants.AppTimeZone.Default);
         }
     }
 }

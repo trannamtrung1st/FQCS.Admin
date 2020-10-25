@@ -122,7 +122,7 @@
             const data = {};
             data.load_all = true;
             $.ajax({
-                url: '@apiUrl/@ApiEndpoint.RESOURCE_API',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.RESOURCE_API',
                 type: 'get',
                 data: data,
                 success: (respData) => {
@@ -174,7 +174,7 @@
         function submitRemove(id) {
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@ApiEndpoint.RESOURCE_API/' + id,
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.RESOURCE_API/' + id,
                 type: 'delete',
                 success: (data) => {
                     successAlert("Deleted successfully").then(getData);

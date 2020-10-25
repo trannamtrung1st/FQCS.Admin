@@ -22,7 +22,7 @@ using TNT.Core.Http.DI;
 namespace FQCS.Admin.WebApi.Controllers
 {
 
-    [Route(ApiEndpoint.USER_API)]
+    [Route(Business.Constants.ApiEndpoint.USER_API)]
     [ApiController]
     [InjectionFilter]
     public class UsersController : BaseController

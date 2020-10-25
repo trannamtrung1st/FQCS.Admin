@@ -15,7 +15,7 @@ namespace FQCS.Admin.Business.Helpers
         {
             this.Culture = CultureInfo.InvariantCulture;
             this.DateTimeStyles = DateTimeStyles.None;
-            this.DateTimeFormat = AppDateTimeFormat.DEFAULT_DATE_FORMAT;
+            this.DateTimeFormat = Constants.AppDateTimeFormat.DEFAULT_DATE_FORMAT;
         }
 
         public DefaultDateTimeConverter(string dateFormatsStr) : this()

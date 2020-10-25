@@ -103,10 +103,10 @@ namespace FQCS.Admin.WebApi
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = JWT.ISSUER,
-                        ValidAudience = JWT.AUDIENCE,
+                        ValidIssuer = Business.Constants.JWT.ISSUER,
+                        ValidAudience = Business.Constants.JWT.AUDIENCE,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.Default.GetBytes(JWT.SECRET_KEY)),
+                            Encoding.Default.GetBytes(Business.Constants.JWT.SECRET_KEY)),
                         ClockSkew = TimeSpan.Zero
                     };
                     //jwtBearerOptions.Events = new JwtBearerEvents
@@ -168,7 +168,7 @@ namespace FQCS.Admin.WebApi
             PrepareEnvironment(env);
             WebRootPath = env.WebRootPath;
             Settings.Instance.WebRootPath = env.WebRootPath;
-            app.UseExceptionHandler($"/{ApiEndpoint.ERROR}");
+            app.UseExceptionHandler($"/{Business.Constants.ApiEndpoint.ERROR}");
             app.UseStaticFiles();
             app.UseRouting();
             // Enable middleware to serve generated Swagger as a JSON endpoint.

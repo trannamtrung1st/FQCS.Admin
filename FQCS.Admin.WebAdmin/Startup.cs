@@ -91,7 +91,7 @@ namespace FQCS.Admin.WebAdmin
                 {
                     var identity = c.Principal.Identity as ClaimsIdentity;
                     //extra claims will be expired after amount of time
-                    if (identity.FindFirst(AppClaimType.UserName)?.Value == null)
+                    if (identity.FindFirst(Business.Constants.AppClaimType.UserName)?.Value == null)
                     {
                         var identityService = c.HttpContext.RequestServices.GetRequiredService<IdentityService>();
                         var entity = await identityService.GetUserByUserNameAsync(identity.Name);

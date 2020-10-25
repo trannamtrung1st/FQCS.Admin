@@ -217,7 +217,7 @@ namespace FQCS.Admin.Business.Services
         public List<Claim> GetExtraClaims(AppUser entity)
         {
             var claims = new List<Claim>();
-            claims.Add(new Claim(AppClaimType.UserName, entity.UserName));
+            claims.Add(new Claim(Constants.AppClaimType.UserName, entity.UserName));
             return claims;
         }
 
@@ -306,11 +306,11 @@ namespace FQCS.Admin.Business.Services
         public TokenResponseModel GenerateTokenResponse(ClaimsPrincipal principal,
             AuthenticationProperties properties, string scope = null)
         {
-            #region Generate JWT Token
+            #region Generate Constants.JWT Token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.Default.GetBytes(JWT.SECRET_KEY);
-            var issuer = JWT.ISSUER;
-            var audience = JWT.AUDIENCE;
+            var key = Encoding.Default.GetBytes(Constants.JWT.SECRET_KEY);
+            var issuer = Constants.JWT.ISSUER;
+            var audience = Constants.JWT.AUDIENCE;
             var identity = principal.Identity as ClaimsIdentity;
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, principal.Identity.Name));
@@ -347,7 +347,7 @@ namespace FQCS.Admin.Business.Services
                 {
                     switch (s)
                     {
-                        case AppOAuthScope.ROLES:
+                        case Constants.AppOAuthScope.ROLES:
                             resp.roles = identity.FindAll(identity.RoleClaimType)
                                 .Select(c => c.Value).ToList();
                             break;
@@ -356,9 +356,9 @@ namespace FQCS.Admin.Business.Services
             }
             #endregion
             #region Refresh Token
-            key = Encoding.Default.GetBytes(JWT.REFRESH_SECRET_KEY);
-            issuer = JWT.REFRESH_ISSUER;
-            audience = JWT.REFRESH_AUDIENCE;
+            key = Encoding.Default.GetBytes(Constants.JWT.REFRESH_SECRET_KEY);
+            issuer = Constants.JWT.REFRESH_ISSUER;
+            audience = Constants.JWT.REFRESH_AUDIENCE;
             var id = identity.Name;
             identity = new ClaimsIdentity(
                 identity.Claims.Where(c => c.Type == identity.NameClaimType),
@@ -398,10 +398,10 @@ namespace FQCS.Admin.Business.Services
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = JWT.REFRESH_ISSUER,
-                    ValidAudience = JWT.REFRESH_AUDIENCE,
+                    ValidIssuer = Constants.JWT.REFRESH_ISSUER,
+                    ValidAudience = Constants.JWT.REFRESH_AUDIENCE,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.Default.GetBytes(JWT.REFRESH_SECRET_KEY)),
+                            Encoding.Default.GetBytes(Constants.JWT.REFRESH_SECRET_KEY)),
                     ClockSkew = TimeSpan.Zero
                 };
                 return tokenHandler.ValidateToken(tokenStr, param, out secToken);

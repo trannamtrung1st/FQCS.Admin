@@ -393,7 +393,7 @@
         function getData() {
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@ApiEndpoint.USER_API/profile',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.USER_API/profile',
                 type: 'get',
                 success: (respData) => {
                     console.log(respData);

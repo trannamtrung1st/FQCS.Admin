@@ -10,11 +10,11 @@
     }
 
     function isDuplicatedUsername(result) {
-        return result.code == @((int)AppResultCode.DuplicatedUsername);
+        return result.code == @((int)Business.Constants.AppResultCode.DuplicatedUsername);
     }
 
     function isFailValidation(result) {
-        return result.code == @((int)AppResultCode.FailValidation);
+        return result.code == @((int)Business.Constants.AppResultCode.FailValidation);
     }
 
     function changeLoading(isLoading) {
@@ -56,7 +56,7 @@
                         formData.append('grant_type', 'refresh_token');
                         formData.append('refresh_token', localStorage.refresh_token);
                         $.ajax({
-                            url: "@apiUrl/@ApiEndpoint.USER_API/login",
+                            url: "@apiUrl/@Business.Constants.ApiEndpoint.USER_API/login",
                             type: 'post',
                             contentType: false,
                             processData: false,
@@ -147,7 +147,7 @@
         else if (resp.status == 400) {
             let html = '';
             let json = resp.responseJSON;
-            if (json.code == @((int)AppResultCode.FailValidation)) {
+            if (json.code == @((int)Business.Constants.AppResultCode.FailValidation)) {
                 html = 'Some inputs are not valid';
                 let data = json.data;
                 for (var i = 0; i < data.length; i++) {
