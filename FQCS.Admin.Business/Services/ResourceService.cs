@@ -151,6 +151,12 @@ namespace FQCS.Admin.Business.Services
         {
             return new ValidationData();
         }
+
+        public ValidationData ValidateDeleteResource(ClaimsPrincipal principal,
+            Resource entity)
+        {
+            return new ValidationData();
+        }
         #endregion
 
     }

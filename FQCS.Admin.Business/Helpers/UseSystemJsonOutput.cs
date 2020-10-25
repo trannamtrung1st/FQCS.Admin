@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
-namespace FQCS.Admin.WebHelpers
+namespace FQCS.Admin.Business
 {
     public class UseSystemJsonOutput : ActionFilterAttribute
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FQCS.Admin.WebHelpers
+namespace FQCS.Admin.Business
 {
     public interface IPaginator
     {
