@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.Business", "FQCS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.ConsoleClient", "FQCS.Admin.ConsoleClient\FQCS.Admin.ConsoleClient.csproj", "{0D1CC56F-4882-4B39-891F-01A263CBCEAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FQCS.Admin.WebApi", "FQCS.Admin.WebApi\FQCS.Admin.WebApi.csproj", "{187876E3-D2A2-4170-A4D8-C1FD93D507BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.WebApi", "FQCS.Admin.WebApi\FQCS.Admin.WebApi.csproj", "{187876E3-D2A2-4170-A4D8-C1FD93D507BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FQCS.Admin.WebAdmin", "FQCS.Admin.WebAdmin\FQCS.Admin.WebAdmin.csproj", "{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{187876E3-D2A2-4170-A4D8-C1FD93D507BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{187876E3-D2A2-4170-A4D8-C1FD93D507BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{187876E3-D2A2-4170-A4D8-C1FD93D507BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
