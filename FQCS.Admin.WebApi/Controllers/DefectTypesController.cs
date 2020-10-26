@@ -101,7 +101,8 @@ namespace FQCS.Admin.WebApi.Controllers
             var ev = _ev_service.UpdateDefectTypeImage(entity, User);
             context.SaveChanges();
             await _service.SaveReplaceDefectTypeImage(model, fullPath, Settings.Instance.WebRootPath, oldRelPath);
-            return NoContent();
+            return Created($"/{relPath}",
+                AppResult.Success(relPath));
         }
 
         [Authorize]
