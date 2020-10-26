@@ -159,6 +159,11 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Code")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
@@ -184,8 +189,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")
@@ -255,8 +260,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")
@@ -288,8 +293,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")

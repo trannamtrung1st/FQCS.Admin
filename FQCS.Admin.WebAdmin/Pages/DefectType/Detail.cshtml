@@ -55,6 +55,10 @@
                                 <input type="text" name="name" class="form-control" placeholder="Please enter name">
                             </div>
                             <div class="form-group">
+                                <label>Code</label>
+                                <input type="text" name="code" class="form-control" placeholder="Please enter code">
+                            </div>
+                            <div class="form-group">
                                 <label>Description</label>
                                 <textarea name="description" class="form-control" placeholder="Please enter description"></textarea>
                             </div>
@@ -193,6 +197,7 @@
         function processData(data) {
             const formMain = $('#form-main');
             formMain.find('[name=name]').val(data.name);
+            formMain.find('[name=code]').val(data.code);
             formMain.find('[name=description]').val(data.description);
             const formImage = $('#form-image');
             if (data.sample_image)
@@ -212,6 +217,7 @@
         function submitData() {
             const model = {};
             model.name = $('[name=name]').val();
+            model.code = $('[name=code]').val();
             model.description = $('[name=description]').val();
             changeLoading(true);
             $.ajax({

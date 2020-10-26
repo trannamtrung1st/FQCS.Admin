@@ -48,6 +48,7 @@
                                 <th></th>
                                 <th>No</th>
                                 <th>Id</th>
+                                <th>Code</th>
                                 <th>Sample image</th>
                                 <th class="sortable">Name</th>
                             </tr>
@@ -59,6 +60,7 @@
                                 <th></th>
                                 <th>No</th>
                                 <th>Id</th>
+                                <th>Code</th>
                                 <th>Sample image</th>
                                 <th class="sortable">Name</th>
                             </tr>
@@ -92,11 +94,11 @@
                 responsive: true,
                 autoWidth: false,
                 columnDefs: [
-                    { targets: [4], orderable: true, searchable: true },
-                    { targets: [3], width: "200px" },
+                    { targets: [5], orderable: true, searchable: true },
+                    { targets: [4], width: "200px" },
                     { targets: "_all", orderable: false, searchable: false },
                 ],
-                order: [[4, 'asc']]
+                order: [[5, 'asc']]
             });
             tblMain._mustDrawNo = true;
             tblMain.on('draw', onTableChange);
@@ -163,6 +165,7 @@
                     btn(obj.id),
                     null,
                     obj.id,
+                    obj.code,
                     img(obj.sample_image),
                     obj.name,
                 ]);

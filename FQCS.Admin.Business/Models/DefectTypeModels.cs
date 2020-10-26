@@ -20,6 +20,8 @@ namespace FQCS.Admin.Business.Models
 
         [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("code")]
+        public string Code { get; set; }
         [JsonProperty("description")]
         public string Description { get; set; }
     }
@@ -36,6 +38,8 @@ namespace FQCS.Admin.Business.Models
 
         [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("code")]
+        public string Code { get; set; }
         [JsonProperty("description")]
         public string Description { get; set; }
     }
@@ -116,6 +120,7 @@ namespace FQCS.Admin.Business.Models
     {
         public int? id { get; set; }
         public string name_contains { get; set; }
+        public string code { get; set; }
     }
 
     public class DefectTypeQueryPaging

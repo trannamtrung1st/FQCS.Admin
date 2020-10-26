@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FQCS.Admin.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201026063914_AddEntities")]
-    partial class AddEntities
+    [Migration("20201026152011_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -161,6 +161,11 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Code")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
@@ -186,8 +191,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")
@@ -257,8 +262,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")
@@ -290,8 +295,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Code")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")

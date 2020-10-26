@@ -57,6 +57,8 @@ namespace FQCS.Admin.Business.Queries
                 query = query.Where(o => o.Id == filter.id);
             if (filter.name_contains != null)
                 query = query.Where(o => o.Name.Contains(filter.name_contains));
+            if (filter.code != null)
+                query = query.Where(o => o.Code == filter.code);
             return query;
         }
         #endregion

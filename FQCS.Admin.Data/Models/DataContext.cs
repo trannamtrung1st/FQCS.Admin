@@ -93,7 +93,7 @@ namespace FQCS.Admin.Data.Models
             {
                 entity.Property(e => e.Code)
                     .IsUnicode(false)
-                    .HasMaxLength(255);
+                    .HasMaxLength(100);
                 entity.Property(e => e.Info)
                     .HasMaxLength(2000);
             });
@@ -101,7 +101,7 @@ namespace FQCS.Admin.Data.Models
             {
                 entity.Property(e => e.Code)
                     .IsUnicode(false)
-                    .HasMaxLength(255);
+                    .HasMaxLength(100);
                 entity.Property(e => e.Info)
                     .HasMaxLength(2000);
                 entity.Property(e => e.Image)
@@ -111,7 +111,7 @@ namespace FQCS.Admin.Data.Models
             {
                 entity.Property(e => e.Code)
                     .IsUnicode(false)
-                    .HasMaxLength(255);
+                    .HasMaxLength(100);
                 entity.HasOne(e => e.Line)
                     .WithMany(e => e.Devices)
                     .HasForeignKey(e => e.ProductionLineId)
@@ -142,6 +142,9 @@ namespace FQCS.Admin.Data.Models
             {
                 entity.Property(e => e.Name)
                     .HasMaxLength(255);
+                entity.Property(e => e.Code)
+                    .IsUnicode(false)
+                    .HasMaxLength(100);
                 entity.Property(e => e.Description)
                     .HasMaxLength(2000);
                 entity.Property(e => e.SampleImage)

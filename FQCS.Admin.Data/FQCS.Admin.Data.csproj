@@ -6,6 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201025101705_Init.cs" />
+    <Compile Remove="Migrations\20201025101705_Init.Designer.cs" />
+    <Compile Remove="Migrations\20201026063914_AddEntities.cs" />
+    <Compile Remove="Migrations\20201026063914_AddEntities.Designer.cs" />
+    <Compile Remove="Migrations\20201026091012_AddDbSets.cs" />
+    <Compile Remove="Migrations\20201026091012_AddDbSets.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">

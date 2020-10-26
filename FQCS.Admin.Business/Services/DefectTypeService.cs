@@ -44,6 +44,7 @@ namespace FQCS.Admin.Business.Services
                             var entity = row;
                             obj["id"] = entity.Id;
                             obj["name"] = entity.Name;
+                            obj["code"] = entity.Code;
                             obj["description"] = entity.Description;
                             obj["sample_image"] = entity.SampleImage;
                         }
