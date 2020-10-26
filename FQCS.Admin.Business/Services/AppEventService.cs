@@ -124,54 +124,108 @@ namespace FQCS.Admin.Business.Services
         }
         #endregion
 
-        #region Create AppEvent
         protected void PrepareCreate(AppEvent entity)
         {
             entity.CreatedTime = DateTime.UtcNow;
         }
 
-        public AppEvent CreateResource(Resource resource, ClaimsPrincipal principal)
+        public AppEvent CreateResource(Resource entity, ClaimsPrincipal principal)
         {
             string username = principal.FindFirstValue(AppClaimType.UserName);
-            var entity = new AppEvent
+            var ev = new AppEvent
             {
                 Data = null,
-                Description = $"User {username} created a resource named {resource.Name}, id: {resource.Id}",
+                Description = $"User {username} created a resource named {entity.Name}, id: {entity.Id}",
                 Type = Data.Constants.AppEventType.CreateResource,
                 UserId = principal.Identity.Name
             };
-            PrepareCreate(entity);
-            return context.AppEvent.Add(entity).Entity;
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
         }
 
-        public AppEvent UpdateResource(Resource resource, ClaimsPrincipal principal)
+        public AppEvent UpdateResource(Resource entity, ClaimsPrincipal principal)
         {
             string username = principal.FindFirstValue(AppClaimType.UserName);
-            var entity = new AppEvent
+            var ev = new AppEvent
             {
                 Data = null,
-                Description = $"User {username} updated resource id: {resource.Id}",
+                Description = $"User {username} updated resource id: {entity.Id}",
                 Type = Data.Constants.AppEventType.UpdateResource,
                 UserId = principal.Identity.Name
             };
-            PrepareCreate(entity);
-            return context.AppEvent.Add(entity).Entity;
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
         }
 
-        public AppEvent DeleteResource(Resource resource, ClaimsPrincipal principal)
+        public AppEvent DeleteResource(Resource entity, ClaimsPrincipal principal)
         {
             string username = principal.FindFirstValue(AppClaimType.UserName);
-            var entity = new AppEvent
+            var ev = new AppEvent
             {
                 Data = null,
-                Description = $"User {username} deleted resource id: {resource.Id}",
+                Description = $"User {username} deleted resource id: {entity.Id}",
                 Type = Data.Constants.AppEventType.DeleteResource,
                 UserId = principal.Identity.Name
             };
-            PrepareCreate(entity);
-            return context.AppEvent.Add(entity).Entity;
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
         }
-        #endregion
+
+        public AppEvent CreateDefectType(DefectType entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} created a defect type named {entity.Name}, id: {entity.Id}",
+                Type = Data.Constants.AppEventType.CreateDefectType,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateDefectTypeImage(DefectType entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated defect type's image - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateDefectType,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateDefectType(DefectType entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated defect type id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateDefectType,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent DeleteDefectType(DefectType entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} deleted defect type id: {entity.Id}",
+                Type = Data.Constants.AppEventType.DeleteDefectType,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
 
         #region Validation
         public ValidationData ValidateGetAppEvents(

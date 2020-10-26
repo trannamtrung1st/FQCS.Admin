@@ -127,10 +127,10 @@ namespace FQCS.Admin.Business.Services
         }
 
         public (string, string) GetDefectTypeImagePath(DefectType entity,
-            string uploadPath)
+            string uploadPath, string rootPath)
         {
-            var folderPath = Path.Combine(uploadPath, nameof(DefectType), entity.Id.ToString(), "Sample");
-            var result = fileService.GetPath(folderPath, ext: ".jpg");
+            var folderPath = Path.Combine(rootPath, uploadPath, nameof(DefectType), entity.Id.ToString(), "Sample");
+            var result = fileService.GetFilePath(folderPath, rootPath, ext: ".jpg");
             return result;
         }
 
@@ -139,21 +139,21 @@ namespace FQCS.Admin.Business.Services
             entity.SampleImage = relPath;
         }
 
-        public async Task ReplaceDefectTypeImage(DefectType entity,
-            UpdateDefectTypeImageModel model, string filePath)
+        public async Task SaveReplaceDefectTypeImage(UpdateDefectTypeImageModel model, 
+            string fullPath, string rootPath, string oldRelPath)
         {
-            if (entity.SampleImage != null)
-                fileService.DeleteFile(entity.SampleImage);
-            await fileService.SaveFile(model.image, filePath);
+            if (oldRelPath != null)
+                fileService.DeleteFile(oldRelPath, rootPath);
+            await fileService.SaveFile(model.image, fullPath);
         }
         #endregion
 
         #region Delete DefectType
-        public DefectType DeleteDefectType(DefectType entity, string uploadPath)
+        public DefectType DeleteDefectType(DefectType entity, string uploadPath, string rootPath)
         {
             entity = context.DefectType.Remove(entity).Entity;
             var folderPath = Path.Combine(uploadPath, nameof(DefectType), entity.Id.ToString());
-            fileService.DeleteDirectory(folderPath);
+            fileService.DeleteDirectory(folderPath, rootPath);
             return entity;
         }
         #endregion
@@ -178,6 +178,12 @@ namespace FQCS.Admin.Business.Services
 
         public ValidationData ValidateUpdateDefectType(ClaimsPrincipal principal,
             DefectType entity, UpdateDefectTypeModel model)
+        {
+            return new ValidationData();
+        }
+
+        public ValidationData ValidateUpdateDefectTypeImage(ClaimsPrincipal principal,
+            DefectType entity, UpdateDefectTypeImageModel model)
         {
             return new ValidationData();
         }

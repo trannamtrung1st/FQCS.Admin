@@ -21,19 +21,20 @@ namespace FQCS.Admin.Business.Services
         {
         }
 
-        public async Task SaveFile(IFormFile file, string filePath)
+        public async Task SaveFile(IFormFile file, string fullPath)
         {
-            var folderPath = Path.GetDirectoryName(filePath);
+            var folderPath = Path.GetDirectoryName(fullPath);
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            using (var stream = System.IO.File.Create(filePath))
+            using (var stream = System.IO.File.Create(fullPath))
             {
                 await file.CopyToAsync(stream);
             }
         }
 
-        public (string, string) GetPath(string folderPath, string fileName = null, string ext = null)
+        public (string, string) GetFilePath(string folderPath, string rootPath,
+            string fileName = null, string ext = null)
         {
             if (fileName == null)
             {
@@ -42,22 +43,23 @@ namespace FQCS.Admin.Business.Services
                 fileName = Path.GetRandomFileName() + ext ?? "";
             }
             var filePath = Path.Combine(folderPath, fileName);
-            var fullFolderPath = Path.GetFullPath(folderPath);
-            var relativePath = filePath.Replace(fullFolderPath, "");
             var absPath = Path.GetFullPath(filePath);
+            var relativePath = absPath.Replace(rootPath, "").Substring(1);
             return (relativePath, absPath);
         }
 
-        public void DeleteFile(string filePath)
+        public void DeleteFile(string filePath, string rootPath)
         {
-            if (File.Exists(filePath))
-                File.Delete(filePath);
+            var fullPath = Path.Combine(rootPath, filePath);
+            if (File.Exists(fullPath))
+                File.Delete(fullPath);
         }
 
-        public void DeleteDirectory(string folderPath, bool recursive = true)
+        public void DeleteDirectory(string folderPath, string rootPath, bool recursive = true)
         {
-            if (Directory.Exists(folderPath))
-                Directory.Delete(folderPath, recursive);
+            var fullPath = Path.Combine(rootPath, folderPath);
+            if (Directory.Exists(fullPath))
+                Directory.Delete(fullPath, recursive);
         }
     }
 }

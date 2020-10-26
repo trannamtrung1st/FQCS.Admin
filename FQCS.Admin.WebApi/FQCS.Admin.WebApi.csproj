@@ -32,8 +32,4 @@
     <ProjectReference Include="..\FQCS.Admin\FQCS.Admin.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
 </Project>

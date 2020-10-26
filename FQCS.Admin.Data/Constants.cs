@@ -28,6 +28,10 @@ namespace FQCS.Admin.Data
 
         public enum AppEventType
         {
+            CreateDefectType = 1,
+            UpdateDefectType = 2,
+            DeleteDefectType = 3,
+            UpdateDefectTypeImage = 4,
             CreateResource = 1000,
             UpdateResource = 1001,
             DeleteResource = 1002,
