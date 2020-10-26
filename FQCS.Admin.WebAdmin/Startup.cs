@@ -110,7 +110,8 @@ namespace FQCS.Admin.WebAdmin
                     "/AccessDenied", "/Error", "/Status", "/Identity/Login", "/Identity/Register" };
                 var authorizeFolders = new[] { "/" };
                 options.Conventions
-                    .AddPageRoute("/Resource/Detail", Constants.Routing.RESOURCE_DETAIL);
+                    .AddPageRoute("/Resource/Detail", Constants.Routing.RESOURCE_DETAIL)
+                    .AddPageRoute("/DefectType/Detail", Constants.Routing.DEFECT_TYPE_DETAIL);
                 foreach (var f in authorizeFolders)
                     options.Conventions.AuthorizeFolder(f);
                 foreach (var p in allowAnnonymousPages)

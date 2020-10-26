@@ -18,6 +18,9 @@ namespace FQCS.Admin.WebAdmin
             public const string RESOURCE = "/resource";
             public const string RESOURCE_CREATE = "/resource/create";
             public const string RESOURCE_DETAIL = "/resource/{id}";
+            public const string DEFECT_TYPE = "/defecttype";
+            public const string DEFECT_TYPE_CREATE = "/defecttype/create";
+            public const string DEFECT_TYPE_DETAIL = "/defecttype/{id}";
             public const string ADMIN_ONLY = "/adminonly";
             public const string ACCESS_DENIED = "/accessdenied";
             public const string STATUS = "/status";
@@ -46,6 +49,7 @@ namespace FQCS.Admin.WebAdmin
         {
             public const string DASHBOARD = "dashboard";
             public const string RESOURCE = "resource";
+            public const string DEFECT_TYPE = "defect_type";
             public const string ADMIN_ONLY = "admin_only";
         }
     }

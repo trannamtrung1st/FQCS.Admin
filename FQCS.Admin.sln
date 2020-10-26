@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.ConsoleClient", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.WebApi", "FQCS.Admin.WebApi\FQCS.Admin.WebApi.csproj", "{187876E3-D2A2-4170-A4D8-C1FD93D507BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FQCS.Admin.WebAdmin", "FQCS.Admin.WebAdmin\FQCS.Admin.WebAdmin.csproj", "{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.WebAdmin", "FQCS.Admin.WebAdmin\FQCS.Admin.WebAdmin.csproj", "{9805FCA5-2E88-4F27-B60A-21F4A37E00D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
