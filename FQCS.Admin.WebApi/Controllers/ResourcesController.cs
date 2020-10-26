@@ -55,6 +55,8 @@ namespace FQCS.Admin.WebApi.Controllers
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
             var entity = _service.CreateResource(model);
+            context.SaveChanges();
+            // must be in transaction
             var ev = _ev_service.CreateResource(entity, User);
             context.SaveChanges();
             return Created($"/{Business.Constants.ApiEndpoint.RESOURCE_API}?id={entity.Id}",
@@ -72,6 +74,8 @@ namespace FQCS.Admin.WebApi.Controllers
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
             _service.UpdateResource(entity, model);
+            context.SaveChanges();
+            // must be in transaction
             var ev = _ev_service.UpdateResource(entity, User);
             context.SaveChanges();
             return NoContent();
@@ -88,6 +92,8 @@ namespace FQCS.Admin.WebApi.Controllers
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
             _service.DeleteResource(entity);
+            context.SaveChanges();
+            // must be in transaction
             var ev = _ev_service.DeleteResource(entity, User);
             context.SaveChanges();
             return NoContent();

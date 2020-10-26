@@ -59,6 +59,7 @@ namespace FQCS.Admin.Business
             public const string ROLE_API = "api/roles";
             public const string USER_API = "api/users";
             public const string RESOURCE_API = "api/resources";
+            public const string APP_EVENT_API = "api/app-events";
             public const string ERROR = "error";
         }
 
