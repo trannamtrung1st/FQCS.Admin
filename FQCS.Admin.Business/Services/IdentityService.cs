@@ -218,6 +218,7 @@ namespace FQCS.Admin.Business.Services
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(Constants.AppClaimType.UserName, entity.UserName));
+            claims.Add(new Claim(Constants.AppClaimType.FullName, entity.FullName));
             return claims;
         }
 

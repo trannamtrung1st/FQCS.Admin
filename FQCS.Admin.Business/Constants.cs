@@ -46,6 +46,7 @@ namespace FQCS.Admin.Business
         public static class AppClaimType
         {
             public const string UserName = "username";
+            public const string FullName = "full_name";
         }
 
         public static class AppOAuthScope

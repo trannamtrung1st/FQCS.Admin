@@ -24,6 +24,8 @@ namespace FQCS.Admin.WebApi.Controllers
     {
         [Inject]
         private readonly ResourceService _service;
+        [Inject]
+        private readonly AppEventService _ev_service;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [Authorize]
@@ -53,6 +55,7 @@ namespace FQCS.Admin.WebApi.Controllers
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
             var entity = _service.CreateResource(model);
+            var ev = _ev_service.CreateResource(entity, User);
             context.SaveChanges();
             return Created($"/{Business.Constants.ApiEndpoint.RESOURCE_API}?id={entity.Id}",
                 AppResult.Success(entity.Id));
@@ -69,6 +72,7 @@ namespace FQCS.Admin.WebApi.Controllers
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
             _service.UpdateResource(entity, model);
+            var ev = _ev_service.UpdateResource(entity, User);
             context.SaveChanges();
             return NoContent();
         }
@@ -84,6 +88,7 @@ namespace FQCS.Admin.WebApi.Controllers
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
             _service.DeleteResource(entity);
+            var ev = _ev_service.DeleteResource(entity, User);
             context.SaveChanges();
             return NoContent();
         }
