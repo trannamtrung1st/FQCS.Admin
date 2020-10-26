@@ -1,5 +1,5 @@
 ﻿@page
-@model FQCS.Admin.WebAdmin.Pages.Resource.CreateModel
+@model FQCS.Admin.WebAdmin.Pages.DefectType.CreateModel
 @{
     var apiUrl = WebAdmin.Settings.Instance.ApiUrl;
 }
@@ -20,7 +20,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="@Constants.Routing.DASHBOARD">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="@Constants.Routing.RESOURCE">Resource</a></li>
+                    <li class="breadcrumb-item"><a href="@Constants.Routing.DEFECT_TYPE">Defect type</a></li>
                     <li class="breadcrumb-item active">@Model.Info.Title</li>
                 </ol>
             </div>
@@ -48,6 +48,10 @@
                             <div class="form-group">
                                 <label>Name</label>
                                 <input type="text" name="name" class="form-control" placeholder="Please enter name">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" placeholder="Please enter description"></textarea>
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -114,15 +118,17 @@
         function submitData() {
             const model = {};
             model.name = $('[name=name]').val();
+            model.description = $('[name=description]').val();
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@Business.Constants.ApiEndpoint.RESOURCE_API',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.DEFECT_TYPE_API',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify(model),
                 success: (respData) => {
+                    let id = respData.data;
                     successAlert("Created successfully").then(() => {
-                        location.href = '@Constants.Routing.RESOURCE';
+                        location.href = '@Constants.Routing.DEFECT_TYPE_DETAIL'.replace('{id}', id);
                     });
                 },
                 error: (resp) => {
