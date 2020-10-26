@@ -21,6 +21,13 @@ namespace FQCS.Admin.Data.Models
         }
 
         public virtual DbSet<Resource> Resource { get; set; }
+        public virtual DbSet<AppEvent> AppEvent { get; set; }
+        public virtual DbSet<DefectType> DefectType { get; set; }
+        public virtual DbSet<ProductionBatch> ProductionBatch { get; set; }
+        public virtual DbSet<ProductionLine> ProductionLine { get; set; }
+        public virtual DbSet<ProductModel> ProductModel { get; set; }
+        public virtual DbSet<QCDevice> QCDevice { get; set; }
+        public virtual DbSet<QCEvent> QCEvent { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
