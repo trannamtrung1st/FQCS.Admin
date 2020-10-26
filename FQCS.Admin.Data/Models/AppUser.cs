@@ -12,5 +12,7 @@ namespace FQCS.Admin.Data.Models
         }
 
         public string FullName { get; set; }
+        public bool Disabled { get; set; }
+        public virtual IList<AppEvent> Events { get; set; }
     }
 }

@@ -17,6 +17,20 @@ namespace FQCS.Admin.Data
         {
             public const string ADMIN = "Administrator";
         }
+
+        public enum BatchStatus
+        {
+            New = 0,
+            Started = 1,
+            Paused = 2,
+            Finished = 3
+        }
+
+        public enum AppEventType
+        {
+
+        }
+
     }
 
 }

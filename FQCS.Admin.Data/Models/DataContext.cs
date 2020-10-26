@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static FQCS.Admin.Data.Constants;
 
 namespace FQCS.Admin.Data.Models
 {
@@ -48,6 +50,95 @@ namespace FQCS.Admin.Data.Models
             modelBuilder.Entity<Resource>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(255);
+            });
+            modelBuilder.Entity<AppEvent>(entity =>
+            {
+                var converter = new EnumToNumberConverter<AppEventType, int>();
+                entity.Property(e => e.Type)
+                    .HasConversion(converter);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(2000);
+                entity.Property(e => e.Data)
+                    .HasMaxLength(2000);
+                entity.HasOne(e => e.User)
+                    .WithMany(e => e.Events)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_AppUser_AppEvent");
+            });
+            modelBuilder.Entity<ProductionBatch>(entity =>
+            {
+                var converter = new EnumToNumberConverter<BatchStatus, int>();
+                entity.Property(e => e.Status)
+                    .HasConversion(converter);
+                entity.HasOne(e => e.Line)
+                    .WithMany(e => e.Batches)
+                    .HasForeignKey(e => e.ProductionLineId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_ProductionLine_ProductionBatch");
+                entity.HasOne(e => e.Model)
+                    .WithMany(e => e.Batches)
+                    .HasForeignKey(e => e.ProductModelId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_ProductModel_ProductionBatch");
+            });
+            modelBuilder.Entity<ProductionLine>(entity =>
+            {
+                entity.Property(e => e.Code)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
+                entity.Property(e => e.Info)
+                    .HasMaxLength(2000);
+            });
+            modelBuilder.Entity<ProductModel>(entity =>
+            {
+                entity.Property(e => e.Code)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
+                entity.Property(e => e.Info)
+                    .HasMaxLength(2000);
+                entity.Property(e => e.Image)
+                    .IsUnicode(false);
+            });
+            modelBuilder.Entity<QCDevice>(entity =>
+            {
+                entity.Property(e => e.Code)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
+                entity.HasOne(e => e.Line)
+                    .WithMany(e => e.Devices)
+                    .HasForeignKey(e => e.ProductionLineId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_ProductionLine_QCDevice");
+            });
+            modelBuilder.Entity<QCEvent>(entity =>
+            {
+                entity.Property(e => e.Description)
+                    .HasMaxLength(2000);
+                entity.HasOne(e => e.Batch)
+                    .WithMany(e => e.Events)
+                    .HasForeignKey(e => e.ProductionBatchId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_ProductionBatch_QCEvent");
+                entity.HasOne(e => e.Device)
+                    .WithMany(e => e.Events)
+                    .HasForeignKey(e => e.QCDeviceId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_QCDevice_QCEvent");
+                entity.HasOne(e => e.DefectType)
+                    .WithMany(e => e.Events)
+                    .HasForeignKey(e => e.DefectTypeId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_DefectType_QCEvent");
+            });
+            modelBuilder.Entity<DefectType>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(2000);
+                entity.Property(e => e.SampleImage)
+                    .IsUnicode(false);
             });
         }
     }
