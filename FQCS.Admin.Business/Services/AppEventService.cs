@@ -129,6 +129,7 @@ namespace FQCS.Admin.Business.Services
             entity.CreatedTime = DateTime.UtcNow;
         }
 
+        #region Resource
         public AppEvent CreateResource(Resource entity, ClaimsPrincipal principal)
         {
             string username = principal.FindFirstValue(AppClaimType.UserName);
@@ -170,7 +171,9 @@ namespace FQCS.Admin.Business.Services
             PrepareCreate(ev);
             return context.AppEvent.Add(ev).Entity;
         }
+        #endregion
 
+        #region Defect Type
         public AppEvent CreateDefectType(DefectType entity, ClaimsPrincipal principal)
         {
             string username = principal.FindFirstValue(AppClaimType.UserName);
@@ -226,6 +229,65 @@ namespace FQCS.Admin.Business.Services
             PrepareCreate(ev);
             return context.AppEvent.Add(ev).Entity;
         }
+        #endregion
+
+        #region Production Line
+        public AppEvent CreateProductionLine(ProductionLine entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} created a production line with code {entity.Code}, id: {entity.Id}",
+                Type = Data.Constants.AppEventType.CreateProductionLine,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent ChangeProductionLineStatus(ProductionLine entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} changed disabled status: {entity.Disabled} - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.ChangeProductionLineStatus,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateProductionLine(ProductionLine entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated production line - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateProductionLine,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent DeleteProductionLine(ProductionLine entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} deleted production line id: {entity.Id}",
+                Type = Data.Constants.AppEventType.DeleteProductionLine,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+        #endregion
 
         #region Validation
         public ValidationData ValidateGetAppEvents(
