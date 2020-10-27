@@ -289,6 +289,64 @@ namespace FQCS.Admin.Business.Services
         }
         #endregion
 
+        #region Product Model
+        public AppEvent CreateProductModel(ProductModel entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} created a product model named {entity.Name}, id: {entity.Id}",
+                Type = Data.Constants.AppEventType.CreateProductModel,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateProductModelImage(ProductModel entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated product model's image - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateProductModel,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateProductModel(ProductModel entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated product model id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateProductModel,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent DeleteProductModel(ProductModel entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} deleted product model id: {entity.Id}",
+                Type = Data.Constants.AppEventType.DeleteProductModel,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+        #endregion
+
         #region Validation
         public ValidationData ValidateGetAppEvents(
             ClaimsPrincipal principal,
