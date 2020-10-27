@@ -22,7 +22,7 @@ namespace FQCS.Admin.Business.Models
         [JsonProperty("info")]
         public string Info { get; set; }
         [JsonProperty("production_line_id")]
-        public int ProductionLineId { get; set; }
+        public int? ProductionLineId { get; set; }
     }
 
     public class UpdateQCDeviceModel : MappingModel<QCDevice>
@@ -40,7 +40,7 @@ namespace FQCS.Admin.Business.Models
         [JsonProperty("info")]
         public string Info { get; set; }
         [JsonProperty("production_line_id")]
-        public int ProductionLineId { get; set; }
+        public int? ProductionLineId { get; set; }
 
     }
 

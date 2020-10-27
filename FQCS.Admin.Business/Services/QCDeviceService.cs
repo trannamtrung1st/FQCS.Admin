@@ -65,12 +65,13 @@ namespace FQCS.Admin.Business.Services
                     case QCDeviceQueryProjection.P_LINE:
                         {
                             var entity = row.Line;
-                            obj["production_line"] = new
-                            {
-                                id = entity.Id,
-                                code = entity.Code,
-                                disabled = entity.Disabled
-                            };
+                            if (entity != null)
+                                obj["production_line"] = new
+                                {
+                                    id = entity.Id,
+                                    code = entity.Code,
+                                    disabled = entity.Disabled
+                                };
                         }
                         break;
                 }

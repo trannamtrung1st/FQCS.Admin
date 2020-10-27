@@ -12,6 +12,10 @@
     <Compile Remove="Migrations\20201026063914_AddEntities.Designer.cs" />
     <Compile Remove="Migrations\20201026091012_AddDbSets.cs" />
     <Compile Remove="Migrations\20201026091012_AddDbSets.Designer.cs" />
+    <Compile Remove="Migrations\20201027062605_SetIsRequiredFalseQCDevice.cs" />
+    <Compile Remove="Migrations\20201027062605_SetIsRequiredFalseQCDevice.Designer.cs" />
+    <Compile Remove="Migrations\20201027062810_Test.cs" />
+    <Compile Remove="Migrations\20201027062810_Test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

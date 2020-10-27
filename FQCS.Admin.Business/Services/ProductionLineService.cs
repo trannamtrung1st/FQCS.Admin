@@ -61,6 +61,14 @@ namespace FQCS.Admin.Business.Services
                             obj["disabled"] = entity.Disabled;
                         }
                         break;
+                    case ProductionLineQueryProjection.SELECT:
+                        {
+                            var entity = row;
+                            obj["id"] = entity.Id;
+                            obj["code"] = entity.Code;
+                            obj["disabled"] = entity.Disabled;
+                        }
+                        break;
                 }
             }
             return obj;

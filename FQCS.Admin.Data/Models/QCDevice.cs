@@ -9,7 +9,7 @@ namespace FQCS.Admin.Data.Models
         public int Id { get; set; }
         public string Code { get; set; }
         public string Info { get; set; }
-        public int ProductionLineId { get; set; }
+        public int? ProductionLineId { get; set; }
         public bool Archived { get; set; }
         public DateTime LastUpdated { get; set; }
         public DateTime CreatedTime { get; set; }
