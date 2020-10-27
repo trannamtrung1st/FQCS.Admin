@@ -20,9 +20,13 @@ namespace FQCS.Admin.Data
 
         public enum BatchStatus
         {
+            [Display(Name = "New")]
             New = 0,
+            [Display(Name = "Started")]
             Started = 1,
+            [Display(Name = "Paused")]
             Paused = 2,
+            [Display(Name = "Finished")]
             Finished = 3
         }
 
@@ -44,6 +48,10 @@ namespace FQCS.Admin.Data
             UpdateQCDevice = 14,
             DeleteQCDevice = 15,
             ChangeQCDeviceStatus = 16,
+            CreateProductionBatch = 17,
+            UpdateProductionBatch = 18,
+            DeleteProductionBatch = 19,
+            ChangeProductionBatchStatus = 20,
             CreateResource = 1000,
             UpdateResource = 1001,
             DeleteResource = 1002,

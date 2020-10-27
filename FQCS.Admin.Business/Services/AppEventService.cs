@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TNT.Core.Helpers.DI;
 using FQCS.Admin.Business.Helpers;
 using static FQCS.Admin.Business.Constants;
+using TNT.Core.Helpers.General;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -253,7 +254,7 @@ namespace FQCS.Admin.Business.Services
             var ev = new AppEvent
             {
                 Data = null,
-                Description = $"User {username} changed disabled status: {entity.Disabled} - id: {entity.Id}",
+                Description = $"User {username} changed production line disabled status: {entity.Disabled} - id: {entity.Id}",
                 Type = Data.Constants.AppEventType.ChangeProductionLineStatus,
                 UserId = principal.Identity.Name
             };
@@ -369,7 +370,7 @@ namespace FQCS.Admin.Business.Services
             var ev = new AppEvent
             {
                 Data = null,
-                Description = $"User {username} changed archived status: {entity.Archived} - id: {entity.Id}",
+                Description = $"User {username} changed QC device archived status: {entity.Archived} - id: {entity.Id}",
                 Type = Data.Constants.AppEventType.ChangeQCDeviceStatus,
                 UserId = principal.Identity.Name
             };
@@ -399,6 +400,64 @@ namespace FQCS.Admin.Business.Services
                 Data = null,
                 Description = $"User {username} deleted QC device id: {entity.Id}",
                 Type = Data.Constants.AppEventType.DeleteQCDevice,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+        #endregion
+
+        #region Production Batch
+        public AppEvent CreateProductionBatch(ProductionBatch entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} created a production batch with code {entity.Code}, id: {entity.Id}",
+                Type = Data.Constants.AppEventType.CreateProductionBatch,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent ChangeProductionBatchStatus(ProductionBatch entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} changed production batch status: {entity.Status.DisplayName()} - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.ChangeProductionBatchStatus,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateProductionBatch(ProductionBatch entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated production batch - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateProductionBatch,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent DeleteProductionBatch(ProductionBatch entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} deleted production batch id: {entity.Id}",
+                Type = Data.Constants.AppEventType.DeleteProductionBatch,
                 UserId = principal.Identity.Name
             };
             PrepareCreate(ev);
