@@ -1,0 +1,255 @@
+﻿@page
+@model FQCS.Admin.WebAdmin.Pages.QCDevice.DetailModel
+@{
+    var apiUrl = WebAdmin.Settings.Instance.ApiUrl;
+}
+
+@section head {
+    <!-- Select2 -->
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@Model.Info.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="@Constants.Routing.DASHBOARD">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="@Constants.Routing.QC_DEVICE">QC device</a></li>
+                    <li class="breadcrumb-item active">@Model.Info.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- jquery validation -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-info-circle mr-1"></i>
+                            Info
+                        </h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form role="form" id="form-main">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input id="cb-active" name="active" value="true"
+                                           class="custom-control-input" type="checkbox" />
+                                    <label for="cb-active" class="custom-control-label">Active</label>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="form-group">
+                                <label>Id</label>
+                                <input type="text" name="id" class="form-control" disabled value="@Model.Id">
+                            </div>
+                            <div class="form-group">
+                                <label>Code</label>
+                                <input type="text" name="code" class="form-control" placeholder="Please enter code">
+                            </div>
+                            <div class="form-group">
+                                <label>Information</label>
+                                <textarea name="info" class="form-control" placeholder="Please enter line information"></textarea>
+                            </div>
+                            <div class="form-group w-50">
+                                <label>Production line</label>
+                                <select class="form-control select2" name="production_line_id">
+                                    <option value="">Not selected</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-check mr-1"></i>
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!--/.col (left) -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+@section scripts {
+    <!-- jquery-validation -->
+    <script src="/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/plugins/jquery-validation/additional-methods.min.js"></script>
+    <!-- Select2 -->
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
+    <script type="text/javascript">
+        let tempData = null;
+        $(document).ready(async function () {
+            $('.select2').select2();
+            await getData();
+            getProductionLines();
+            $('#form-main input[name=active]').change(confirmSubmitChangeStatus);
+            $('#form-main').validate({
+                submitHandler: confirmSubmit,
+                rules: {
+                    code: {
+                        required: true,
+                    },
+                },
+                messages: {
+                    code: {
+                        required: "Code required",
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+
+        function getData() {
+            changeLoading(true);
+            return $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API',
+                type: 'get',
+                data: {
+                    id: @Model.Id,
+                    fields: '@QCDeviceQueryProjection.INFO',
+                    single_only: true
+                },
+                success: (respData) => {
+                    console.log(respData);
+                    let data = respData.data.single;
+                    tempData = data;
+                    processData(data);
+                },
+                error: (resp) => {
+                    handleGeneralError(resp, '@Constants.Routing.QC_DEVICE');
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
+
+        function processData(data) {
+            const formMain = $('#form-main');
+            formMain.find('[name=code]').val(data.code);
+            formMain.find('[name=info]').val(data.info);
+            formMain.find('[name=active]').prop('checked', !data.archived);
+        }
+
+        function confirmSubmit() {
+            confirmAlert().then((result) => {
+                if (result.value)
+                    submitData();
+            });
+        }
+
+        function submitData() {
+            const model = {};
+            const formMain = $('#form-main');
+            model.code = formMain.find('[name=code]').val();
+            model.info = formMain.find('[name=info]').val();
+            model.production_line_id = formMain.find('[name=production_line_id]').val();
+            changeLoading(true);
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API/@Model.Id',
+                type: 'patch',
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: (respData) => {
+                    successAlert("Updated successfully");
+                },
+                error: (resp) => {
+                    handleGeneralError(resp);
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
+
+        function confirmSubmitChangeStatus(event) {
+            confirmAlert().then((result) => {
+                if (result.value)
+                    submitChangeStatus();
+                else $('#form-main [name=active]').prop('checked', !event.target.checked);
+            });
+        }
+
+        function submitChangeStatus() {
+            const model = {};
+            model.archived = !($('#form-main [name=active]:checked').length > 0);
+            changeLoading(true);
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API/@Model.Id/status',
+                type: 'patch',
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: (respData) => {
+                    successAlert("Updated successfully");
+                },
+                error: (resp) => {
+                    handleGeneralError(resp);
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
+
+        function getProductionLines() {
+            changeLoading(true);
+            const data = {};
+            data.load_all = true;
+            data.fields = '@QCDeviceQueryProjection.SELECT';
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_LINE_API',
+                type: 'get',
+                data: data,
+                success: (respData) => {
+                    console.log(respData);
+                    let data = respData.data.list;
+                    let select = $('#form-main [name=production_line_id]');
+                    for (var i = 0; i < data.length; i++) {
+                        select.append(
+                            $('<option value="' + data[i].id + '">').append(data[i].code)
+                        );
+                    }
+                    select.val(tempData.production_line_id).change();
+                },
+                error: (data) => {
+                    handleGeneralError(data);
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
+
+    </script>
+}
