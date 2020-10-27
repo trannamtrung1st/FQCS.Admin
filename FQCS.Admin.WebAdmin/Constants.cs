@@ -30,6 +30,9 @@ namespace FQCS.Admin.WebAdmin
             public const string QC_DEVICE = "/qcdevice";
             public const string QC_DEVICE_CREATE = "/qcdevice/create";
             public const string QC_DEVICE_DETAIL = "/qcdevice/{id}";
+            public const string PRODUCTION_BATCH = "/productionbatch";
+            public const string PRODUCTION_BATCH_CREATE = "/productionbatch/create";
+            public const string PRODUCTION_BATCH_DETAIL = "/productionbatch/{id}";
             public const string ADMIN_ONLY = "/adminonly";
             public const string ACCESS_DENIED = "/accessdenied";
             public const string STATUS = "/status";
@@ -62,6 +65,7 @@ namespace FQCS.Admin.WebAdmin
             public const string PRODUCTION_LINE = "production_line";
             public const string PRODUCT_MODEL = "product_model";
             public const string QC_DEVICE = "qc_device";
+            public const string PRODUCTION_BATCH = "production_batch";
             public const string ADMIN_ONLY = "admin_only";
         }
     }

@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using TNT.Core.Helpers.DI;
 using FQCS.Admin.Business.Helpers;
+using TNT.Core.Helpers.General;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -62,6 +63,7 @@ namespace FQCS.Admin.Business.Services
                                 iso = $"{time.ToUniversalTime():s}Z"
                             };
                             obj["status"] = entity.Status;
+                            obj["status_display"] = entity.Status.DisplayName();
                         }
                         break;
                     case ProductionBatchQueryProjection.P_LINE:
@@ -84,6 +86,7 @@ namespace FQCS.Admin.Business.Services
                                 {
                                     id = entity.Id,
                                     code = entity.Code,
+                                    name = entity.Name,
                                 };
                         }
                         break;

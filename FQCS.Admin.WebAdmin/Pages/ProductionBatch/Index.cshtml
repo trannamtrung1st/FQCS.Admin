@@ -1,5 +1,5 @@
 ﻿@page
-@model FQCS.Admin.WebAdmin.Pages.ProductModel.IndexModel
+@model FQCS.Admin.WebAdmin.Pages.ProductionBatch.IndexModel
 @{
     var apiUrl = WebAdmin.Settings.Instance.ApiUrl;
 }
@@ -36,7 +36,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="@Constants.Routing.PRODUCT_MODEL_CREATE" class="btn btn-primary float-right">
+                    <a href="@Constants.Routing.PRODUCTION_BATCH_CREATE" class="btn btn-primary float-right">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
@@ -48,9 +48,10 @@
                                 <th></th>
                                 <th>No</th>
                                 <th>Id</th>
-                                <th>Code</th>
-                                <th class="sortable">Name</th>
-                                <th>Image</th>
+                                <th class="sortable">Code</th>
+                                <th class="sortable">Line</th>
+                                <th class="sortable">Device</th>
+                                <th class="sortable">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,9 +61,10 @@
                                 <th></th>
                                 <th>No</th>
                                 <th>Id</th>
-                                <th>Code</th>
-                                <th class="sortable">Name</th>
-                                <th>Image</th>
+                                <th class="sortable">Code</th>
+                                <th class="sortable">Line</th>
+                                <th class="sortable">Device</th>
+                                <th class="sortable">Status</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -94,11 +96,10 @@
                 responsive: true,
                 autoWidth: false,
                 columnDefs: [
-                    { targets: [4], orderable: true, searchable: true },
-                    { targets: [5], width: "200px" },
+                    { targets: [3, 4, 5, 6], orderable: true, searchable: true },
                     { targets: "_all", orderable: false, searchable: false },
                 ],
-                order: [[4, 'asc']]
+                order: [[3, 'asc']]
             });
             tblMain._mustDrawNo = true;
             tblMain.on('draw', onTableChange);
@@ -126,8 +127,9 @@
             changeLoading(true);
             const data = {};
             data.load_all = true;
+            data.fields = '@ProductionBatchQueryProjection.INFO,@ProductionBatchQueryProjection.P_LINE,@ProductionBatchQueryProjection.P_MODEL';
             $.ajax({
-                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCT_MODEL_API',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_BATCH_API',
                 type: 'get',
                 data: data,
                 success: (respData) => {
@@ -136,7 +138,7 @@
                     processData(data);
                 },
                 error: (data) => {
-                    handleGeneralError(data, '@Constants.Routing.PRODUCT_MODEL');
+                    handleGeneralError(data, '@Constants.Routing.PRODUCTION_BATCH');
                 },
                 complete: () => {
                     changeLoading(false);
@@ -153,12 +155,10 @@
                         "<i class=\"fa fa-list\"></i>" +
                     "</button>" +
                     "<div class=\"dropdown-menu\" aria-labelledby=\"btn-dropdown\">" +
-                        "<a class=\"dropdown-item\" href=\"" + "@Constants.Routing.PRODUCT_MODEL_DETAIL".replace('{id}', id) + "\"><i class=\"fa fa-info-circle dropdown-item-icon\"></i>Detail</a>" +
+                        "<a class=\"dropdown-item\" href=\"" + "@Constants.Routing.PRODUCTION_BATCH_DETAIL".replace('{id}', id) + "\"><i class=\"fa fa-info-circle dropdown-item-icon\"></i>Detail</a>" +
                         "<button class=\"dropdown-item\" onclick=\"confirmRemove(" + id + ")\"><i class=\"fa fa-trash dropdown-item-icon\"></i>Remove</button>" +
                     "</div>" +
                 "</div>";
-            var img = (image) => image ?
-                "<img src='@apiUrl/" + image + "' class='img-fluid' />" : null;
             for (var i = 0; i < data.length; i++) {
                 const obj = data[i];
                 tblMain.row.add([
@@ -166,8 +166,9 @@
                     null,
                     obj.id,
                     obj.code,
-                    obj.name,
-                    img(obj.image),
+                    "<a href='#'>" + (obj.production_line?.code ?? "") + "</a>",
+                    "<a href='#'>" + (obj.product_model?.name ?? "") + "</a>",
+                    obj.status_display
                 ]);
             }
             tblMain.draw();
@@ -183,7 +184,7 @@
         function submitRemove(id) {
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCT_MODEL_API/' + id,
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_BATCH_API/' + id,
                 type: 'delete',
                 success: (data) => {
                     successAlert("Deleted successfully").then(getData);
