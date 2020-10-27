@@ -23,6 +23,8 @@ namespace FQCS.Admin.ConsoleClient
                 Console.WriteLine("1/ Start Zoo");
                 Console.WriteLine("2/ Start Kafka");
                 Console.WriteLine("3/ Reset Kafka data");
+                Console.WriteLine("4/ Stop Kafka");
+                Console.WriteLine("5/ Stop Zoo");
                 Console.WriteLine("Other/ EXIT");
                 Console.Write("Your choice: ");
                 var choice = Console.ReadLine();
@@ -46,6 +48,20 @@ namespace FQCS.Admin.ConsoleClient
                         {
                             string strCmdText;
                             strCmdText = $"/C start {adminConfig.ResetKafkaCmd}";
+                            System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+                        }
+                        break;
+                    case "4":
+                        {
+                            string strCmdText;
+                            strCmdText = $"/C start {adminConfig.StopKafkaCmd}";
+                            System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+                        }
+                        break;
+                    case "5":
+                        {
+                            string strCmdText;
+                            strCmdText = $"/C start {adminConfig.StopZooCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
