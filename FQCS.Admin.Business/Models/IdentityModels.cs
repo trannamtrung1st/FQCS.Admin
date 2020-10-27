@@ -146,7 +146,10 @@ namespace FQCS.Admin.Business.Models
         //---------------------------------------
 
         public const string INFO = "info";
-        public const string POSTS = "posts";
+
+        public static readonly IDictionary<string, string[]> MAPS = new Dictionary<string, string[]>
+        {
+        };
     }
 
     public class AppUserQuerySort

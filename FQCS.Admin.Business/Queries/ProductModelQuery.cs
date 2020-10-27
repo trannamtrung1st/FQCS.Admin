@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FQCS.Admin.Business.Models;
 using FQCS.Admin.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FQCS.Admin.Business.Queries
 {
@@ -59,6 +60,16 @@ namespace FQCS.Admin.Business.Queries
                 query = query.Where(o => o.Name.Contains(filter.name_contains));
             if (filter.code != null)
                 query = query.Where(o => o.Code == filter.code);
+            return query;
+        }
+
+        public static IQueryable<ProductModel> Project(
+            this IQueryable<ProductModel> query, ProductModelQueryProjection projection)
+        {
+            foreach (var f in projection.GetFieldsArr())
+                if (ProductModelQueryProjection.MAPS.ContainsKey(f))
+                    foreach (var prop in ProductModelQueryProjection.MAPS[f])
+                        query = query.Include(prop);
             return query;
         }
         #endregion

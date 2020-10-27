@@ -84,6 +84,10 @@ namespace FQCS.Admin.Business.Models
 
         public const string INFO = "info";
         public const string SELECT = "select";
+
+        public static readonly IDictionary<string, string[]> MAPS = new Dictionary<string, string[]>
+        {
+        };
     }
 
 

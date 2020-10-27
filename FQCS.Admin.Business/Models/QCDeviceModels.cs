@@ -80,7 +80,13 @@ namespace FQCS.Admin.Business.Models
         //---------------------------------------
 
         public const string INFO = "info";
+        public const string P_LINE = "pline";
         public const string SELECT = "select";
+
+        public static readonly IDictionary<string, string[]> MAPS = new Dictionary<string, string[]>
+        {
+            {P_LINE, new []{ $"{nameof(QCDevice.Line)}" }}
+        };
     }
 
 

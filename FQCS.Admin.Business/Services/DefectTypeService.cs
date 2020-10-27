@@ -77,6 +77,7 @@ namespace FQCS.Admin.Business.Services
             var query = DefectTypes;
             #region General
             if (filter != null) query = query.Filter(filter);
+            query = query.Project(projection);
             int? totalCount = null;
             if (options.count_total) totalCount = query.Count();
             #endregion

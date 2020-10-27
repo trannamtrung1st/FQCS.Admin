@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FQCS.Admin.Business.Models;
 using FQCS.Admin.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FQCS.Admin.Business.Queries
 {
@@ -57,6 +58,16 @@ namespace FQCS.Admin.Business.Queries
                 query = query.Where(o => o.CreatedTime.Date >= filter.from_date);
             if (filter.to_date != null)
                 query = query.Where(o => o.CreatedTime.Date <= filter.to_date);
+            return query;
+        }
+
+        public static IQueryable<AppEvent> Project(
+            this IQueryable<AppEvent> query, AppEventQueryProjection projection)
+        {
+            foreach (var f in projection.GetFieldsArr())
+                if (AppEventQueryProjection.MAPS.ContainsKey(f))
+                    foreach (var prop in AppEventQueryProjection.MAPS[f])
+                        query = query.Include(prop);
             return query;
         }
         #endregion

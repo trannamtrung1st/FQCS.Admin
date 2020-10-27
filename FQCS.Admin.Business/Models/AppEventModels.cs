@@ -38,6 +38,11 @@ namespace FQCS.Admin.Business.Models
         //---------------------------------------
         public const string INFO = "info";
         public const string USER = "user";
+
+        public static readonly IDictionary<string, string[]> MAPS = new Dictionary<string, string[]>
+        {
+            {USER, new []{ $"{nameof(AppEvent.User)}" }}
+        };
     }
 
 

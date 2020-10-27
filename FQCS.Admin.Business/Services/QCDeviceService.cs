@@ -62,6 +62,17 @@ namespace FQCS.Admin.Business.Services
                             obj["archived"] = entity.Archived;
                         }
                         break;
+                    case QCDeviceQueryProjection.P_LINE:
+                        {
+                            var entity = row.Line;
+                            obj["production_line"] = new
+                            {
+                                id = entity.Id,
+                                code = entity.Code,
+                                disabled = entity.Disabled
+                            };
+                        }
+                        break;
                 }
             }
             return obj;
@@ -90,6 +101,7 @@ namespace FQCS.Admin.Business.Services
             var query = QCDevices;
             #region General
             if (filter != null) query = query.Filter(filter);
+            query = query.Project(projection);
             int? totalCount = null;
             if (options.count_total) totalCount = query.Count();
             #endregion
