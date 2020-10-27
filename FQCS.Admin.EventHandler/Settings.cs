@@ -4,7 +4,12 @@ using System.Text;
 
 namespace FQCS.Admin.EventHandler
 {
-    class Settings
+    public class Settings
     {
+        public string KafkaServer;
+        public string KafkaUsername;
+        public string KafkaPassword;
+        public string GroupId;
+        public int RetryAfterSecs;
     }
 }
