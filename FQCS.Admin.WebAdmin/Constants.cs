@@ -24,6 +24,9 @@ namespace FQCS.Admin.WebAdmin
             public const string PRODUCTION_LINE = "/productionline";
             public const string PRODUCTION_LINE_CREATE = "/productionline/create";
             public const string PRODUCTION_LINE_DETAIL = "/productionline/{id}";
+            public const string PRODUCT_MODEL = "/productmodel";
+            public const string PRODUCT_MODEL_CREATE = "/productmodel/create";
+            public const string PRODUCT_MODEL_DETAIL = "/productmodel/{id}";
             public const string ADMIN_ONLY = "/adminonly";
             public const string ACCESS_DENIED = "/accessdenied";
             public const string STATUS = "/status";
@@ -54,6 +57,7 @@ namespace FQCS.Admin.WebAdmin
             public const string RESOURCE = "resource";
             public const string DEFECT_TYPE = "defect_type";
             public const string PRODUCTION_LINE = "production_line";
+            public const string PRODUCT_MODEL = "product_model";
             public const string ADMIN_ONLY = "admin_only";
         }
     }
