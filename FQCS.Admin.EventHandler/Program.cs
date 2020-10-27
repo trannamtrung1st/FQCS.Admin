@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Confluent.Kafka;
+using FQCS.Admin.Business.Models;
+using FQCS.Admin.Kafka;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading;
@@ -11,7 +14,14 @@ namespace FQCS.Admin.EventHandler
         {
             var json = File.ReadAllText("appsettings.json");
             var settings = JsonConvert.DeserializeObject<Settings>(json);
+            Handle(settings);
+        }
+
+        static void Handle(Settings settings)
+        {
             var cancelSource = new CancellationTokenSource();
+            var producer = KafkaHelper.GetPlainProducer(settings.KafkaServer,
+                settings.KafkaUsername, settings.KafkaPassword);
             using var handler = new Handler(settings);
             handler.SubscribeTopic(Constants.KafkaTopic.TOPIC_QC_EVENT);
             var task = handler.StartConsuming(cancelSource.Token, settings.RetryAfterSecs);
@@ -21,7 +31,22 @@ namespace FQCS.Admin.EventHandler
                 var line = Console.ReadLine();
                 if (line == "C")
                     cancelSource.Cancel();
+                // test only
+                else
+                    SendTest(settings, producer);
             }
+        }
+
+        static void SendTest(Settings settings, IProducer<Null, string> producer)
+        {
+            var mess = new Message<Null, string>();
+            mess.Value = JsonConvert.SerializeObject(new QCEventMessage
+            {
+                CreatedTime = DateTime.UtcNow,
+                DefectTypeId = DateTime.UtcNow.Second,
+                QCDeviceId = DateTime.UtcNow.Second
+            });
+            producer.Produce(Constants.KafkaTopic.TOPIC_QC_EVENT, mess);
         }
     }
 }

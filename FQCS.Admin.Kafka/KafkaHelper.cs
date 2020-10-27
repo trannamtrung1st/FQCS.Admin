@@ -25,5 +25,21 @@ namespace FQCS.Admin.Kafka
             var newOrderConsumer = new ConsumerBuilder<Null, string>(config).Build();
             return newOrderConsumer;
         }
+
+        public static IProducer<Null, string> GetPlainProducer(string server,
+            string username, string password)
+        {
+            var config = new ProducerConfig
+            {
+                BootstrapServers = server,
+                SaslUsername = username,
+                SaslPassword = password,
+                SaslMechanism = SaslMechanism.Plain,
+                SecurityProtocol = SecurityProtocol.SaslPlaintext
+            };
+            var producer = new ProducerBuilder<Null, string>(config).Build();
+            return producer;
+        }
+
     }
 }
