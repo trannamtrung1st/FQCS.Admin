@@ -117,7 +117,8 @@ namespace FQCS.Admin.WebApi.Controllers
                 var validationData = _service.ValidateDeleteDefectType(User, entity);
                 if (!validationData.IsValid)
                     return BadRequest(AppResult.FailValidation(data: validationData));
-                _service.DeleteDefectType(entity, Settings.Instance.UploadFolderPath, Settings.Instance.WebRootPath);
+                _service.DeleteDefectType(entity);
+                _service.DeleteDefectTypeFolder(entity, Settings.Instance.UploadFolderPath, Settings.Instance.WebRootPath);
                 context.SaveChanges();
                 // must be in transaction
                 var ev = _ev_service.DeleteDefectType(entity, User);

@@ -150,12 +150,15 @@ namespace FQCS.Admin.Business.Services
         #endregion
 
         #region Delete DefectType
-        public DefectType DeleteDefectType(DefectType entity, string uploadPath, string rootPath)
+        public DefectType DeleteDefectType(DefectType entity)
         {
             entity = context.DefectType.Remove(entity).Entity;
+            return entity;
+        }
+        public void DeleteDefectTypeFolder(DefectType entity, string uploadPath, string rootPath)
+        {
             var folderPath = Path.Combine(uploadPath, nameof(DefectType), entity.Id.ToString());
             fileService.DeleteDirectory(folderPath, rootPath);
-            return entity;
         }
         #endregion
 
