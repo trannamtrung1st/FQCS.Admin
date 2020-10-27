@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FQCS.Admin.Business\FQCS.Admin.Business.csproj" />
+    <ProjectReference Include="..\FQCS.Admin\FQCS.Admin.csproj" />
+  </ItemGroup>
+
+</Project>

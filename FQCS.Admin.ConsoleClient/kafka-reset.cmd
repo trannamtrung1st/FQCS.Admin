@@ -1,0 +1,1 @@
+rd /s /q N:\ITs\Kafka\logs&rd /s /q N:\ITs\ZooKeepers\data\version-2
