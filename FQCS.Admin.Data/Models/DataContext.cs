@@ -78,6 +78,11 @@ namespace FQCS.Admin.Data.Models
                 var converter = new EnumToNumberConverter<BatchStatus, int>();
                 entity.Property(e => e.Status)
                     .HasConversion(converter);
+                entity.Property(e => e.Code)
+                    .IsUnicode(false)
+                    .HasMaxLength(100);
+                entity.Property(e => e.Info)
+                    .HasMaxLength(2000);
                 entity.HasOne(e => e.Line)
                     .WithMany(e => e.Batches)
                     .HasForeignKey(e => e.ProductionLineId)

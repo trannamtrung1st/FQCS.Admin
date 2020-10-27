@@ -8,6 +8,8 @@ namespace FQCS.Admin.Data.Models
     public class ProductionBatch
     {
         public int Id { get; set; }
+        public string Code { get; set; }
+        public string Info { get; set; }
         public int ProductionLineId { get; set; }
         public int ProductModelId { get; set; }
         public int TotalAmount { get; set; }
