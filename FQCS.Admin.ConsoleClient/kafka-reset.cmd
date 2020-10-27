@@ -1,1 +1,1 @@
-rd /s /q N:\ITs\Kafka\logs&rd /s /q N:\ITs\ZooKeepers\data\version-2
+rd /s /q N:\Servers\Kafka-Capstone\kafka-logs&rd /s /q N:\Servers\Kafka-Capstone\zoo-data\version-2
