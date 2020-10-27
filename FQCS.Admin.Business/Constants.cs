@@ -63,6 +63,7 @@ namespace FQCS.Admin.Business
             public const string DEFECT_TYPE_API = "api/defect-types";
             public const string PRODUCTION_LINE_API = "api/production-lines";
             public const string PRODUCT_MODEL_API = "api/product-models";
+            public const string QC_DEVICE_API = "api/qc-devices";
             public const string ERROR = "error";
         }
 

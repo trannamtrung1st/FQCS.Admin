@@ -347,6 +347,64 @@ namespace FQCS.Admin.Business.Services
         }
         #endregion
 
+        #region QC Device
+        public AppEvent CreateQCDevice(QCDevice entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} created a QC device with code {entity.Code}, id: {entity.Id}",
+                Type = Data.Constants.AppEventType.CreateQCDevice,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent ChangeQCDeviceStatus(QCDevice entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} changed archived status: {entity.Archived} - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.ChangeQCDeviceStatus,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateQCDevice(QCDevice entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated QC device - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateQCDevice,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent DeleteQCDevice(QCDevice entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} deleted QC device id: {entity.Id}",
+                Type = Data.Constants.AppEventType.DeleteQCDevice,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+        #endregion
+
         #region Validation
         public ValidationData ValidateGetAppEvents(
             ClaimsPrincipal principal,
