@@ -151,7 +151,7 @@
             changeLoading(true);
             const data = {};
             data.load_all = true;
-            data.fields = '@QCDeviceQueryProjection.SELECT';
+            data.fields = '@ProductionLineQueryProjection.SELECT';
             $.ajax({
                 url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_LINE_API',
                 type: 'get',

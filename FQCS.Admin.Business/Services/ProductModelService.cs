@@ -66,6 +66,14 @@ namespace FQCS.Admin.Business.Services
                             obj["image"] = entity.Image;
                         }
                         break;
+                    case ProductModelQueryProjection.SELECT:
+                        {
+                            var entity = row;
+                            obj["id"] = entity.Id;
+                            obj["name"] = entity.Name;
+                            obj["code"] = entity.Code;
+                        }
+                        break;
                 }
             }
             return obj;
