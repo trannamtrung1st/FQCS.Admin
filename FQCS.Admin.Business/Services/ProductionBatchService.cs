@@ -160,6 +160,7 @@ namespace FQCS.Admin.Business.Services
         #region Create ProductionBatch
         protected void PrepareCreate(ProductionBatch entity)
         {
+            entity.Status = Data.Constants.BatchStatus.New;
             entity.CreatedTime = DateTime.UtcNow;
             entity.LastUpdated = entity.CreatedTime;
         }

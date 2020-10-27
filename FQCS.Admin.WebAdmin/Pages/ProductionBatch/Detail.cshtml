@@ -1,5 +1,5 @@
 ﻿@page
-@model FQCS.Admin.WebAdmin.Pages.ProductionBatch.CreateModel
+@model FQCS.Admin.WebAdmin.Pages.ProductionBatch.DetailModel
 @{
     var apiUrl = WebAdmin.Settings.Instance.ApiUrl;
 }
@@ -42,9 +42,23 @@
                             Info
                         </h3>
                     </div>
+                    <!-- /.card-header -->
                     <!-- form start -->
                     <form role="form" id="form-main">
                         <div class="card-body">
+                            <div class="form-group text-right">
+                                <button class="btn btn-secondary">
+                                    <i class="fa fa-play"></i>
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-pause"></i>
+                                </button>
+                            </div>
+                            <hr />
+                            <div class="form-group">
+                                <label>Id</label>
+                                <input type="text" name="id" class="form-control" disabled value="@Model.Id">
+                            </div>
                             <div class="form-group">
                                 <label>Code</label>
                                 <input type="text" name="code" class="form-control" placeholder="Please enter code">
@@ -57,24 +71,24 @@
                                 <label>Total amount</label>
                                 <input type="number" step="1" name="total_amount" class="form-control" placeholder="Please enter amount">
                             </div>
-                            <div class="form-group w-50">
+                            <div class="form-group">
                                 <label>Production line</label>
-                                <select class="form-control select2" name="production_line_id">
-                                    <option value="">Not selected</option>
-                                </select>
+                                <p>
+                                    <a href="#" name="production_line"></a>
+                                </p>
                             </div>
-                            <div class="form-group w-50">
+                            <div class="form-group">
                                 <label>Product model</label>
-                                <select class="form-control select2" name="product_model_id">
-                                    <option value="">Not selected</option>
-                                </select>
+                                <p>
+                                    <a href="#" name="product_model"></a>
+                                </p>
                             </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-check mr-1"></i>
-                                Submit
+                                Update
                             </button>
                         </div>
                     </form>
@@ -89,39 +103,26 @@
 <!-- /.content -->
 
 @section scripts {
-
     <!-- jquery-validation -->
     <script src="/plugins/jquery-validation/jquery.validate.min.js"></script>
     <script src="/plugins/jquery-validation/additional-methods.min.js"></script>
     <!-- Select2 -->
     <script src="/plugins/select2/js/select2.full.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
+        let tempData = null;
+        $(document).ready(async function () {
             $('.select2').select2();
-            getProductionLines();
-            getProductModels();
+            getData();
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
                 rules: {
                     code: {
                         required: true,
                     },
-                    production_line_id: {
-                        required: true,
-                    },
-                    product_model_id: {
-                        required: true,
-                    },
                 },
                 messages: {
                     code: {
                         required: "Code required",
-                    },
-                    production_line_id: {
-                        required: "Must belong to a production line",
-                    },
-                    product_model_id: {
-                        required: "Must define product model",
                     },
                 },
                 errorElement: 'span',
@@ -138,6 +139,40 @@
             });
         });
 
+        function getData() {
+            changeLoading(true);
+            return $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_BATCH_API',
+                type: 'get',
+                data: {
+                    id: @Model.Id,
+                    fields: '@ProductionBatchQueryProjection.INFO,@ProductionBatchQueryProjection.P_LINE,@ProductionBatchQueryProjection.P_MODEL',
+                    single_only: true
+                },
+                success: (respData) => {
+                    console.log(respData);
+                    let data = respData.data.single;
+                    tempData = data;
+                    processData(data);
+                },
+                error: (resp) => {
+                    handleGeneralError(resp, '@Constants.Routing.PRODUCTION_BATCH');
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
+
+        function processData(data) {
+            const formMain = $('#form-main');
+            formMain.find('[name=code]').val(data.code);
+            formMain.find('[name=info]').val(data.info);
+            formMain.find('[name=total_amount]').val(data.total_amount);
+            formMain.find('[name=production_line]').html(data.production_line.code);
+            formMain.find('[name=product_model]').html(data.product_model.name);
+        }
+
         function confirmSubmit() {
             confirmAlert().then((result) => {
                 if (result.value)
@@ -147,21 +182,18 @@
 
         function submitData() {
             const model = {};
-            model.code = $('[name=code]').val();
-            model.info = $('[name=info]').val();
-            model.total_amount = $('[name=total_amount]').val();
-            model.production_line_id = $('[name=production_line_id]').val();
-            model.product_model_id = $('[name=product_model_id]').val();
+            const formMain = $('#form-main');
+            model.code = formMain.find('[name=code]').val();
+            model.info = formMain.find('[name=info]').val();
+            model.total_amount = formMain.find('[name=total_amount]').val();
             changeLoading(true);
             $.ajax({
-                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_BATCH_API',
-                type: 'post',
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_BATCH_API/@Model.Id',
+                type: 'patch',
                 contentType: 'application/json',
                 data: JSON.stringify(model),
                 success: (respData) => {
-                    successAlert("Created successfully").then(() => {
-                        location.href = '@Constants.Routing.PRODUCTION_BATCH';
-                    });
+                    successAlert("Updated successfully");
                 },
                 error: (resp) => {
                     handleGeneralError(resp);
@@ -172,60 +204,5 @@
             });
         }
 
-        function getProductionLines() {
-            changeLoading(true);
-            const data = {};
-            data.load_all = true;
-            data.fields = '@ProductionLineQueryProjection.SELECT';
-            $.ajax({
-                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_LINE_API',
-                type: 'get',
-                data: data,
-                success: (respData) => {
-                    console.log(respData);
-                    let data = respData.data.list;
-                    let select = $('#form-main [name=production_line_id]');
-                    for (var i = 0; i < data.length; i++) {
-                        select.append(
-                            $('<option value="' + data[i].id + '">').append(data[i].code)
-                        );
-                    }
-                },
-                error: (data) => {
-                    handleGeneralError(data);
-                },
-                complete: () => {
-                    changeLoading(false);
-                }
-            });
-        }
-
-        function getProductModels() {
-            changeLoading(true);
-            const data = {};
-            data.load_all = true;
-            data.fields = '@ProductModelQueryProjection.SELECT';
-            $.ajax({
-                url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCT_MODEL_API',
-                type: 'get',
-                data: data,
-                success: (respData) => {
-                    console.log(respData);
-                    let data = respData.data.list;
-                    let select = $('#form-main [name=product_model_id]');
-                    for (var i = 0; i < data.length; i++) {
-                        select.append(
-                            $('<option value="' + data[i].id + '">').append(data[i].code)
-                        );
-                    }
-                },
-                error: (data) => {
-                    handleGeneralError(data);
-                },
-                complete: () => {
-                    changeLoading(false);
-                }
-            });
-        }
     </script>
 }
