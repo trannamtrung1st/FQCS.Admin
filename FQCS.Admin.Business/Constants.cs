@@ -65,6 +65,7 @@ namespace FQCS.Admin.Business
             public const string PRODUCT_MODEL_API = "api/product-models";
             public const string QC_DEVICE_API = "api/qc-devices";
             public const string PRODUCTION_BATCH_API = "api/production-batches";
+            public const string QC_EVENT_API = "api/qc-events";
             public const string ERROR = "error";
         }
 

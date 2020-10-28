@@ -46,8 +46,8 @@ namespace FQCS.Admin.EventHandler
                         var model = JsonConvert.DeserializeObject<QCEventMessage>(mess.Value);
                         using (var scope = provider.CreateScope())
                         {
-                            var context = provider.GetRequiredService<DataContext>();
                             var sProvider = scope.ServiceProvider;
+                            var context = sProvider.GetRequiredService<DataContext>();
                             var qcEventService = sProvider.GetRequiredService<QCEventService>();
                             var fileService = sProvider.GetRequiredService<FileService>();
                             var validationResult = qcEventService.ValidateQCMessage(model);
