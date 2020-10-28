@@ -1,0 +1,144 @@
+﻿@{
+    var apiUrl = WebAdmin.Settings.Instance.ApiUrl;
+}
+
+<div id="section-batch-report" style="display:none" class="section-report">
+    <form id="form-batch-report">
+        <div class="form-group w-50">
+            <label>Production batch</label>
+            <select class="form-control select2" name="batch_id">
+                <option value="">Not selected</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-check mr-1"></i>
+                Download
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    initFuncs['section-batch-report'] = () => {
+        initFuncs['section-batch-report'] = null;
+        if (!productionBatchs)
+            getProductionBatchs();
+        $('#form-batch-report').validate({
+            submitHandler: confirmSubmitBatchReport,
+            rules: {
+                batch_id: {
+                    required: true,
+                },
+            },
+            messages: {
+                batch_id: {
+                    required: "Select 1 batch",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    };
+
+    function confirmSubmitBatchReport() {
+        confirmAlert().then((result) => {
+            if (result.value)
+                submitBatchReport();
+        });
+    }
+
+    function submitBatchReport() {
+        const data = {};
+        data.batch_id = $('#form-batch-report [name=batch_id]').val();
+        changeLoading(true);
+        $.ajax({
+            url: '@apiUrl/@Business.Constants.ApiEndpoint.REPORT_API/batch',
+            type: 'get',
+            data: data,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: (blob, status, xhr) => {
+                // check for a filename
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                    // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                    window.navigator.msSaveBlob(blob, filename);
+                } else {
+                    var URL = window.URL || window.webkitURL;
+                    var downloadUrl = URL.createObjectURL(blob);
+
+                    if (filename) {
+                        // use HTML5 a[download] attribute to specify filename
+                        var a = document.createElement("a");
+                        // safari doesn't support this yet
+                        if (typeof a.download === 'undefined') {
+                            window.location.href = downloadUrl;
+                        } else {
+                            a.href = downloadUrl;
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                        }
+                    } else {
+                        window.location.href = downloadUrl;
+                    }
+                    setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+                }
+            },
+            error: (resp) => {
+                handleGeneralError(resp);
+            },
+            complete: () => {
+                changeLoading(false);
+            }
+        });
+    }
+
+    function getProductionBatchs() {
+        changeLoading(true);
+        const data = {};
+        data.load_all = true;
+        data.fields = '@ProductionBatchQueryProjection.SELECT';
+        $.ajax({
+            url: '@apiUrl/@Business.Constants.ApiEndpoint.PRODUCTION_BATCH_API',
+            type: 'get',
+            data: data,
+            success: (respData) => {
+                console.log(respData);
+                let data = respData.data.list;
+                productionBatchs = data;
+                let select = $('#form-batch-report [name=batch_id]');
+                for (var i = 0; i < data.length; i++) {
+                    select.append(
+                        $('<option value="' + data[i].id + '">').append(data[i].code)
+                    );
+                }
+            },
+            error: (data) => {
+                handleGeneralError(data);
+            },
+            complete: () => {
+                changeLoading(false);
+            }
+        });
+    }
+
+</script>

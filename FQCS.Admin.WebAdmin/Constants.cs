@@ -35,6 +35,7 @@ namespace FQCS.Admin.WebAdmin
             public const string PRODUCTION_BATCH_DETAIL = "/productionbatch/{id}";
             public const string QC_EVENT = "/qcevent";
             public const string QC_EVENT_DETAIL = "/qcevent/{id}";
+            public const string REPORT = "/report";
             public const string ADMIN_ONLY = "/adminonly";
             public const string ACCESS_DENIED = "/accessdenied";
             public const string STATUS = "/status";
@@ -69,6 +70,7 @@ namespace FQCS.Admin.WebAdmin
             public const string QC_DEVICE = "qc_device";
             public const string QC_EVENT = "qc_event";
             public const string PRODUCTION_BATCH = "production_batch";
+            public const string REPORT = "report";
             public const string ADMIN_ONLY = "admin_only";
         }
     }
