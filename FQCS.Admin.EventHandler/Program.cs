@@ -43,8 +43,8 @@ namespace FQCS.Admin.EventHandler
             mess.Value = JsonConvert.SerializeObject(new QCEventMessage
             {
                 CreatedTime = DateTime.UtcNow,
-                DefectTypeId = DateTime.UtcNow.Second,
-                QCDeviceId = DateTime.UtcNow.Second
+                QCDefectCode = DateTime.UtcNow.Second.ToString(),
+                Identifier = "TestProducer"
             });
             producer.Produce(Constants.KafkaTopic.TOPIC_QC_EVENT, mess);
         }

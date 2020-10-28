@@ -22,6 +22,8 @@ namespace FQCS.Admin.Business.Models
         public string Name { get; set; }
         [JsonProperty("code")]
         public string Code { get; set; }
+        [JsonProperty("qc_mapping_code")]
+        public string QCMappingCode { get; set; }
         [JsonProperty("description")]
         public string Description { get; set; }
     }
@@ -40,6 +42,8 @@ namespace FQCS.Admin.Business.Models
         public string Name { get; set; }
         [JsonProperty("code")]
         public string Code { get; set; }
+        [JsonProperty("qc_mapping_code")]
+        public string QCMappingCode { get; set; }
         [JsonProperty("description")]
         public string Description { get; set; }
     }

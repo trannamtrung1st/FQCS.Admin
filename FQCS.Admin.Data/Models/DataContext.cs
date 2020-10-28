@@ -149,11 +149,14 @@ namespace FQCS.Admin.Data.Models
             });
             modelBuilder.Entity<DefectType>(entity =>
             {
-                entity.Property(e => e.Name)
-                    .HasMaxLength(255);
                 entity.Property(e => e.Code)
                     .IsUnicode(false)
                     .HasMaxLength(100);
+                entity.Property(e => e.QCMappingCode)
+                    .IsUnicode(false)
+                    .HasMaxLength(100);
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255);
                 entity.Property(e => e.Description)
                     .HasMaxLength(2000);
                 entity.Property(e => e.SampleImage)

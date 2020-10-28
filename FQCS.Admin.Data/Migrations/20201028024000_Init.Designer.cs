@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FQCS.Admin.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201027042610_AddInfoQCDevice")]
-    partial class AddInfoQCDevice
+    [Migration("20201028024000_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -174,6 +174,11 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
+                    b.Property<string>("QCMappingCode")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
                     b.Property<string>("SampleImage")
                         .HasColumnType("varchar(max)")
                         .IsUnicode(false);
@@ -225,11 +230,20 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Code")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FinishedTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Info")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
@@ -313,7 +327,7 @@ namespace FQCS.Admin.Data.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductionLineId")
+                    b.Property<int?>("ProductionLineId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -512,8 +526,7 @@ namespace FQCS.Admin.Data.Migrations
                         .WithMany("Devices")
                         .HasForeignKey("ProductionLineId")
                         .HasConstraintName("FK_ProductionLine_QCDevice")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.QCEvent", b =>

@@ -7,11 +7,12 @@ namespace FQCS.Admin.Business.Models
 {
     public class QCEventMessage
     {
-        [JsonProperty("defect_type_id")]
-        public int DefectTypeId { get; set; }
+        // this is code from QC device
+        [JsonProperty("qc_defect_code")]
+        public string QCDefectCode { get; set; }
         [JsonProperty("created_time")]
         public DateTime CreatedTime { get; set; }
-        [JsonProperty("qc_device_id")]
-        public int QCDeviceId { get; set; }
+        [JsonProperty("identifier")]
+        public string Identifier { get; set; }
     }
 }

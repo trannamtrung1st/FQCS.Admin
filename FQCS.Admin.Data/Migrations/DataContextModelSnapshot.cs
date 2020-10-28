@@ -172,6 +172,11 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
+                    b.Property<string>("QCMappingCode")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
                     b.Property<string>("SampleImage")
                         .HasColumnType("varchar(max)")
                         .IsUnicode(false);

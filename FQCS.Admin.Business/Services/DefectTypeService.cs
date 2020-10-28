@@ -45,6 +45,7 @@ namespace FQCS.Admin.Business.Services
                             obj["id"] = entity.Id;
                             obj["name"] = entity.Name;
                             obj["code"] = entity.Code;
+                            obj["qc_mapping_code"] = entity.QCMappingCode;
                             obj["description"] = entity.Description;
                             obj["sample_image"] = entity.SampleImage;
                         }

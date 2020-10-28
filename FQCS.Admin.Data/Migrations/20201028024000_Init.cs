@@ -55,6 +55,7 @@ namespace FQCS.Admin.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(unicode: false, maxLength: 100, nullable: true),
+                    QCMappingCode = table.Column<string>(unicode: false, maxLength: 100, nullable: true),
                     Name = table.Column<string>(maxLength: 255, nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     SampleImage = table.Column<string>(unicode: false, nullable: true)
@@ -88,6 +89,7 @@ namespace FQCS.Admin.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(unicode: false, maxLength: 100, nullable: true),
+                    Name = table.Column<string>(maxLength: 255, nullable: true),
                     Info = table.Column<string>(maxLength: 2000, nullable: true),
                     Image = table.Column<string>(unicode: false, nullable: true),
                     LastUpdated = table.Column<DateTime>(nullable: false),
@@ -247,7 +249,8 @@ namespace FQCS.Admin.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(unicode: false, maxLength: 100, nullable: true),
-                    ProductionLineId = table.Column<int>(nullable: false),
+                    Info = table.Column<string>(maxLength: 2000, nullable: true),
+                    ProductionLineId = table.Column<int>(nullable: true),
                     Archived = table.Column<bool>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     CreatedTime = table.Column<DateTime>(nullable: false)
@@ -269,6 +272,8 @@ namespace FQCS.Admin.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(unicode: false, maxLength: 100, nullable: true),
+                    Info = table.Column<string>(maxLength: 2000, nullable: true),
                     ProductionLineId = table.Column<int>(nullable: false),
                     ProductModelId = table.Column<int>(nullable: false),
                     TotalAmount = table.Column<int>(nullable: false),

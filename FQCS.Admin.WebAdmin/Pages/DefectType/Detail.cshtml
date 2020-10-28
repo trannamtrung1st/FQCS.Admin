@@ -59,6 +59,10 @@
                                 <input type="text" name="code" class="form-control" placeholder="Please enter code">
                             </div>
                             <div class="form-group">
+                                <label>QC mapping code</label>
+                                <input type="text" name="qc_mapping_code" class="form-control" placeholder="The equivalent defect code from QC device">
+                            </div>
+                            <div class="form-group">
                                 <label>Description</label>
                                 <textarea name="description" class="form-control" placeholder="Please enter description"></textarea>
                             </div>
@@ -198,6 +202,7 @@
             const formMain = $('#form-main');
             formMain.find('[name=name]').val(data.name);
             formMain.find('[name=code]').val(data.code);
+            formMain.find('[name=qc_mapping_code]').val(data.qc_mapping_code);
             formMain.find('[name=description]').val(data.description);
             const formImage = $('#form-image');
             if (data.sample_image)
@@ -218,6 +223,7 @@
             const model = {};
             model.name = $('[name=name]').val();
             model.code = $('[name=code]').val();
+            model.qc_mapping_code = $('[name=qc_mapping_code]').val();
             model.description = $('[name=description]').val();
             changeLoading(true);
             $.ajax({
