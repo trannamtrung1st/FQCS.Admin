@@ -35,6 +35,12 @@ namespace FQCS.Admin.Business.Queries
             return query.Where(o => o.ProductionBatchId == batchId);
         }
 
+        public static IQueryable<QCEvent> SortByTime(this IQueryable<QCEvent> query, bool asc)
+        {
+            return asc ? query.OrderBy(o => o.CreatedTime) :
+                query.OrderByDescending(o => o.CreatedTime);
+        }
+
         #region IQueryable<QCEvent>
         public static IQueryable<QCEvent> Sort(this IQueryable<QCEvent> query,
             QCEventQuerySort model)
@@ -47,8 +53,7 @@ namespace FQCS.Admin.Business.Queries
                 {
                     case QCEventQuerySort.TIME:
                         {
-                            query = asc ? query.OrderBy(o => o.CreatedTime) :
-                                query.OrderByDescending(o => o.CreatedTime);
+                            query = query.SortByTime(asc);
                         }
                         break;
                 }

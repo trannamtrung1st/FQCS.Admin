@@ -18,17 +18,65 @@ namespace FQCS.Admin.Business.Services
 {
     public class ReportService : Service
     {
+        [Inject]
+        protected readonly QCEventService qcEventService;
+        [Inject]
+        protected readonly ProductionBatchService proBatchService;
+
         public ReportService(ServiceInjection inj) : base(inj)
         {
         }
 
         public XLWorkbook GenerateBatchEventReport(BatchReportOptions options)
         {
+            var proBatch = proBatchService.ProductionBatchs.Id(options.batch_id)
+                .Select(o => new ProductionBatch
+                {
+                    Id = o.Id,
+                    Code = o.Code
+                }).FirstOrDefault();
             var workbook = new XLWorkbook();
-            var worksheet = workbook.Worksheets.Add("Batch report");
-            var header = worksheet.SetRowData(1, "No", "Id", "Time", "Defect code", "Defect name", "Batch code");
+            // sheet 1
+            var sheet1 = workbook.Worksheets.Add("Batch report");
+            var currentRow = 1;
+            var headerTitle = new[] { "No", "Id", "Time", "Defect code", "Defect name", "Batch code" };
+            var header = sheet1.SetRowData(currentRow++, headerTitle);
             header.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             header.Style.Font.SetBold();
+            var entities = qcEventService.QCEvents.OfBatch(options.batch_id)
+                .SortByTime(false)
+                .Select(o => new
+                {
+                    o.Id,
+                    o.CreatedTime,
+                    DefectTypeCode = o.DefectType.Code,
+                    DefectTypeName = o.DefectType.Name,
+                    BatchCode = o.Batch.Code
+                }).ToList();
+            var no = 1;
+            foreach (var o in entities)
+                sheet1.SetRowData(currentRow++, no++, o.Id, o.CreatedTime, o.DefectTypeCode, o.DefectTypeName, o.BatchCode);
+            for (var i = 1; i <= headerTitle.Length; i++)
+                sheet1.Column(i).AdjustToContents();
+
+            // sheet 2
+            var sheet2 = workbook.AddWorksheet("Defect report");
+            currentRow = 1;
+            headerTitle = new[] { "No", "Defect code", "Defect name", "Amount", "", "", "Batch code", proBatch.Code };
+            var row = sheet2.SetRowData(currentRow++, headerTitle);
+            row.Style.Font.SetBold();
+            row.Cell(headerTitle.Length).Style.Font.SetBold(false);
+            var groups = entities.GroupBy(o => new
+            {
+                o.DefectTypeCode,
+                o.DefectTypeName
+            }).ToList();
+            no = 1;
+            foreach (var g in groups)
+                sheet2.SetRowData(currentRow++, no++, g.Key.DefectTypeCode, g.Key.DefectTypeName, g.Count());
+            for (var i = 1; i <= headerTitle.Length; i++)
+                sheet2.Column(i).AdjustToContents();
+
             return workbook;
         }
 
