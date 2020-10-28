@@ -6,10 +6,10 @@ namespace FQCS.Admin.EventHandler
 {
     public class Settings
     {
-        public string KafkaServer;
-        public string KafkaUsername;
-        public string KafkaPassword;
-        public string GroupId;
-        public int RetryAfterSecs;
+        public string KafkaServer { get; set; }
+        public string KafkaUsername { get; set; }
+        public string KafkaPassword { get; set; }
+        public string GroupId { get; set; }
+        public int RetryAfterSecs { get; set; }
     }
 }

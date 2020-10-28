@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FQCS.Admin.EventHandler
+namespace FQCS.Admin.Kafka
 {
     public static class Constants
     {

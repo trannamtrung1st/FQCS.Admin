@@ -34,7 +34,7 @@ namespace FQCS.Admin.EventHandler
             var mess = result.Message;
             switch (result.Topic)
             {
-                case Constants.KafkaTopic.TOPIC_QC_EVENT:
+                case Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT:
                     {
                         var model = JsonConvert.DeserializeObject<QCEventMessage>(mess.Value);
                         Console.WriteLine(mess.Value);

@@ -1,4 +1,6 @@
 ﻿using Confluent.Kafka;
+using FQCS.Admin.Business.Models;
+using FQCS.Admin.Kafka;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ namespace FQCS.Admin.ConsoleClient
 {
     class Program
     {
+        static IProducer<Null, string> producer;
         static void Main(string[] args)
         {
             StartAdminConsole();
@@ -25,6 +28,7 @@ namespace FQCS.Admin.ConsoleClient
                 Console.WriteLine("3/ Reset Kafka data");
                 Console.WriteLine("4/ Stop Kafka");
                 Console.WriteLine("5/ Stop Zoo");
+                Console.WriteLine("6/ Produce test QC message");
                 Console.WriteLine("Other/ EXIT");
                 Console.Write("Your choice: ");
                 var choice = Console.ReadLine();
@@ -65,10 +69,33 @@ namespace FQCS.Admin.ConsoleClient
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
+                    case "6":
+                        {
+                            if (producer == null)
+                                producer = KafkaHelper.GetPlainProducer(adminConfig.KafkaServer,
+                                    adminConfig.KafkaUsername, adminConfig.KafkaPassword);
+                            SendTest();
+                        }
+                        break;
                     default:
                         return;
                 }
             }
+        }
+
+        static void SendTest()
+        {
+            var mess = new Message<Null, string>();
+            mess.Value = JsonConvert.SerializeObject(new QCEventMessage
+            {
+                CreatedTime = DateTime.UtcNow,
+                QCDefectCode = DateTime.UtcNow.Second.ToString(),
+                Identifier = "TestProducer"
+            });
+            producer.Produce(Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT, mess, rep =>
+            {
+                Console.WriteLine(rep.Status);
+            });
         }
     }
 
