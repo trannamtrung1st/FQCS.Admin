@@ -109,7 +109,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             <a href="@Constants.Routing.DASHBOARD" class="nav-link @ActiveMenu(Constants.Menu.DASHBOARD)">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -118,7 +118,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">General</li>
+                        <li class="nav-header">Information</li>
                         <li class="nav-item">
                             <a href="@Constants.Routing.PRODUCT_MODEL" class="nav-link @ActiveMenu(Constants.Menu.PRODUCT_MODEL)">
                                 <i class="nav-icon fas fa-shoe-prints"></i>
@@ -152,10 +152,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="@Constants.Routing.QC_EVENT" class="nav-link @ActiveMenu(Constants.Menu.QC_EVENT)">
-                                <i class="nav-icon fas fa-exclamation-circle"></i>
+                            <a href="@Constants.Routing.RESOURCE" class="nav-link @ActiveMenu(Constants.Menu.RESOURCE)">
+                                <i class="nav-icon fas fa-server"></i>
                                 <p>
-                                    QC event
+                                    Resource
                                 </p>
                             </a>
                         </li>
@@ -167,6 +167,15 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-header">Statistic</li>
+                        <li class="nav-item">
+                            <a href="@Constants.Routing.QC_EVENT" class="nav-link @ActiveMenu(Constants.Menu.QC_EVENT)">
+                                <i class="nav-icon fas fa-exclamation-circle"></i>
+                                <p>
+                                    QC event
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="@Constants.Routing.REPORT" class="nav-link @ActiveMenu(Constants.Menu.REPORT)">
                                 <i class="nav-icon fas fa-file-contract"></i>
@@ -175,14 +184,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="@Constants.Routing.RESOURCE" class="nav-link @ActiveMenu(Constants.Menu.RESOURCE)">
-                                <i class="nav-icon fas fa-server"></i>
-                                <p>
-                                    Resource
-                                </p>
-                            </a>
-                        </li>
+                        <li class="nav-header">Administration</li>
                         <li class="nav-item">
                             <a href="@Constants.Routing.ADMIN_ONLY" class="nav-link @ActiveMenu(Constants.Menu.ADMIN_ONLY)">
                                 <i class="nav-icon fas fa-user"></i>
