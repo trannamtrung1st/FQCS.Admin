@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using FQCS.Admin.Business.Models;
 using FQCS.Admin.Kafka;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ namespace FQCS.Admin.ConsoleClient
     {
         static IProducer<Null, string> producer;
         static Settings adminConfig;
+        static Random random = new Random();
         static void Main(string[] args)
         {
             StartAdminConsole();
@@ -89,15 +91,19 @@ namespace FQCS.Admin.ConsoleClient
         static void SendTest()
         {
             var mess = new Message<Null, string>();
-            var testImg = File.ReadAllBytes(adminConfig.TestImage);
-            var testImgB64 = Convert.ToBase64String(testImg);
+            var imgPath = adminConfig.TestImage.Replace("{no}", random.Next(156, 165).ToString());
+            var img = File.ReadAllBytes(imgPath);
+            var leftImgB64 = Convert.ToBase64String(img);
+            imgPath = adminConfig.TestImage.Replace("{no}", random.Next(156, 165).ToString());
+            img = File.ReadAllBytes(imgPath);
+            var rightImgB64 = Convert.ToBase64String(img);
             mess.Value = JsonConvert.SerializeObject(new QCEventMessage
             {
                 CreatedTime = DateTime.UtcNow,
-                QCDefectCode = "D1u",
+                QCDefectCode = $"DEFECT{random.Next(1, 5)}",
                 Identifier = "1",
-                LeftB64Image = testImgB64,
-                RightB64Image = testImgB64,
+                LeftB64Image = leftImgB64,
+                RightB64Image = rightImgB64,
             });
             producer.Produce(Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT, mess, rep =>
             {
