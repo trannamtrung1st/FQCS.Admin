@@ -11,6 +11,11 @@ namespace FQCS.Admin.Business
     public static class Constants
     {
 
+        public class ContentType
+        {
+            public const string SPREADSHEET = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        }
+
         public enum AppResultCode
         {
             [Display(Name = "Unknown error")]
@@ -66,6 +71,7 @@ namespace FQCS.Admin.Business
             public const string QC_DEVICE_API = "api/qc-devices";
             public const string PRODUCTION_BATCH_API = "api/production-batches";
             public const string QC_EVENT_API = "api/qc-events";
+            public const string REPORT_API = "api/reports";
             public const string ERROR = "error";
         }
 

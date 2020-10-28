@@ -97,6 +97,7 @@ namespace FQCS.Admin.Business.Models
     public class QCEventQueryFilter
     {
         public int? id { get; set; }
+        public int? batch_id { get; set; }
     }
 
     public class QCEventQueryPaging

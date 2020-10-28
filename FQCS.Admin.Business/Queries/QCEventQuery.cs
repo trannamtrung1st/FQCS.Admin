@@ -30,6 +30,11 @@ namespace FQCS.Admin.Business.Queries
             return query.Where(o => ids.Contains(o.Id));
         }
 
+        public static IQueryable<QCEvent> OfBatch(this IQueryable<QCEvent> query, int batchId)
+        {
+            return query.Where(o => o.ProductionBatchId == batchId);
+        }
+
         #region IQueryable<QCEvent>
         public static IQueryable<QCEvent> Sort(this IQueryable<QCEvent> query,
             QCEventQuerySort model)
@@ -56,6 +61,8 @@ namespace FQCS.Admin.Business.Queries
         {
             if (filter.id != null)
                 query = query.Where(o => o.Id == filter.id);
+            if (filter.batch_id != null)
+                query = query.Where(o => o.ProductionBatchId == filter.batch_id);
             return query;
         }
 

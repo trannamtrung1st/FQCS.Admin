@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TNT.Core.Helpers.DI;
 using FQCS.Admin.Business.Helpers;
 using System.IO;
+using ClosedXML.Excel;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -160,6 +161,44 @@ namespace FQCS.Admin.Business.Services
             var list = GetQCEventDynamic(entities, projection, options);
             var result = new QueryResult<IDictionary<string, object>>();
             result.List = list;
+            if (options.count_total) result.Count = totalCount;
+            return result;
+        }
+
+        public async Task<QueryResult<QCEvent>> QueryQCEvent(
+            QCEventQueryProjection projection,
+            QCEventQueryOptions options,
+            QCEventQueryFilter filter = null,
+            QCEventQuerySort sort = null,
+            QCEventQueryPaging paging = null)
+        {
+            var query = QCEvents;
+            #region General
+            if (filter != null) query = query.Filter(filter);
+            query = query.Project(projection);
+            int? totalCount = null;
+            if (options.count_total) totalCount = query.Count();
+            #endregion
+            if (!options.single_only)
+            {
+                #region List query
+                if (sort != null) query = query.Sort(sort);
+                if (paging != null && (!options.load_all || !QCEventQueryOptions.IsLoadAllAllowed))
+                    query = query.SelectPage(paging.page, paging.limit);
+                #endregion
+            }
+
+            if (options.single_only)
+            {
+                var single = query.SingleOrDefault();
+                if (single == null) return null;
+                return new QueryResult<QCEvent>()
+                {
+                    Single = single
+                };
+            }
+            var result = new QueryResult<QCEvent>();
+            result.List = query.ToList();
             if (options.count_total) result.Count = totalCount;
             return result;
         }
