@@ -14,6 +14,8 @@ namespace FQCS.Admin.Data.Models
         public DateTime CreatedTime { get; set; }
         public int ProductionBatchId { get; set; }
         public int QCDeviceId { get; set; }
+        public string LeftImage { get; set; }
+        public string RightImage { get; set; }
 
         public virtual ProductionBatch Batch { get; set; }
         public virtual QCDevice Device { get; set; }

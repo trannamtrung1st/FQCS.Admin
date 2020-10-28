@@ -11,6 +11,7 @@ namespace FQCS.Admin.ConsoleClient
     class Program
     {
         static IProducer<Null, string> producer;
+        static Settings adminConfig;
         static void Main(string[] args)
         {
             StartAdminConsole();
@@ -19,7 +20,7 @@ namespace FQCS.Admin.ConsoleClient
         static void StartAdminConsole()
         {
             var json = File.ReadAllText("appsettings.json");
-            var adminConfig = JsonConvert.DeserializeObject<Settings>(json);
+            adminConfig = JsonConvert.DeserializeObject<Settings>(json);
             while (true)
             {
                 Console.Clear();
@@ -88,11 +89,15 @@ namespace FQCS.Admin.ConsoleClient
         static void SendTest()
         {
             var mess = new Message<Null, string>();
+            var testImg = File.ReadAllBytes(adminConfig.TestImage);
+            var testImgB64 = Convert.ToBase64String(testImg);
             mess.Value = JsonConvert.SerializeObject(new QCEventMessage
             {
                 CreatedTime = DateTime.UtcNow,
                 QCDefectCode = "D1u",
-                Identifier = "1"
+                Identifier = "1",
+                LeftB64Image = testImgB64,
+                RightB64Image = testImgB64,
             });
             producer.Produce(Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT, mess, rep =>
             {

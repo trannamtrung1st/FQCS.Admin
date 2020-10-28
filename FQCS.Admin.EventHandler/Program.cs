@@ -35,6 +35,7 @@ namespace FQCS.Admin.EventHandler
             using var handler = new Handler(settings, provider);
             handler.SubscribeTopic(Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT);
             var task = handler.StartConsuming(cancelSource.Token,
+                settings.SaveFolderPath,
                 settings.RetryAfterSecs, settings.MaxTryCount);
             Console.WriteLine("Press C to exit");
             while (!cancelSource.IsCancellationRequested)

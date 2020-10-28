@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace FQCS.Admin.EventHandler
             consumer.Subscribe(topic);
         }
 
-        protected async Task HandleMessage(ConsumeResult<Null, string> result)
+        protected async Task HandleMessage(ConsumeResult<Null, string> result, string savePath)
         {
             var mess = result.Message;
             switch (result.Topic)
@@ -43,7 +44,6 @@ namespace FQCS.Admin.EventHandler
                 case Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT:
                     {
                         var model = JsonConvert.DeserializeObject<QCEventMessage>(mess.Value);
-                        Console.WriteLine(mess.Value);
                         using (var scope = provider.CreateScope())
                         {
                             var context = provider.GetRequiredService<DataContext>();
@@ -52,6 +52,7 @@ namespace FQCS.Admin.EventHandler
                             var defectTypeService = sProvider.GetRequiredService<DefectTypeService>();
                             var proBatchService = sProvider.GetRequiredService<ProductionBatchService>();
                             var qcDeviceService = sProvider.GetRequiredService<QCDeviceService>();
+                            var fileService = sProvider.GetRequiredService<FileService>();
                             var validationResult = qcEventService.ValidateQCMessage(model);
                             if (!validationResult.IsValid)
                             {
@@ -72,16 +73,34 @@ namespace FQCS.Admin.EventHandler
                                     Code = o.Code,
                                     Name = o.Name
                                 }).First();
-                            var proBatchId = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
-                                .RunningAtTime(model.CreatedTime).Select(o => o.Id).First();
+                            var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
+                                .RunningAtTime(model.CreatedTime).Select(o => new ProductionBatch
+                                {
+                                    Id = o.Id,
+                                    ProductModelId = o.ProductModelId
+                                }).First();
                             var entity = new QCEvent
                             {
                                 CreatedTime = model.CreatedTime,
                                 QCDeviceId = deviceId,
                                 DefectTypeId = defectType.Id,
-                                Description = $"Defect type at batch: {proBatchId}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}",
-                                ProductionBatchId = proBatchId
+                                Description = $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}",
+                                ProductionBatchId = proBatch.Id
                             };
+                            if (model.LeftB64Image != null && model.RightB64Image != null)
+                            {
+                                var leftImg = Convert.FromBase64String(model.LeftB64Image);
+                                var rightImg = Convert.FromBase64String(model.RightB64Image);
+                                var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
+                                var modelId = proBatch.ProductModelId;
+                                var folderPath = Path.Combine(savePath, $"{dateStr}/{modelId}");
+                                var (leftRelPath, leftFullPath) = fileService.GetFilePath(folderPath, ext: ".jpg");
+                                var (rightRelPath, rightFullPath) = fileService.GetFilePath(folderPath, ext: ".jpg");
+                                await fileService.SaveFile(leftImg, leftFullPath);
+                                await fileService.SaveFile(rightImg, rightFullPath);
+                                entity.LeftImage = leftFullPath;
+                                entity.RightImage = rightFullPath;
+                            }
                             entity = qcEventService.CreateQCEvent(entity);
                             context.SaveChanges();
                             Console.WriteLine(entity.Description);
@@ -91,7 +110,9 @@ namespace FQCS.Admin.EventHandler
             }
         }
 
-        public Task StartConsuming(CancellationToken cancellation, int retryAfterSecs = 10, int maxTryCount = 5)
+        public Task StartConsuming(CancellationToken cancellation,
+            string savePath,
+            int retryAfterSecs = 10, int maxTryCount = 5)
         {
             return Task.Run(async () =>
             {
@@ -106,7 +127,7 @@ namespace FQCS.Admin.EventHandler
                     {
                         var reqId = Guid.NewGuid().ToString();
                         Console.WriteLine($"{reqId} | Receive message at {DateTime.UtcNow}");
-                        await HandleMessage(result);
+                        await HandleMessage(result, savePath);
                         Console.WriteLine($"{reqId} | Finish handle message");
                         consumer.Commit(result);
                     }

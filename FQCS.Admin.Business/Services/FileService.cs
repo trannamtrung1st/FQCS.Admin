@@ -21,6 +21,14 @@ namespace FQCS.Admin.Business.Services
         {
         }
 
+        public async Task SaveFile(byte[] file, string fullPath)
+        {
+            var folderPath = Path.GetDirectoryName(fullPath);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+            await File.WriteAllBytesAsync(fullPath, file);
+        }
+
         public async Task SaveFile(IFormFile file, string fullPath)
         {
             var folderPath = Path.GetDirectoryName(fullPath);
@@ -33,7 +41,7 @@ namespace FQCS.Admin.Business.Services
             }
         }
 
-        public (string, string) GetFilePath(string folderPath, string rootPath,
+        public (string, string) GetFilePath(string folderPath, string rootPath = null,
             string fileName = null, string ext = null)
         {
             if (fileName == null)
@@ -44,7 +52,7 @@ namespace FQCS.Admin.Business.Services
             }
             var filePath = Path.Combine(folderPath, fileName);
             var absPath = Path.GetFullPath(filePath);
-            var relativePath = absPath.Replace(rootPath, "").Substring(1);
+            var relativePath = rootPath == null ? absPath : absPath.Replace(rootPath, "").Substring(1);
             return (relativePath, absPath);
         }
 

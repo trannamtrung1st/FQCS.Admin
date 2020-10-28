@@ -13,5 +13,6 @@ namespace FQCS.Admin.EventHandler
         public int RetryAfterSecs { get; set; }
         public int MaxTryCount { get; set; }
         public string ConnStr { get; set; }
+        public string SaveFolderPath { get; set; }
     }
 }
