@@ -11,6 +11,7 @@ namespace FQCS.Admin.EventHandler
         public string KafkaPassword { get; set; }
         public string GroupId { get; set; }
         public int RetryAfterSecs { get; set; }
+        public int MaxTryCount { get; set; }
         public string ConnStr { get; set; }
     }
 }

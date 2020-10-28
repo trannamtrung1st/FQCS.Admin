@@ -98,6 +98,9 @@ namespace FQCS.Admin.EventHandler
                 var tryCount = 0;
                 while (!cancellation.IsCancellationRequested)
                 {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
                     var result = consumer.Consume(cancellation);
                     try
                     {
@@ -111,12 +114,22 @@ namespace FQCS.Admin.EventHandler
                     {
                         if (++tryCount == maxTryCount)
                         {
-                            Console.WriteLine($"Fail to handle message: {e}");
+                            tryCount = 0;
+                            Console.WriteLine(e);
+                            Console.WriteLine("-------------------------------------");
+                            Console.WriteLine($"Fail to handle message");
+                            Console.WriteLine("-------------------------------------");
                             consumer.Commit(result);
                         }
-                        else consumer.Unassign();
-                        Console.WriteLine($"Error: {e}, waiting for retry");
-                        Thread.Sleep(retryAfterSecs * 1000);
+                        else
+                        {
+                            consumer.Unassign();
+                            Console.WriteLine(e);
+                            Console.WriteLine("-------------------------------------");
+                            Console.WriteLine("Waiting for retry");
+                            Console.WriteLine("-------------------------------------");
+                            Thread.Sleep(retryAfterSecs * 1000);
+                        }
                     }
                 }
             }, cancellation);
