@@ -26,8 +26,9 @@ namespace FQCS.Admin.Business.Services
         {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Batch report");
-            worksheet.Cell("A1").Value = $"Hello World! {options.batch_id}";
-            worksheet.Cell("A2").FormulaA1 = "=MID(A1, 7, 5)";
+            var header = worksheet.SetRowData(1, "No", "Id", "Time", "Defect code", "Defect name", "Batch code");
+            header.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            header.Style.Font.SetBold();
             return workbook;
         }
 
