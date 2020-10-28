@@ -57,6 +57,8 @@ namespace FQCS.Admin.ConsoleClient
                         break;
                     case "4":
                         {
+                            if (producer != null)
+                                producer.Dispose();
                             string strCmdText;
                             strCmdText = $"/C start {adminConfig.StopKafkaCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
@@ -89,8 +91,8 @@ namespace FQCS.Admin.ConsoleClient
             mess.Value = JsonConvert.SerializeObject(new QCEventMessage
             {
                 CreatedTime = DateTime.UtcNow,
-                QCDefectCode = DateTime.UtcNow.Second.ToString(),
-                Identifier = "TestProducer"
+                QCDefectCode = "D1u",
+                Identifier = "1"
             });
             producer.Produce(Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT, mess, rep =>
             {

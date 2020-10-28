@@ -10,6 +10,16 @@ namespace FQCS.Admin.Business.Queries
 {
     public static class ProductionBatchQuery
     {
+        public static IQueryable<ProductionBatch> InLine(this IQueryable<ProductionBatch> query, int lineId)
+        {
+            return query.Where(o => o.ProductionLineId == lineId);
+        }
+
+        public static IQueryable<ProductionBatch> RunningAtTime(this IQueryable<ProductionBatch> query, DateTime time)
+        {
+            return query.Where(o => o.StartedTime <= time && (o.FinishedTime == null || o.FinishedTime >= time));
+        }
+
         public static IQueryable<ProductionBatch> Id(this IQueryable<ProductionBatch> query, int id)
         {
             return query.Where(o => o.Id == id);

@@ -30,6 +30,11 @@ namespace FQCS.Admin.Business.Queries
             return query.Where(o => ids.Contains(o.Id));
         }
 
+        public static IQueryable<DefectType> QCMappingCode(this IQueryable<DefectType> query, string mapCode)
+        {
+            return query.Where(o => o.QCMappingCode == mapCode);
+        }
+
         #region IQueryable<DefectType>
         public static IQueryable<DefectType> Sort(this IQueryable<DefectType> query,
             DefectTypeQuerySort model)
