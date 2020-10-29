@@ -33,8 +33,9 @@ namespace FQCS.Admin.Business.Services
                 .Select(o => new ProductionBatch
                 {
                     Id = o.Id,
-                    Code = o.Code
-                }).FirstOrDefault();
+                    Code = o.Code,
+                    TotalAmount = o.TotalAmount
+                }).First();
             var workbook = new XLWorkbook();
             // sheet 1
             var sheet1 = workbook.Worksheets.Add("Batch report");
@@ -62,8 +63,13 @@ namespace FQCS.Admin.Business.Services
             // sheet 2
             var sheet2 = workbook.AddWorksheet("Defect report");
             currentRow = 1;
-            headerTitle = new[] { "No", "Defect code", "Defect name", "Amount", "", "", "Batch code", proBatch.Code };
+            headerTitle = new[] { "No", "Defect code", "Defect name", "Amount", "Average(%)",
+                "", "Batch code", proBatch.Code };
             var row = sheet2.SetRowData(currentRow++, headerTitle);
+            var totalCell = sheet2.Cell(2, 7);
+            totalCell.Value = "Total amount"; totalCell.Style.Font.SetBold();
+            sheet2.Cell(2, 8).Value = proBatch.TotalAmount;
+
             row.Style.Font.SetBold();
             row.Cell(headerTitle.Length).Style.Font.SetBold(false);
             var groups = entities.GroupBy(o => new
@@ -73,7 +79,11 @@ namespace FQCS.Admin.Business.Services
             }).ToList();
             no = 1;
             foreach (var g in groups)
-                sheet2.SetRowData(currentRow++, no++, g.Key.DefectTypeCode, g.Key.DefectTypeName, g.Count());
+            {
+                var count = g.Count();
+                var avg = Math.Round((double)count / proBatch.TotalAmount * 100, 2);
+                sheet2.SetRowData(currentRow++, no++, g.Key.DefectTypeCode, g.Key.DefectTypeName, count, avg);
+            }
             for (var i = 1; i <= headerTitle.Length; i++)
                 sheet2.Column(i).AdjustToContents();
 
