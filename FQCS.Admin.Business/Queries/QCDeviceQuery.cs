@@ -10,6 +10,11 @@ namespace FQCS.Admin.Business.Queries
 {
     public static class QCDeviceQuery
     {
+        public static IQueryable<QCDevice> Code(this IQueryable<QCDevice> query, string code)
+        {
+            return query.Where(o => o.Code == code);
+        }
+
         public static IQueryable<QCDevice> Id(this IQueryable<QCDevice> query, int id)
         {
             return query.Where(o => o.Id == id);

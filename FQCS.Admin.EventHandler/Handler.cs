@@ -76,8 +76,8 @@ namespace FQCS.Admin.EventHandler
             var proBatchService = sProvider.GetRequiredService<ProductionBatchService>();
             var qcDeviceService = sProvider.GetRequiredService<QCDeviceService>();
             var fileService = sProvider.GetRequiredService<FileService>();
-            var deviceId = int.Parse(model.Identifier);
-            var device = qcDeviceService.QCDevices.Id(deviceId).Select(o => new QCDevice
+            var deviceCode = model.Identifier;
+            var device = qcDeviceService.QCDevices.Code(deviceCode).Select(o => new QCDevice
             {
                 Id = o.Id,
                 Code = o.Code,
@@ -99,7 +99,7 @@ namespace FQCS.Admin.EventHandler
             var entity = new QCEvent
             {
                 CreatedTime = model.CreatedTime,
-                QCDeviceId = deviceId,
+                QCDeviceId = device.Id,
                 DefectTypeId = defectType.Id,
                 Description = $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}",
                 ProductionBatchId = proBatch.Id

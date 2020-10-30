@@ -101,7 +101,7 @@ namespace FQCS.Admin.ConsoleClient
             {
                 CreatedTime = DateTime.UtcNow,
                 QCDefectCode = $"DEFECT{random.Next(1, 5)}",
-                Identifier = "1",
+                Identifier = "DEVICE1",
                 LeftB64Image = leftImgB64,
                 RightB64Image = rightImgB64,
             });
