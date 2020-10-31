@@ -12,7 +12,7 @@ namespace FQCS.Admin.ConsoleClient
     class Program
     {
         static IProducer<Null, string> producer;
-        static Settings adminConfig;
+        static Settings settings;
         static Random random = new Random();
         static void Main(string[] args)
         {
@@ -22,7 +22,7 @@ namespace FQCS.Admin.ConsoleClient
         static void StartAdminConsole()
         {
             var json = File.ReadAllText("appsettings.json");
-            adminConfig = JsonConvert.DeserializeObject<Settings>(json);
+            settings = JsonConvert.DeserializeObject<Settings>(json);
             while (true)
             {
                 Console.Clear();
@@ -40,21 +40,21 @@ namespace FQCS.Admin.ConsoleClient
                     case "1":
                         {
                             string strCmdText;
-                            strCmdText = $"/C start {adminConfig.StartZooCmd}";
+                            strCmdText = $"/C start {settings.StartZooCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
                     case "2":
                         {
                             string strCmdText;
-                            strCmdText = $"/C start {adminConfig.StartKafkaCmd}";
+                            strCmdText = $"/C start {settings.StartKafkaCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
                     case "3":
                         {
                             string strCmdText;
-                            strCmdText = $"/C start {adminConfig.ResetKafkaCmd}";
+                            strCmdText = $"/C start {settings.ResetKafkaCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
@@ -63,23 +63,23 @@ namespace FQCS.Admin.ConsoleClient
                             if (producer != null)
                                 producer.Dispose();
                             string strCmdText;
-                            strCmdText = $"/C start {adminConfig.StopKafkaCmd}";
+                            strCmdText = $"/C start {settings.StopKafkaCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
                     case "5":
                         {
                             string strCmdText;
-                            strCmdText = $"/C start {adminConfig.StopZooCmd}";
+                            strCmdText = $"/C start {settings.StopZooCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
                     case "6":
                         {
                             if (producer == null)
-                                producer = KafkaHelper.GetPlainProducer(adminConfig.KafkaServer,
-                                    adminConfig.KafkaUsername, adminConfig.KafkaPassword);
-                            SendTest();
+                                producer = KafkaHelper.GetPlainProducer(settings.KafkaServer,
+                                    settings.KafkaUsername, settings.KafkaPassword);
+                            SendTest(settings);
                         }
                         break;
                     default:
@@ -88,20 +88,20 @@ namespace FQCS.Admin.ConsoleClient
             }
         }
 
-        static void SendTest()
+        static void SendTest(Settings settings)
         {
             var mess = new Message<Null, string>();
-            var imgPath = adminConfig.TestImage.Replace("{no}", random.Next(156, 165).ToString());
+            var imgPath = Program.settings.TestImage.Replace("{no}", random.Next(156, 165).ToString());
             var img = File.ReadAllBytes(imgPath);
             var leftImgB64 = Convert.ToBase64String(img);
-            imgPath = adminConfig.TestImage.Replace("{no}", random.Next(156, 165).ToString());
+            imgPath = Program.settings.TestImage.Replace("{no}", random.Next(156, 165).ToString());
             img = File.ReadAllBytes(imgPath);
             var rightImgB64 = Convert.ToBase64String(img);
             mess.Value = JsonConvert.SerializeObject(new QCEventMessage
             {
                 CreatedTime = DateTime.UtcNow,
-                QCDefectCode = $"DEFECT{random.Next(1, 5)}",
-                Identifier = "DEVICE1",
+                QCDefectCode = settings.TestDefectCode,
+                Identifier = settings.TestDeviceId,
                 LeftB64Image = leftImgB64,
                 RightB64Image = rightImgB64,
             });
