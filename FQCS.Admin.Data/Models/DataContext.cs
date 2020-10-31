@@ -53,6 +53,15 @@ namespace FQCS.Admin.Data.Models
                 entity.Property(e => e.Id)
                     .IsUnicode(false)
                     .HasMaxLength(100);
+
+                // init data
+                entity.HasData(new AppRole
+                {
+                    ConcurrencyStamp = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
+                    Name = Constants.RoleName.ADMIN,
+                    NormalizedName = Constants.RoleName.ADMIN.ToUpper()
+                });
             });
             modelBuilder.Entity<Resource>(entity =>
             {
