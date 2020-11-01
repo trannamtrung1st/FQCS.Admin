@@ -81,8 +81,8 @@ namespace FQCS.Admin.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8e83d1f3-c7e5-42b0-adfa-171181a058cc",
-                            ConcurrencyStamp = "838be8bd-d939-476b-9215-09d74da353f8",
+                            Id = "7f5bb645-b211-45fd-8068-1a048947e97d",
+                            ConcurrencyStamp = "8f3ed609-1863-45c3-bad8-527ff511c552",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -346,10 +346,10 @@ namespace FQCS.Admin.Data.Migrations
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.QCEvent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)")
+                        .HasMaxLength(255)
+                        .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");

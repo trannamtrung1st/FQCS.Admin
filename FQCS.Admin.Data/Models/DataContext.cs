@@ -138,6 +138,9 @@ namespace FQCS.Admin.Data.Models
             });
             modelBuilder.Entity<QCEvent>(entity =>
             {
+                entity.Property(e => e.Id)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
                 entity.Property(e => e.Description)
                     .HasMaxLength(2000);
                 entity.Property(e => e.LeftImage)

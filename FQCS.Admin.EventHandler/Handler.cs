@@ -53,7 +53,8 @@ namespace FQCS.Admin.EventHandler
                             var validationResult = qcEventService.ValidateQCMessage(model);
                             if (!validationResult.IsValid)
                             {
-                                Console.WriteLine("Invalid QC message");
+                                Console.WriteLine(string.Join('\n', 
+                                    validationResult.Results.Select(o => o.Message)));
                                 return;
                             }
                             var (entity, leftImg, rightImg, leftFullPath, rightFullPath) =

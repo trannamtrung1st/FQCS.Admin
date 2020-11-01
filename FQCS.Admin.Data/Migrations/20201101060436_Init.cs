@@ -304,14 +304,15 @@ namespace FQCS.Admin.Data.Migrations
                 name: "QCEvent",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(unicode: false, maxLength: 255, nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     DefectTypeId = table.Column<int>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     CreatedTime = table.Column<DateTime>(nullable: false),
                     ProductionBatchId = table.Column<int>(nullable: false),
-                    QCDeviceId = table.Column<int>(nullable: false)
+                    QCDeviceId = table.Column<int>(nullable: false),
+                    LeftImage = table.Column<string>(unicode: false, maxLength: 2000, nullable: true),
+                    RightImage = table.Column<string>(unicode: false, maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -335,6 +336,11 @@ namespace FQCS.Admin.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "7f5bb645-b211-45fd-8068-1a048947e97d", "8f3ed609-1863-45c3-bad8-527ff511c552", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppEvent_UserId",

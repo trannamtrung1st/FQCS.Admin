@@ -11,6 +11,7 @@ using TNT.Core.Helpers.DI;
 using FQCS.Admin.Business.Helpers;
 using System.IO;
 using ClosedXML.Excel;
+using static FQCS.Admin.Business.Constants;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -227,7 +228,11 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateQCMessage(
             QCEventMessage model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            var existed = QCEvents.Exists(model.Id);
+            if (existed)
+                validationData.Fail(mess: "Existed ID", AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateGetQCEvents(

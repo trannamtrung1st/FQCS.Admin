@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FQCS.Admin.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201028024000_Init")]
+    [Migration("20201101060436_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,15 @@ namespace FQCS.Admin.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "7f5bb645-b211-45fd-8068-1a048947e97d",
+                            ConcurrencyStamp = "8f3ed609-1863-45c3-bad8-527ff511c552",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        });
                 });
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.AppUser", b =>
@@ -339,10 +348,10 @@ namespace FQCS.Admin.Data.Migrations
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.QCEvent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)")
+                        .HasMaxLength(255)
+                        .IsUnicode(false);
 
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
@@ -357,11 +366,21 @@ namespace FQCS.Admin.Data.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("LeftImage")
+                        .HasColumnType("varchar(2000)")
+                        .HasMaxLength(2000)
+                        .IsUnicode(false);
+
                     b.Property<int>("ProductionBatchId")
                         .HasColumnType("int");
 
                     b.Property<int>("QCDeviceId")
                         .HasColumnType("int");
+
+                    b.Property<string>("RightImage")
+                        .HasColumnType("varchar(2000)")
+                        .HasMaxLength(2000)
+                        .IsUnicode(false);
 
                     b.HasKey("Id");
 

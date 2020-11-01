@@ -7,7 +7,7 @@ namespace FQCS.Admin.Data.Models
 {
     public class QCEvent
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Description { get; set; }
         public int DefectTypeId { get; set; }
         public DateTime LastUpdated { get; set; }
