@@ -53,7 +53,7 @@ namespace FQCS.Admin.EventHandler
                             var validationResult = qcEventService.ValidateQCMessage(model);
                             if (!validationResult.IsValid)
                             {
-                                Console.WriteLine(string.Join('\n', 
+                                Console.WriteLine(string.Join('\n',
                                     validationResult.Results.Select(o => o.Message)));
                                 return;
                             }
@@ -99,6 +99,7 @@ namespace FQCS.Admin.EventHandler
                 }).First();
             var entity = new QCEvent
             {
+                Id = model.Id,
                 CreatedTime = model.CreatedTime,
                 QCDeviceId = device.Id,
                 DefectTypeId = defectType.Id,
