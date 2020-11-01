@@ -59,8 +59,10 @@ namespace FQCS.Admin.EventHandler
                             }
                             var (entity, leftImg, rightImg, leftFullPath, rightFullPath) =
                                 ProcessQCMessage(sProvider, model, savePath);
-                            await fileService.SaveFile(leftImg, leftFullPath);
-                            await fileService.SaveFile(rightImg, rightFullPath);
+                            if (leftImg != null)
+                                await fileService.SaveFile(leftImg, leftFullPath);
+                            if (rightImg != null)
+                                await fileService.SaveFile(rightImg, rightFullPath);
                             entity = qcEventService.CreateQCEvent(entity);
                             context.SaveChanges();
                             Console.WriteLine(entity.Description);
