@@ -94,15 +94,21 @@ namespace FQCS.Admin.Business.Services
                             var entity = row;
                             if (entity.LeftImage != null)
                             {
-                                var img = File.ReadAllBytes(entity.LeftImage);
-                                var img64 = Convert.ToBase64String(img);
-                                obj["left_image"] = img64;
+                                if (File.Exists(entity.LeftImage))
+                                {
+                                    var img = File.ReadAllBytes(entity.LeftImage);
+                                    var img64 = Convert.ToBase64String(img);
+                                    obj["left_image"] = img64;
+                                }
                             }
                             if (entity.RightImage != null)
                             {
-                                var img = File.ReadAllBytes(entity.RightImage);
-                                var img64 = Convert.ToBase64String(img);
-                                obj["right_image"] = img64;
+                                if (File.Exists(entity.RightImage))
+                                {
+                                    var img = File.ReadAllBytes(entity.RightImage);
+                                    var img64 = Convert.ToBase64String(img);
+                                    obj["right_image"] = img64;
+                                }
                             }
                         }
                         break;
