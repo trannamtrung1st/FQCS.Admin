@@ -42,7 +42,7 @@ namespace FQCS.Admin.Business.Helpers
             }
             var dt = value as DateTime?;
             var df = this.DateFormat.First();
-            writer.WriteRawValue(dt?.ToString(df));
+            writer.WriteValue(dt?.ToString(df));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
