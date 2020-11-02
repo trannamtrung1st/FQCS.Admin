@@ -62,6 +62,14 @@ namespace FQCS.Admin.Business.Services
                             };
                         }
                         break;
+                    case AppConfigQueryProjection.SELECT:
+                        {
+                            var entity = row;
+                            obj["id"] = entity.Id;
+                            obj["name"] = entity.Name;
+                            obj["is_default"] = entity.IsDefault;
+                        }
+                        break;
                 }
             }
             return obj;

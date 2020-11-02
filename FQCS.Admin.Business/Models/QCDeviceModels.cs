@@ -23,6 +23,8 @@ namespace FQCS.Admin.Business.Models
         public string Info { get; set; }
         [JsonProperty("production_line_id")]
         public int? ProductionLineId { get; set; }
+        [JsonProperty("app_config_id")]
+        public string AppConfigId { get; set; }
     }
 
     public class UpdateQCDeviceModel : MappingModel<QCDevice>
@@ -41,6 +43,8 @@ namespace FQCS.Admin.Business.Models
         public string Info { get; set; }
         [JsonProperty("production_line_id")]
         public int? ProductionLineId { get; set; }
+        [JsonProperty("app_config_id")]
+        public string AppConfigId { get; set; }
 
     }
 
@@ -81,6 +85,7 @@ namespace FQCS.Admin.Business.Models
 
         public const string INFO = "info";
         public const string P_LINE = "pline";
+        public const string CFG = "cfg";
         public const string SELECT = "select";
 
         public static readonly IDictionary<string, string[]> MAPS = new Dictionary<string, string[]>

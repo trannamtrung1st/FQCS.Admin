@@ -72,6 +72,12 @@
                                     <option value="">Not selected</option>
                                 </select>
                             </div>
+                            <div class="form-group w-50">
+                                <label>Config</label>
+                                <select class="form-control select2" name="app_config_id">
+                                    <option value="">Not selected</option>
+                                </select>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
@@ -103,6 +109,7 @@
             $('.select2').select2();
             await getData();
             getProductionLines();
+            getAppConfigs();
             $('#form-main input[name=active]').change(confirmSubmitChangeStatus);
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
@@ -175,6 +182,7 @@
             model.code = formMain.find('[name=code]').val();
             model.info = formMain.find('[name=info]').val();
             model.production_line_id = formMain.find('[name=production_line_id]').val();
+            model.app_config_id = formMain.find('[name=app_config_id]').val();
             changeLoading(true);
             $.ajax({
                 url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API/@Model.Id',
@@ -241,6 +249,39 @@
                         );
                     }
                     select.val(tempData.production_line_id).change();
+                },
+                error: (data) => {
+                    handleGeneralError(data);
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
+
+        function getAppConfigs() {
+            changeLoading(true);
+            const data = {};
+            data.load_all = true;
+            data.fields = '@AppConfigQueryProjection.SELECT';
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.APP_CONFIG_API',
+                type: 'get',
+                data: data,
+                success: (respData) => {
+                    console.log(respData);
+                    let data = respData.data.list;
+                    let select = $('#form-main [name=app_config_id]');
+                    let default_id = null;
+                    for (var i = 0; i < data.length; i++) {
+                        select.append(
+                            $('<option value="' + data[i].id + '">').append(data[i].id + ' - ' + data[i].name)
+                        );
+                        if (data[i].is_default)
+                            default_id = data[i].id;
+                    }
+                    //select.val(default_id).change();
+                    select.val(tempData.app_config_id).change();
                 },
                 error: (data) => {
                     handleGeneralError(data);

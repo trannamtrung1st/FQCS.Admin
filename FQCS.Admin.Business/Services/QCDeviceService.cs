@@ -43,6 +43,7 @@ namespace FQCS.Admin.Business.Services
                             obj["code"] = entity.Code;
                             obj["info"] = entity.Info;
                             obj["production_line_id"] = entity.ProductionLineId;
+                            obj["app_config_id"] = entity.AppConfigId;
                             var time = entity.CreatedTime
                                 .ToDefaultTimeZone();
                             var timeStr = time.ToString(options.date_format);
@@ -71,6 +72,18 @@ namespace FQCS.Admin.Business.Services
                                     id = entity.Id,
                                     code = entity.Code,
                                     disabled = entity.Disabled
+                                };
+                        }
+                        break;
+                    case QCDeviceQueryProjection.CFG:
+                        {
+                            var entity = row.Config;
+                            if (entity != null)
+                                obj["app_config"] = new
+                                {
+                                    id = entity.Id,
+                                    name = entity.Name,
+                                    client_id = entity.ClientId,
                                 };
                         }
                         break;
