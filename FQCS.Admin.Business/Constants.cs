@@ -11,7 +11,16 @@ namespace FQCS.Admin.Business
     public static class Constants
     {
 
-        public class ContentType
+        public static class QCEventOps
+        {
+            public const string GET_EVENTS = "get_events";
+            public const string DOWNLOAD_IMAGES = "download_images";
+            public const string UPDATE_STATUS = "update_status";
+            public const string TRIGGER_SEND = "trigger_send";
+            public const string CLEAR_ALL = "clear_all";
+        }
+
+        public static class ContentType
         {
             public const string SPREADSHEET = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         }

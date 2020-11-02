@@ -51,6 +51,11 @@
                             <label>Operation</label>
                             <select class="form-control select2" name="operation">
                                 <option value="">Not selected</option>
+                                <option value="@Business.Constants.QCEventOps.GET_EVENTS">Manual get new QC events</option>
+                                <option value="@Business.Constants.QCEventOps.DOWNLOAD_IMAGES">Download images folder</option>
+                                <option value="@Business.Constants.QCEventOps.UPDATE_STATUS">Update sent status of events</option>
+                                <option value="@Business.Constants.QCEventOps.TRIGGER_SEND">Trigger sending new QC events</option>
+                                <option value="@Business.Constants.QCEventOps.CLEAR_ALL">Clear all events</option>
                             </select>
                         </div>
                         <div class="form-group w-50">
