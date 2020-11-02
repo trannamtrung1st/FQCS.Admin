@@ -10,6 +10,10 @@ namespace FQCS.Admin.Business
 {
     public static class Constants
     {
+        public static class DeviceConstants
+        {
+            public const string AppClientScheme = "AppClient";
+        }
 
         public static class QCEventOps
         {
@@ -88,6 +92,7 @@ namespace FQCS.Admin.Business
         public static class AppDateTimeFormat
         {
             public const string DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
+            public const string APP_CLIENT_AUTH_FORMAT = "ddMMyyyyHHmmss";
         }
 
         public static class AppTimeZone

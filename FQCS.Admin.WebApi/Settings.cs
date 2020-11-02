@@ -9,6 +9,7 @@ namespace FQCS.Admin.WebApi
     {
         public string WebRootPath { get; set; }
         public string UploadFolderPath { get; set; }
+        public string QCEventImageFolderPath { get; set; }
         public double TokenValidHours { get; set; }
         public double RefreshTokenValidHours { get; set; }
 

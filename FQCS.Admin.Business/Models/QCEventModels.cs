@@ -7,6 +7,24 @@ using System.Text;
 
 namespace FQCS.Admin.Business.Models
 {
+    public class QCEventDeviceModel
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("defect_type_code")]
+        public string DefectTypeCode { get; set; }
+        [JsonProperty("noti_sent")]
+        public bool NotiSent { get; set; }
+        [JsonProperty("left_image")]
+        public string LeftImage { get; set; }
+        [JsonProperty("right_image")]
+        public string RightImage { get; set; }
+        [JsonProperty("created_time")]
+        public ApiDateTime CreatedTime { get; set; }
+        [JsonProperty("last_updated")]
+        public ApiDateTime LastUpdated { get; set; }
+    }
+
     public class QCEventMessage
     {
         // this is code from QC device

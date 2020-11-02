@@ -32,7 +32,7 @@ namespace FQCS.Admin.Business.Services
 
         public IDictionary<string, object> GetQCEventDynamic(
             QCEvent row, QCEventQueryProjection projection,
-            QCEventQueryOptions options)
+            QCEventQueryOptions options, string qcFolderPath)
         {
             var obj = new Dictionary<string, object>();
             foreach (var f in projection.GetFieldsArr())
@@ -95,18 +95,20 @@ namespace FQCS.Admin.Business.Services
                             var entity = row;
                             if (entity.LeftImage != null)
                             {
-                                if (File.Exists(entity.LeftImage))
+                                var finalPath = Path.Combine(qcFolderPath, entity.LeftImage);
+                                if (File.Exists(finalPath))
                                 {
-                                    var img = File.ReadAllBytes(entity.LeftImage);
+                                    var img = File.ReadAllBytes(finalPath);
                                     var img64 = Convert.ToBase64String(img);
                                     obj["left_image"] = img64;
                                 }
                             }
                             if (entity.RightImage != null)
                             {
-                                if (File.Exists(entity.RightImage))
+                                var finalPath = Path.Combine(qcFolderPath, entity.RightImage);
+                                if (File.Exists(finalPath))
                                 {
-                                    var img = File.ReadAllBytes(entity.RightImage);
+                                    var img = File.ReadAllBytes(finalPath);
                                     var img64 = Convert.ToBase64String(img);
                                     obj["right_image"] = img64;
                                 }
@@ -120,12 +122,12 @@ namespace FQCS.Admin.Business.Services
 
         public List<IDictionary<string, object>> GetQCEventDynamic(
             IEnumerable<QCEvent> rows, QCEventQueryProjection projection,
-            QCEventQueryOptions options)
+            QCEventQueryOptions options, string qcFolderPath)
         {
             var list = new List<IDictionary<string, object>>();
             foreach (var o in rows)
             {
-                var obj = GetQCEventDynamic(o, projection, options);
+                var obj = GetQCEventDynamic(o, projection, options, qcFolderPath);
                 list.Add(obj);
             }
             return list;
@@ -133,7 +135,7 @@ namespace FQCS.Admin.Business.Services
 
         public async Task<QueryResult<IDictionary<string, object>>> QueryQCEventDynamic(
             QCEventQueryProjection projection,
-            QCEventQueryOptions options,
+            QCEventQueryOptions options, string qcFolderPath,
             QCEventQueryFilter filter = null,
             QCEventQuerySort sort = null,
             QCEventQueryPaging paging = null)
@@ -158,14 +160,14 @@ namespace FQCS.Admin.Business.Services
             {
                 var single = query.SingleOrDefault();
                 if (single == null) return null;
-                var singleResult = GetQCEventDynamic(single, projection, options);
+                var singleResult = GetQCEventDynamic(single, projection, options, qcFolderPath);
                 return new QueryResult<IDictionary<string, object>>()
                 {
                     Single = singleResult
                 };
             }
             var entities = query.ToList();
-            var list = GetQCEventDynamic(entities, projection, options);
+            var list = GetQCEventDynamic(entities, projection, options, qcFolderPath);
             var result = new QueryResult<IDictionary<string, object>>();
             result.List = list;
             if (options.count_total) result.Count = totalCount;

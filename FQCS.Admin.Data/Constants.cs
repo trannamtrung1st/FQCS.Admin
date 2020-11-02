@@ -56,6 +56,7 @@ namespace FQCS.Admin.Data
             UpdateAppConfig = 22,
             DeleteAppConfig = 23,
             ChangeDefaultAppConfig = 24,
+            SendCommandToDeviceAPI = 25,
             CreateResource = 1000,
             UpdateResource = 1001,
             DeleteResource = 1002,

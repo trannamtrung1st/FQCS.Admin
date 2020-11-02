@@ -9,11 +9,17 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using TNT.Core.Helpers.DI;
 using FQCS.Admin.Business.Helpers;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using TNT.Core.Http;
 
 namespace FQCS.Admin.Business.Services
 {
     public class QCDeviceService : Service
     {
+        [Inject]
+        protected readonly IdentityService identityService;
+
         public QCDeviceService(ServiceInjection inj) : base(inj)
         {
         }
@@ -201,6 +207,12 @@ namespace FQCS.Admin.Business.Services
             return new ValidationData();
         }
 
+        public ValidationData ValidateSendCommandToDeviceAPI(ClaimsPrincipal principal,
+            SendCommandToDeviceAPIModel model)
+        {
+            return new ValidationData();
+        }
+
         public ValidationData ValidateCreateQCDevice(ClaimsPrincipal principal,
             CreateQCDeviceModel model)
         {
@@ -223,6 +235,28 @@ namespace FQCS.Admin.Business.Services
             QCDevice entity)
         {
             return new ValidationData();
+        }
+        #endregion
+
+        #region Send command
+        public async Task<int> SendCommandGetEvents(SendCommandToDeviceAPIModel model,
+            QCDevice entity, AppConfig deviceConfig)
+        {
+            var queryStr = new Dictionary<string, object>()
+            {
+                { "load_all", true },
+                { "sent", false }
+            }.ToQueryString();
+            var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events?{queryStr}";
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(url, UriKind.Absolute));
+            var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);
+            request.Headers.Authorization = new AuthenticationHeaderValue(
+                Constants.DeviceConstants.AppClientScheme, authHeader);
+            var resp = await Global.HttpDevice.SendAsync(request);
+            if (!resp.IsSuccessStatusCode)
+                throw new Exception("Error sending command");
+            var respObj = resp.Content.ReadAsAsync<List<QCEventDeviceModel>>();
+            return 0;
         }
         #endregion
 

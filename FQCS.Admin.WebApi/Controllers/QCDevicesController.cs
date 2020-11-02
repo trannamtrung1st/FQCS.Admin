@@ -125,5 +125,36 @@ namespace FQCS.Admin.WebApi.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("cmd")]
+        public async Task<IActionResult> SendCommandToDeviceAPI(SendCommandToDeviceAPIModel model)
+        {
+            var entity = _service.QCDevices.Id(model.DeviceId).FirstOrDefault();
+            if (entity == null)
+                return NotFound(AppResult.NotFound());
+            var validationData = _service.ValidateSendCommandToDeviceAPI(User, model);
+            if (!validationData.IsValid)
+                return BadRequest(AppResult.FailValidation(data: validationData));
+            switch (model.Command)
+            {
+                case Business.Constants.QCEventOps.GET_EVENTS:
+                    await _service.SendCommandGetEvents(model, entity, entity.Config);
+                    break;
+                case Business.Constants.QCEventOps.DOWNLOAD_IMAGES:
+                    break;
+                case Business.Constants.QCEventOps.CLEAR_ALL:
+                    break;
+                case Business.Constants.QCEventOps.TRIGGER_SEND:
+                    break;
+                case Business.Constants.QCEventOps.UPDATE_STATUS:
+                    break;
+            }
+            // must be in transaction
+            var ev = _ev_service.SendCommandToDeviceAPI(model, entity, User);
+            context.SaveChanges();
+            return Ok(AppResult.Success());
+        }
+
+
     }
 }

@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 
 namespace FQCS.Admin.Business.Models
 {
+    public class SendCommandToDeviceAPIModel
+    {
+        [JsonProperty("command")]
+        public string Command { get; set; }
+        [JsonProperty("device_id")]
+        public int DeviceId { get; set; }
+        [JsonProperty("settings")]
+        public Dictionary<string, object> Settings { get; set; }
+    }
+
     public class CreateQCDeviceModel : MappingModel<QCDevice>
     {
         public CreateQCDeviceModel()

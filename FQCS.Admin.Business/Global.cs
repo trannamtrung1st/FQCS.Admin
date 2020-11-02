@@ -9,11 +9,13 @@ using FQCS.Admin.Business.Models;
 using FQCS.Admin.Business.Services;
 using FQCS.Admin.Data.Models;
 using TNT.Core.Helpers.DI;
+using System.Net.Http;
 
 namespace FQCS.Admin.Business
 {
     public class Global
     {
+        public static HttpClient HttpDevice { get; private set; }
         public static Random Random { get; private set; }
         public static IMapper Mapper { get; private set; }
 
@@ -56,6 +58,7 @@ namespace FQCS.Admin.Business
         public static void Init(IServiceCollection services)
         {
             Random = new Random();
+            HttpDevice = new HttpClient();
             InitAutoMapper();
             InitDI(services);
         }

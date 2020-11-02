@@ -48,8 +48,8 @@
                 <div class="card-body">
                     <form id="form-operation">
                         <div class="form-group w-50">
-                            <label>Operation</label>
-                            <select class="form-control select2" name="operation">
+                            <label>Command</label>
+                            <select class="form-control select2" name="command">
                                 <option value="">Not selected</option>
                                 <option value="@Business.Constants.QCEventOps.GET_EVENTS">Manual get new QC events</option>
                                 <option value="@Business.Constants.QCEventOps.DOWNLOAD_IMAGES">Download images folder</option>
@@ -59,7 +59,7 @@
                             </select>
                         </div>
                         <div class="form-group w-50">
-                            <label>Operate on device</label>
+                            <label>Destination device</label>
                             <select class="form-control select2" name="device_id">
                                 <option value="">Not selected</option>
                             </select>
@@ -67,7 +67,7 @@
                     </form>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary float-right" onclick="sendCommand()">
+                    <button class="btn btn-primary float-right" onclick="confirmSendCommand()">
                         <i class="fa fa-terminal"></i> Send
                     </button>
                 </div>
@@ -229,6 +229,49 @@
 
         function reloadTable() {
             tblMain.ajax.reload();
+        }
+
+        function confirmSendCommand() {
+            confirmAlert().then((result) => {
+                if (result.value)
+                    sendCommand();
+            });
+        }
+
+        function sendCommand() {
+            const model = {};
+            model.command = $('#form-operation [name=command]').val();
+            model.device_id = $('#form-operation [name=device_id]').val();
+            model.settings = {
+                'test': true
+            };
+            changeLoading(true);
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API/cmd',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: (respData) => {
+                    switch (model.command) {
+                        case '@Business.Constants.QCEventOps.GET_EVENTS':
+                            successAlert("Successfully get {no} events").then(() => {
+                                location.reload();
+                            });
+                            break;
+                        default:
+                            successAlert("Sent command successfully").then(() => {
+                                location.reload();
+                            });
+                            break;
+                    }
+                },
+                error: (resp) => {
+                    handleGeneralError(resp);
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
         }
 
     </script>

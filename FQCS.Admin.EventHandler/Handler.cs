@@ -121,10 +121,11 @@ namespace FQCS.Admin.EventHandler
                 var folderPath = Path.Combine(savePath, defectType?.QCMappingCode ?? "");
                 leftImg = Convert.FromBase64String(model.LeftB64Image);
                 rightImg = Convert.FromBase64String(model.RightB64Image);
-                leftFullPath = fileService.GetFilePath(folderPath, ext: ".jpg").Item2;
-                rightFullPath = fileService.GetFilePath(folderPath, ext: ".jpg").Item2;
-                entity.LeftImage = leftFullPath;
-                entity.RightImage = rightFullPath;
+                var (leftRel, lFull) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
+                var (rightRel, rFull) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
+                entity.LeftImage = leftRel;
+                entity.RightImage = rightRel;
+                leftFullPath = lFull; rightFullPath = rFull;
             }
             return (entity, leftImg, rightImg, leftFullPath, rightFullPath);
         }

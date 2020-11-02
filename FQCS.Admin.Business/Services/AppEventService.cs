@@ -350,6 +350,20 @@ namespace FQCS.Admin.Business.Services
         #endregion
 
         #region QC Device
+        public AppEvent SendCommandToDeviceAPI(SendCommandToDeviceAPIModel model, QCDevice entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} sent cmd {model.Command} to QC device with code {entity.Code} id: {entity.Id}",
+                Type = Data.Constants.AppEventType.SendCommandToDeviceAPI,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
         public AppEvent CreateQCDevice(QCDevice entity, ClaimsPrincipal principal)
         {
             string username = principal.FindFirstValue(AppClaimType.UserName);

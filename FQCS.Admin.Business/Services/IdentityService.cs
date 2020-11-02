@@ -32,6 +32,22 @@ namespace FQCS.Admin.Business.Services
         {
         }
 
+        #region AppClient
+        public string GetAppClientAuthHeader(AppConfig entity)
+        {
+            var now = DateTime.UtcNow;
+            var df = Constants.AppDateTimeFormat.APP_CLIENT_AUTH_FORMAT;
+            var dtStr = now.ToString(df);
+            var hashed = ComputeHash(dtStr, df, entity.ClientSecret);
+            return $"{Constants.DeviceConstants.AppClientScheme} {entity.ClientId}!{dtStr}!{df}!{hashed}";
+        }
+
+        public string ComputeHash(string dateTimeStr, string dateFormat, string secret)
+        {
+            return CryptoHelper.HMACSHA256(dateTimeStr + dateFormat, secret);
+        }
+        #endregion
+
         #region Query AppUser
         public IQueryable<AppUser> Users
         {
