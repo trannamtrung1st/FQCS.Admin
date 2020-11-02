@@ -10,11 +10,13 @@ namespace FQCS.Admin.Data.Models
         public string Code { get; set; }
         public string Info { get; set; }
         public int? ProductionLineId { get; set; }
+        public string AppConfigId { get; set; }
         public bool Archived { get; set; }
         public DateTime LastUpdated { get; set; }
         public DateTime CreatedTime { get; set; }
 
         public virtual ProductionLine Line { get; set; }
         public virtual IList<QCEvent> Events { get; set; }
+        public virtual AppConfig Config { get; set; }
     }
 }

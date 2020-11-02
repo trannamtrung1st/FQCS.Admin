@@ -11,5 +11,7 @@ namespace FQCS.Admin.Data.Models
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public bool IsDefault { get; set; }
+    
+        public virtual IList<QCDevice> Devices { get; set; }
     }
 }

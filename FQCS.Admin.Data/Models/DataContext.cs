@@ -135,6 +135,12 @@ namespace FQCS.Admin.Data.Models
                     .HasForeignKey(e => e.ProductionLineId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_ProductionLine_QCDevice");
+                entity.HasOne(e => e.Config)
+                    .WithMany(e => e.Devices)
+                    .HasForeignKey(e => e.AppConfigId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_AppConfig_QCDevice");
             });
             modelBuilder.Entity<QCEvent>(entity =>
             {
