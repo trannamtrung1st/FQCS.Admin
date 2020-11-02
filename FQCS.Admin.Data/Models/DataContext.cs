@@ -180,6 +180,20 @@ namespace FQCS.Admin.Data.Models
                 entity.Property(e => e.SampleImage)
                     .IsUnicode(false);
             });
+            modelBuilder.Entity<AppConfig>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255);
+                entity.Property(e => e.ClientId)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
+                entity.Property(e => e.ClientSecret)
+                    .IsUnicode(false)
+                    .HasMaxLength(500);
+            });
         }
     }
 
