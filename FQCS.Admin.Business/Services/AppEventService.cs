@@ -465,6 +465,64 @@ namespace FQCS.Admin.Business.Services
         }
         #endregion
 
+        #region App Config
+        public AppEvent CreateAppConfig(AppConfig entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} created an app config with id: {entity.Id}",
+                Type = Data.Constants.AppEventType.CreateAppConfig,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent ChangeDefaultAppConfig(AppConfig entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} changed default app config id: {entity.Id}",
+                Type = Data.Constants.AppEventType.ChangeDefaultAppConfig,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent UpdateAppConfig(AppConfig entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} updated app config - id: {entity.Id}",
+                Type = Data.Constants.AppEventType.UpdateAppConfig,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+
+        public AppEvent DeleteAppConfig(AppConfig entity, ClaimsPrincipal principal)
+        {
+            string username = principal.FindFirstValue(AppClaimType.UserName);
+            var ev = new AppEvent
+            {
+                Data = null,
+                Description = $"User {username} deleted app config id: {entity.Id}",
+                Type = Data.Constants.AppEventType.DeleteAppConfig,
+                UserId = principal.Identity.Name
+            };
+            PrepareCreate(ev);
+            return context.AppEvent.Add(ev).Entity;
+        }
+        #endregion
+
         #region Validation
         public ValidationData ValidateGetAppEvents(
             ClaimsPrincipal principal,

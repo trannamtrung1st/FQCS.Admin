@@ -125,6 +125,7 @@ namespace FQCS.Admin.Business.Models
     {
         public string id { get; set; }
         public string name_contains { get; set; }
+        public bool? is_default { get; set; }
     }
 
     public class AppConfigQueryPaging

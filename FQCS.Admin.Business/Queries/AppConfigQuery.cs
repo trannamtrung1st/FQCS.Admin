@@ -15,6 +15,11 @@ namespace FQCS.Admin.Business.Queries
             return query.Where(o => o.Id == id);
         }
 
+        public static IQueryable<AppConfig> IsDefault(this IQueryable<AppConfig> query, bool val = true)
+        {
+            return query.Where(o => o.IsDefault == val);
+        }
+
         public static IQueryable<AppConfig> IdOnly(this IQueryable<AppConfig> query)
         {
             return query.Select(o => new AppConfig { Id = o.Id });
@@ -58,6 +63,8 @@ namespace FQCS.Admin.Business.Queries
                 query = query.Where(o => o.Id == filter.id);
             if (filter.name_contains != null)
                 query = query.Where(o => o.Name.Contains(filter.name_contains));
+            if (filter.is_default != null)
+                query = query.Where(o => o.IsDefault == filter.is_default);
             return query;
         }
 

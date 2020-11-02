@@ -193,6 +193,13 @@ namespace FQCS.Admin.Business.Services
             return new ValidationData();
         }
 
+        public ValidationData ValidateChangeDefaultConfig(ClaimsPrincipal principal,
+            AppConfig entity, ChangeDefaultConfigModel model)
+        {
+            return new ValidationData();
+        }
+
+
         public ValidationData ValidateDeleteAppConfig(ClaimsPrincipal principal,
             AppConfig entity)
         {

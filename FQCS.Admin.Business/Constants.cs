@@ -72,6 +72,7 @@ namespace FQCS.Admin.Business
             public const string PRODUCTION_BATCH_API = "api/production-batches";
             public const string QC_EVENT_API = "api/qc-events";
             public const string REPORT_API = "api/reports";
+            public const string APP_CONFIG_API = "api/app-configs";
             public const string ERROR = "error";
         }
 
