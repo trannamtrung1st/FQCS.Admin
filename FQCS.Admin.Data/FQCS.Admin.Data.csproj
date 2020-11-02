@@ -16,6 +16,8 @@
     <Compile Remove="Migrations\20201027062605_SetIsRequiredFalseQCDevice.Designer.cs" />
     <Compile Remove="Migrations\20201027062810_Test.cs" />
     <Compile Remove="Migrations\20201027062810_Test.Designer.cs" />
+    <Compile Remove="Migrations\20201102080807_AddDbSet.cs" />
+    <Compile Remove="Migrations\20201102080807_AddDbSet.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

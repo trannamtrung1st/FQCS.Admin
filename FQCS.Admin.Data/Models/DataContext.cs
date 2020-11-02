@@ -28,6 +28,7 @@ namespace FQCS.Admin.Data.Models
         public virtual DbSet<ProductModel> ProductModel { get; set; }
         public virtual DbSet<QCDevice> QCDevice { get; set; }
         public virtual DbSet<QCEvent> QCEvent { get; set; }
+        public virtual DbSet<AppConfig> AppConfig { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -123,7 +123,7 @@ namespace FQCS.Admin.Business.Models
 
     public class AppConfigQueryFilter
     {
-        public int? id { get; set; }
+        public string id { get; set; }
         public string name_contains { get; set; }
     }
 
