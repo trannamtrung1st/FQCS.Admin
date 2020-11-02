@@ -12,6 +12,7 @@ using FQCS.Admin.Business.Helpers;
 using System.IO;
 using ClosedXML.Excel;
 using static FQCS.Admin.Business.Constants;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -225,6 +226,42 @@ namespace FQCS.Admin.Business.Services
             return context.QCEvent.Add(entity).Entity;
         }
         #endregion
+
+        public QCEvent ConvertToQCEvent(QCEventDeviceModel model, QCDevice device)
+        {
+            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
+            var proBatchService = provider.GetRequiredService<ProductionBatchService>();
+
+            var defectType = model.DefectTypeCode != null ?
+                defectTypeService.DefectTypes.QCMappingCode(model.DefectTypeCode)
+                .Select(o => new DefectType
+                {
+                    Id = o.Id,
+                    Code = o.Code,
+                    Name = o.Name
+                }).First() : null;
+            var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
+                .RunningAtTime(model.CreatedTime.Utc.Value).Select(o => new ProductionBatch
+                {
+                    Id = o.Id,
+                    ProductModelId = o.ProductModelId
+                }).First();
+
+            var entity = new QCEvent
+            {
+                Id = model.Id,
+                CreatedTime = model.CreatedTime.Utc.Value,
+                QCDeviceId = device.Id,
+                DefectTypeId = defectType?.Id,
+                Description = defectType != null ?
+                    $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime.Utc}"
+                    : $"Pass at batch: {proBatch.Id} at {model.CreatedTime.Utc}",
+                ProductionBatchId = proBatch.Id,
+                LeftImage = model.LeftImage,
+                RightImage = model.RightImage,
+            };
+            return entity;
+        }
 
         #region Validation
         public ValidationData ValidateQCMessage(

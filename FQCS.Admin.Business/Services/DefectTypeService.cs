@@ -9,14 +9,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using TNT.Core.Helpers.DI;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
     public class DefectTypeService : Service
     {
-        [Inject]
-        protected readonly FileService fileService;
-
         public DefectTypeService(ServiceInjection inj) : base(inj)
         {
         }
@@ -132,6 +130,7 @@ namespace FQCS.Admin.Business.Services
         public (string, string) GetDefectTypeImagePath(DefectType entity,
             string uploadPath, string rootPath)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             var folderPath = Path.Combine(rootPath, uploadPath, nameof(DefectType), entity.Id.ToString(), "Sample");
             var result = fileService.GetFilePath(folderPath, rootPath, ext: ".jpg");
             return result;
@@ -145,6 +144,7 @@ namespace FQCS.Admin.Business.Services
         public async Task SaveReplaceDefectTypeImage(UpdateDefectTypeImageModel model, 
             string fullPath, string rootPath, string oldRelPath)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             if (oldRelPath != null)
                 fileService.DeleteFile(oldRelPath, rootPath);
             await fileService.SaveFile(model.image, fullPath);
@@ -159,6 +159,7 @@ namespace FQCS.Admin.Business.Services
         }
         public void DeleteDefectTypeFolder(DefectType entity, string uploadPath, string rootPath)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             var folderPath = Path.Combine(uploadPath, nameof(DefectType), entity.Id.ToString());
             fileService.DeleteDirectory(folderPath, rootPath);
         }

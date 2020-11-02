@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FQCS.Admin.Business.Models
@@ -22,12 +23,13 @@ namespace FQCS.Admin.Business.Models
             set
             {
                 _iso = value;
-                DateTime utc;
-                if (_iso != null && DateTime.TryParse(_iso, out utc))
-                    Utc = utc;
+                DateTime dt;
+                if (_iso != null && DateTime.TryParse(_iso,
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dt))
+                    Utc = dt;
             }
         }
         [JsonIgnore]
-        public DateTime Utc { get; private set; }
+        public DateTime? Utc { get; private set; }
     }
 }

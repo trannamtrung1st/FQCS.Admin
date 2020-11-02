@@ -12,14 +12,12 @@ using FQCS.Admin.Business.Helpers;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using TNT.Core.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
     public class QCDeviceService : Service
     {
-        [Inject]
-        protected readonly IdentityService identityService;
-
         public QCDeviceService(ServiceInjection inj) : base(inj)
         {
         }
@@ -68,6 +66,13 @@ namespace FQCS.Admin.Business.Services
                                 iso = $"{time.ToUniversalTime():s}Z"
                             };
                             obj["archived"] = entity.Archived;
+                        }
+                        break;
+                    case QCDeviceQueryProjection.SELECT:
+                        {
+                            var entity = row;
+                            obj["id"] = entity.Id;
+                            obj["code"] = entity.Code;
                         }
                         break;
                     case QCDeviceQueryProjection.P_LINE:
@@ -239,9 +244,11 @@ namespace FQCS.Admin.Business.Services
         #endregion
 
         #region Send command
-        public async Task<int> SendCommandGetEvents(SendCommandToDeviceAPIModel model,
+        public async Task<(int, int)> SendCommandGetEvents(SendCommandToDeviceAPIModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
+            var qcEventService = provider.GetRequiredService<QCEventService>();
+            var identityService = provider.GetRequiredService<IdentityService>();
             var queryStr = new Dictionary<string, object>()
             {
                 { "load_all", true },
@@ -255,10 +262,26 @@ namespace FQCS.Admin.Business.Services
             var resp = await Global.HttpDevice.SendAsync(request);
             if (!resp.IsSuccessStatusCode)
                 throw new Exception("Error sending command");
-            var respObj = resp.Content.ReadAsAsync<List<QCEventDeviceModel>>();
-            return 0;
+            var respObj = await resp.Content.ReadAsAsync<AppResultDeviceModel<QueryResult<QCEventDeviceModel>>>();
+            int successCount = 0; int failCount = 0;
+            foreach (var e in respObj.Data.List)
+            {
+                if (!qcEventService.QCEvents.Exists(e.Id))
+                {
+                    try
+                    {
+                        var newEntity = qcEventService.ConvertToQCEvent(e, entity);
+                        newEntity = qcEventService.CreateQCEvent(newEntity);
+                        successCount++;
+                    }
+                    catch (Exception) { failCount++; }
+
+                }
+            }
+            return (successCount, failCount);
         }
         #endregion
+
 
     }
 }

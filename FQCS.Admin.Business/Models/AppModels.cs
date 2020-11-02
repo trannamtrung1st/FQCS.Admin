@@ -8,6 +8,15 @@ using TNT.Core.Helpers.General;
 
 namespace FQCS.Admin.Business.Models
 {
+    public class AppResultDeviceModel<T>
+    {
+        [JsonProperty("message")]
+        public string Message { get; set; }
+        [JsonProperty("data")]
+        public T Data { get; set; }
+        [JsonProperty("code")]
+        public int? Code { get; set; }
+    }
 
     public class AppResult
     {

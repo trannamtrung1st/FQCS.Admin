@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 using TNT.Core.Helpers.DI;
 using System.IO;
 using FQCS.Admin.Business.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
     public class ProductModelService : Service
     {
-        [Inject]
-        protected readonly FileService fileService;
-
         public ProductModelService(ServiceInjection inj) : base(inj)
         {
         }
@@ -156,6 +154,7 @@ namespace FQCS.Admin.Business.Services
         public (string, string) GetProductModelImagePath(ProductModel entity,
             string uploadPath, string rootPath)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             var folderPath = Path.Combine(rootPath, uploadPath, nameof(ProductModel), entity.Id.ToString(), "Image");
             var result = fileService.GetFilePath(folderPath, rootPath, ext: ".jpg");
             return result;
@@ -169,6 +168,7 @@ namespace FQCS.Admin.Business.Services
         public async Task SaveReplaceProductModelImage(UpdateProductModelImageModel model, 
             string fullPath, string rootPath, string oldRelPath)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             if (oldRelPath != null)
                 fileService.DeleteFile(oldRelPath, rootPath);
             await fileService.SaveFile(model.image, fullPath);
@@ -183,6 +183,7 @@ namespace FQCS.Admin.Business.Services
         }
         public void DeleteProductModelFolder(ProductModel entity, string uploadPath, string rootPath)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             var folderPath = Path.Combine(uploadPath, nameof(ProductModel), entity.Id.ToString());
             fileService.DeleteDirectory(folderPath, rootPath);
         }

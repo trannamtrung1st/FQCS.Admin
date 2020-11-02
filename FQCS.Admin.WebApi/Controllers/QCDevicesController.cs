@@ -135,10 +135,16 @@ namespace FQCS.Admin.WebApi.Controllers
             var validationData = _service.ValidateSendCommandToDeviceAPI(User, model);
             if (!validationData.IsValid)
                 return BadRequest(AppResult.FailValidation(data: validationData));
+            object respData = null;
             switch (model.Command)
             {
                 case Business.Constants.QCEventOps.GET_EVENTS:
-                    await _service.SendCommandGetEvents(model, entity, entity.Config);
+                    var (succ, fail) = await _service.SendCommandGetEvents(model, entity, entity.Config);
+                    respData = new
+                    {
+                        success = succ,
+                        fail = fail
+                    };
                     break;
                 case Business.Constants.QCEventOps.DOWNLOAD_IMAGES:
                     break;
@@ -152,7 +158,7 @@ namespace FQCS.Admin.WebApi.Controllers
             // must be in transaction
             var ev = _ev_service.SendCommandToDeviceAPI(model, entity, User);
             context.SaveChanges();
-            return Ok(AppResult.Success());
+            return Ok(AppResult.Success(respData));
         }
 
 

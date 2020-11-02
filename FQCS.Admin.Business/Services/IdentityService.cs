@@ -39,7 +39,7 @@ namespace FQCS.Admin.Business.Services
             var df = Constants.AppDateTimeFormat.APP_CLIENT_AUTH_FORMAT;
             var dtStr = now.ToString(df);
             var hashed = ComputeHash(dtStr, df, entity.ClientSecret);
-            return $"{Constants.DeviceConstants.AppClientScheme} {entity.ClientId}!{dtStr}!{df}!{hashed}";
+            return $"{entity.ClientId}!{dtStr}!{df}!{hashed}";
         }
 
         public string ComputeHash(string dateTimeStr, string dateFormat, string secret)

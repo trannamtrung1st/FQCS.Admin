@@ -13,22 +13,20 @@ using static FQCS.Admin.Business.Constants;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using ClosedXML.Excel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
     public class ReportService : Service
     {
-        [Inject]
-        protected readonly QCEventService qcEventService;
-        [Inject]
-        protected readonly ProductionBatchService proBatchService;
-
         public ReportService(ServiceInjection inj) : base(inj)
         {
         }
 
         public XLWorkbook GenerateBatchEventReport(BatchReportOptions options)
         {
+            var proBatchService = provider.GetRequiredService<ProductionBatchService>();
+            var qcEventService = provider.GetRequiredService<QCEventService>();
             var proBatch = proBatchService.ProductionBatchs.Id(options.batch_id)
                 .Select(o => new ProductionBatch
                 {

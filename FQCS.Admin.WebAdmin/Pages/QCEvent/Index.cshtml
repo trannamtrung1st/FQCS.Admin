@@ -224,8 +224,37 @@
                 ],
                 order: [[3, 'desc']]
             });
+            getQCDevices();
             $('.select2').select2();
         });
+
+        function getQCDevices() {
+            changeLoading(true);
+            const data = {};
+            data.load_all = true;
+            data.fields = '@ProductionLineQueryProjection.SELECT';
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API',
+                type: 'get',
+                data: data,
+                success: (respData) => {
+                    console.log(respData);
+                    let data = respData.data.list;
+                    let select = $('#form-operation [name=device_id]');
+                    for (var i = 0; i < data.length; i++) {
+                        select.append(
+                            $('<option value="' + data[i].id + '">').append(data[i].code)
+                        );
+                    }
+                },
+                error: (data) => {
+                    handleGeneralError(data);
+                },
+                complete: () => {
+                    changeLoading(false);
+                }
+            });
+        }
 
         function reloadTable() {
             tblMain.ajax.reload();
@@ -254,14 +283,11 @@
                 success: (respData) => {
                     switch (model.command) {
                         case '@Business.Constants.QCEventOps.GET_EVENTS':
-                            successAlert("Successfully get {no} events").then(() => {
-                                location.reload();
-                            });
+                            successAlert("Success: " + respData.data.success +
+                                ", fail: " + respData.data.fail).then(reloadTable);
                             break;
                         default:
-                            successAlert("Sent command successfully").then(() => {
-                                location.reload();
-                            });
+                            successAlert("Sent command successfully").then(reloadTable);
                             break;
                     }
                 },
