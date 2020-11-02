@@ -9,7 +9,7 @@ namespace FQCS.Admin.Data.Models
     {
         public string Id { get; set; }
         public string Description { get; set; }
-        public int DefectTypeId { get; set; }
+        public int? DefectTypeId { get; set; }
         public DateTime LastUpdated { get; set; }
         public DateTime CreatedTime { get; set; }
         public int ProductionBatchId { get; set; }

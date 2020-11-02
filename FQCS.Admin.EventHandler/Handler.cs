@@ -86,26 +86,30 @@ namespace FQCS.Admin.EventHandler
                 Code = o.Code,
                 ProductionLineId = o.ProductionLineId
             }).First();
-            var defectType = defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
+            var defectType = model.QCDefectCode != null ?
+                defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
                 .Select(o => new DefectType
                 {
                     Id = o.Id,
                     Code = o.Code,
                     Name = o.Name
-                }).First();
+                }).First() : null;
             var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
                 .RunningAtTime(model.CreatedTime).Select(o => new ProductionBatch
                 {
                     Id = o.Id,
                     ProductModelId = o.ProductModelId
                 }).First();
+
             var entity = new QCEvent
             {
                 Id = model.Id,
                 CreatedTime = model.CreatedTime,
                 QCDeviceId = device.Id,
-                DefectTypeId = defectType.Id,
-                Description = $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}",
+                DefectTypeId = defectType?.Id,
+                Description = defectType != null ?
+                    $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}"
+                    : $"Pass at batch: {proBatch.Id} at {model.CreatedTime}",
                 ProductionBatchId = proBatch.Id
             };
             byte[] leftImg = null; byte[] rightImg = null;

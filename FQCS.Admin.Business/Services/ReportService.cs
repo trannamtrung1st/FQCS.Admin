@@ -50,8 +50,8 @@ namespace FQCS.Admin.Business.Services
                 {
                     o.Id,
                     o.CreatedTime,
-                    DefectTypeCode = o.DefectType.Code,
-                    DefectTypeName = o.DefectType.Name,
+                    DefectTypeCode = o.DefectType != null ? o.DefectType.Code : null,
+                    DefectTypeName = o.DefectType != null ? o.DefectType.Name : null,
                     BatchCode = o.Batch.Code
                 }).ToList();
             var no = 1;
@@ -82,7 +82,7 @@ namespace FQCS.Admin.Business.Services
             {
                 var count = g.Count();
                 var avg = Math.Round((double)count / proBatch.TotalAmount * 100, 2);
-                sheet2.SetRowData(currentRow++, no++, g.Key.DefectTypeCode, g.Key.DefectTypeName, count, avg);
+                sheet2.SetRowData(currentRow++, no++, g.Key.DefectTypeCode ?? "", g.Key.DefectTypeName ?? "", count, avg);
             }
             for (var i = 1; i <= headerTitle.Length; i++)
                 sheet2.Column(i).AdjustToContents();

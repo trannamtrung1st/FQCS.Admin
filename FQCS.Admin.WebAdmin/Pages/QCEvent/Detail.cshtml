@@ -139,7 +139,7 @@
             formMain.find('[name=description]').val(data.description);
             formMain.find('[name=created_time]').html(data.created_time.display);
             formMain.find('[name=batch]').html(data.batch.code);
-            formMain.find('[name=defect_type]').html(data.defect_type.name);
+            formMain.find('[name=defect_type]').html(data.defect_type?.name);
             //data:image/jpeg;charset=utf-8;base64,
             if (data.left_image)
                 formMain.find('[name=left_image]').attr('src', 'data:image/jpeg;charset=utf-8;base64,' + data.left_image);
