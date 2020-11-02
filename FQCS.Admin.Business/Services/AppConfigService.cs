@@ -42,7 +42,6 @@ namespace FQCS.Admin.Business.Services
                             obj["id"] = entity.Id;
                             obj["name"] = entity.Name;
                             obj["client_id"] = entity.ClientId;
-                            obj["client_secret"] = entity.ClientSecret;
                             obj["is_default"] = entity.IsDefault;
                             var time = entity.CreatedTime
                                 .ToDefaultTimeZone();
@@ -166,6 +165,8 @@ namespace FQCS.Admin.Business.Services
         public void UpdateAppConfig(AppConfig entity, UpdateAppConfigModel model)
         {
             model.CopyTo(entity);
+            if (!string.IsNullOrWhiteSpace(model.ClientSecretReset))
+                entity.ClientSecret = model.ClientSecretReset;
             PrepareUpdate(entity);
         }
         #endregion

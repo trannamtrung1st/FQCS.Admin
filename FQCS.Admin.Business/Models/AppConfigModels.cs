@@ -41,8 +41,8 @@ namespace FQCS.Admin.Business.Models
         public string Name { get; set; }
         [JsonProperty("client_id")]
         public string ClientId { get; set; }
-        [JsonProperty("client_secret")]
-        public string ClientSecret { get; set; }
+        [JsonProperty("client_secret_reset")]
+        public string ClientSecretReset { get; set; }
 
     }
 
