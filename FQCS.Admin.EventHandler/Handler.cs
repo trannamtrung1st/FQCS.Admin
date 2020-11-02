@@ -118,7 +118,7 @@ namespace FQCS.Admin.EventHandler
             {
                 var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
                 var modelId = proBatch.ProductModelId;
-                var folderPath = Path.Combine(savePath, $"{dateStr}/{modelId}");
+                var folderPath = Path.Combine(savePath, defectType?.QCMappingCode ?? "");
                 leftImg = Convert.FromBase64String(model.LeftB64Image);
                 rightImg = Convert.FromBase64String(model.RightB64Image);
                 leftFullPath = fileService.GetFilePath(folderPath, ext: ".jpg").Item2;
