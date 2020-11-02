@@ -131,6 +131,8 @@ namespace FQCS.Admin.Data.Models
                     .HasMaxLength(100);
                 entity.Property(e => e.Info)
                     .HasMaxLength(2000);
+                entity.Property(e => e.DeviceAPIBaseUrl)
+                    .HasMaxLength(255);
                 entity.HasOne(e => e.Line)
                     .WithMany(e => e.Devices)
                     .HasForeignKey(e => e.ProductionLineId)

@@ -11,6 +11,7 @@ namespace FQCS.Admin.Data.Models
         public string Info { get; set; }
         public int? ProductionLineId { get; set; }
         public string AppConfigId { get; set; }
+        public string DeviceAPIBaseUrl { get; set; }
         public bool Archived { get; set; }
         public DateTime LastUpdated { get; set; }
         public DateTime CreatedTime { get; set; }

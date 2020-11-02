@@ -25,6 +25,8 @@ namespace FQCS.Admin.Business.Models
         public int? ProductionLineId { get; set; }
         [JsonProperty("app_config_id")]
         public string AppConfigId { get; set; }
+        [JsonProperty("device_api_base_url")]
+        public string DeviceAPIBaseUrl { get; set; }
     }
 
     public class UpdateQCDeviceModel : MappingModel<QCDevice>
@@ -45,7 +47,8 @@ namespace FQCS.Admin.Business.Models
         public int? ProductionLineId { get; set; }
         [JsonProperty("app_config_id")]
         public string AppConfigId { get; set; }
-
+        [JsonProperty("device_api_base_url")]
+        public string DeviceAPIBaseUrl { get; set; }
     }
 
     public class ChangeQCDeviceStatusModel

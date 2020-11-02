@@ -44,6 +44,7 @@ namespace FQCS.Admin.Business.Services
                             obj["info"] = entity.Info;
                             obj["production_line_id"] = entity.ProductionLineId;
                             obj["app_config_id"] = entity.AppConfigId;
+                            obj["device_api_base_url"] = entity.DeviceAPIBaseUrl;
                             var time = entity.CreatedTime
                                 .ToDefaultTimeZone();
                             var timeStr = time.ToString(options.date_format);

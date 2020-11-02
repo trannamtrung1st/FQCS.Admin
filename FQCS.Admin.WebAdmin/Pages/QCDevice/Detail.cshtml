@@ -78,6 +78,10 @@
                                     <option value="">Not selected</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label>Base API URL</label>
+                                <input type="text" name="device_api_base_url" class="form-control" placeholder="Please enter an URL">
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
@@ -166,6 +170,7 @@
             const formMain = $('#form-main');
             formMain.find('[name=code]').val(data.code);
             formMain.find('[name=info]').val(data.info);
+            formMain.find('[name=device_api_base_url]').val(data.device_api_base_url);
             formMain.find('[name=active]').prop('checked', !data.archived);
         }
 
@@ -183,6 +188,8 @@
             model.info = formMain.find('[name=info]').val();
             model.production_line_id = formMain.find('[name=production_line_id]').val();
             model.app_config_id = formMain.find('[name=app_config_id]').val();
+            model.app_config_id = model.app_config_id ? model.app_config_id : null;
+            model.device_api_base_url = formMain.find('[name=device_api_base_url]').val();
             changeLoading(true);
             $.ajax({
                 url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_DEVICE_API/@Model.Id',
