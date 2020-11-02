@@ -30,6 +30,9 @@ namespace FQCS.Admin.WebAdmin
             public const string QC_DEVICE = "/qcdevice";
             public const string QC_DEVICE_CREATE = "/qcdevice/create";
             public const string QC_DEVICE_DETAIL = "/qcdevice/{id}";
+            public const string APP_CONFIG = "/appconfig";
+            public const string APP_CONFIG_CREATE = "/appconfig/create";
+            public const string APP_CONFIG_DETAIL = "/appconfig/{id}";
             public const string PRODUCTION_BATCH = "/productionbatch";
             public const string PRODUCTION_BATCH_CREATE = "/productionbatch/create";
             public const string PRODUCTION_BATCH_DETAIL = "/productionbatch/{id}";
@@ -71,6 +74,7 @@ namespace FQCS.Admin.WebAdmin
             public const string QC_EVENT = "qc_event";
             public const string PRODUCTION_BATCH = "production_batch";
             public const string REPORT = "report";
+            public const string APP_CONFIG = "app_config";
             public const string ADMIN_ONLY = "admin_only";
         }
     }

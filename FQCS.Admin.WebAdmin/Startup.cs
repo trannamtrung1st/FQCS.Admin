@@ -116,6 +116,7 @@ namespace FQCS.Admin.WebAdmin
                     .AddPageRoute("/QCDevice/Detail", Constants.Routing.QC_DEVICE_DETAIL)
                     .AddPageRoute("/ProductionBatch/Detail", Constants.Routing.PRODUCTION_BATCH_DETAIL)
                     .AddPageRoute("/QCEvent/Detail", Constants.Routing.QC_EVENT_DETAIL)
+                    .AddPageRoute("/AppConfig/Detail", Constants.Routing.APP_CONFIG_DETAIL)
                     .AddPageRoute("/DefectType/Detail", Constants.Routing.DEFECT_TYPE_DETAIL);
                 foreach (var f in authorizeFolders)
                     options.Conventions.AuthorizeFolder(f);
