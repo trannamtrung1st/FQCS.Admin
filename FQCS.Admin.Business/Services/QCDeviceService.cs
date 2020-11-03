@@ -13,6 +13,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using TNT.Core.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Text.RegularExpressions;
+using System.Net.Mime;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -279,6 +284,24 @@ namespace FQCS.Admin.Business.Services
                 }
             }
             return (successCount, failCount);
+        }
+
+        public async Task<(Stream, string)> SendCommandDownloadImages(SendCommandToDeviceAPIModel model,
+            QCDevice entity, AppConfig deviceConfig)
+        {
+            var identityService = provider.GetRequiredService<IdentityService>();
+            var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/images";
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(url, UriKind.Absolute));
+            var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);
+            request.Headers.Authorization = new AuthenticationHeaderValue(
+                Constants.DeviceConstants.AppClientScheme, authHeader);
+            var resp = await Global.HttpDevice.SendAsync(request);
+            if (!resp.IsSuccessStatusCode)
+                throw new Exception("Error sending command");
+            string fileName = "images.zip";
+            var contentDisposition = resp.Content.Headers.ContentDisposition;
+            if (contentDisposition != null) fileName = contentDisposition.FileName;
+            return (await resp.Content.ReadAsStreamAsync(), fileName);
         }
         #endregion
 

@@ -14,6 +14,7 @@ using FQCS.Admin.Business;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using FQCS.Admin.Business.Helpers;
+using System.Net.Mime;
 
 namespace FQCS.Admin.WebApi.Controllers
 {
@@ -147,7 +148,9 @@ namespace FQCS.Admin.WebApi.Controllers
                     };
                     break;
                 case Business.Constants.QCEventOps.DOWNLOAD_IMAGES:
-                    break;
+                    var (stream, fileName) = await _service.SendCommandDownloadImages(
+                        model, entity, entity.Config);
+                    return File(stream, MediaTypeNames.Application.Zip, fileName);
                 case Business.Constants.QCEventOps.CLEAR_ALL:
                     break;
                 case Business.Constants.QCEventOps.TRIGGER_SEND:
