@@ -322,6 +322,24 @@
                     };
                     func = sendDownloadCommand;
                     break;
+                case '@Business.Constants.QCEventOps.UPDATE_STATUS':
+                    success = (respData) => {
+                        successAlert("Success: " + respData.data);
+                    }
+                    func = sendGeneralCommand;
+                    break;
+                case '@Business.Constants.QCEventOps.TRIGGER_SEND':
+                    success = (respData) => {
+                        successAlert("Executed at: " + respData.data);
+                    }
+                    func = sendGeneralCommand;
+                    break;
+                case '@Business.Constants.QCEventOps.CLEAR_ALL':
+                    success = (respData) => {
+                        successAlert("Clear: " + respData.data);
+                    }
+                    func = sendGeneralCommand;
+                    break;
                 default:
                     success = (respData) => {
                         successAlert("Sent command successfully").then(reloadTable);

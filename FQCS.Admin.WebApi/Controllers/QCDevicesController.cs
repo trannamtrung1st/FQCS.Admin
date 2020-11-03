@@ -152,10 +152,19 @@ namespace FQCS.Admin.WebApi.Controllers
                         model, entity, entity.Config);
                     return File(stream, MediaTypeNames.Application.Zip, fileName);
                 case Business.Constants.QCEventOps.CLEAR_ALL:
+                    var deleted = await _service.SendCommandClearAllEvents(
+                        model, entity, entity.Config);
+                    respData = deleted;
                     break;
                 case Business.Constants.QCEventOps.TRIGGER_SEND:
+                    var dateTimeOffset = await _service.SendCommandTriggerSendUnsent(
+                        model, entity, entity.Config);
+                    respData = dateTimeOffset;
                     break;
                 case Business.Constants.QCEventOps.UPDATE_STATUS:
+                    var updated = await _service.SendCommandUpdateSentStatus(
+                        model, entity, entity.Config);
+                    respData = updated;
                     break;
             }
             // must be in transaction
