@@ -226,6 +226,40 @@ namespace FQCS.Admin.Business.Services
             return context.QCEvent.Add(entity).Entity;
         }
         #endregion
+        public (QCEvent, DefectType) ConvertToQCEvent(QCEventMessage model, QCDevice device)
+        {
+            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
+            var proBatchService = provider.GetRequiredService<ProductionBatchService>();
+
+            var defectType = model.QCDefectCode != null ?
+                defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
+                .Select(o => new DefectType
+                {
+                    Id = o.Id,
+                    Code = o.Code,
+                    Name = o.Name,
+                    QCMappingCode = o.QCMappingCode
+                }).First() : null;
+            var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
+                .RunningAtTime(model.CreatedTime).Select(o => new ProductionBatch
+                {
+                    Id = o.Id,
+                    ProductModelId = o.ProductModelId
+                }).First();
+
+            var entity = new QCEvent
+            {
+                Id = model.Id,
+                CreatedTime = model.CreatedTime,
+                QCDeviceId = device.Id,
+                DefectTypeId = defectType?.Id,
+                Description = defectType != null ?
+                    $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}"
+                    : $"Pass at batch: {proBatch.Id} at {model.CreatedTime}",
+                ProductionBatchId = proBatch.Id,
+            };
+            return (entity, defectType);
+        }
 
         public QCEvent ConvertToQCEvent(QCEventDeviceModel model, QCDevice device)
         {

@@ -75,8 +75,7 @@ namespace FQCS.Admin.EventHandler
         protected (QCEvent, byte[], byte[], string, string) ProcessQCMessage(IServiceProvider sProvider,
             QCEventMessage model, string savePath)
         {
-            var defectTypeService = sProvider.GetRequiredService<DefectTypeService>();
-            var proBatchService = sProvider.GetRequiredService<ProductionBatchService>();
+            var qcEventService = sProvider.GetRequiredService<QCEventService>();
             var qcDeviceService = sProvider.GetRequiredService<QCDeviceService>();
             var fileService = sProvider.GetRequiredService<FileService>();
             var deviceCode = model.Identifier;
@@ -86,38 +85,12 @@ namespace FQCS.Admin.EventHandler
                 Code = o.Code,
                 ProductionLineId = o.ProductionLineId
             }).First();
-            var defectType = model.QCDefectCode != null ?
-                defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
-                .Select(o => new DefectType
-                {
-                    Id = o.Id,
-                    Code = o.Code,
-                    Name = o.Name
-                }).First() : null;
-            var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
-                .RunningAtTime(model.CreatedTime).Select(o => new ProductionBatch
-                {
-                    Id = o.Id,
-                    ProductModelId = o.ProductModelId
-                }).First();
-
-            var entity = new QCEvent
-            {
-                Id = model.Id,
-                CreatedTime = model.CreatedTime,
-                QCDeviceId = device.Id,
-                DefectTypeId = defectType?.Id,
-                Description = defectType != null ?
-                    $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}"
-                    : $"Pass at batch: {proBatch.Id} at {model.CreatedTime}",
-                ProductionBatchId = proBatch.Id
-            };
+            var (entity, defectType) = qcEventService.ConvertToQCEvent(model, device);
             byte[] leftImg = null; byte[] rightImg = null;
             string leftFullPath = null; string rightFullPath = null;
             if (model.LeftB64Image != null && model.RightB64Image != null)
             {
                 var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
-                var modelId = proBatch.ProductModelId;
                 var folderPath = Path.Combine(savePath, defectType?.QCMappingCode ?? "");
                 leftImg = Convert.FromBase64String(model.LeftB64Image);
                 rightImg = Convert.FromBase64String(model.RightB64Image);
