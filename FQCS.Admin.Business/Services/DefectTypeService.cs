@@ -141,7 +141,7 @@ namespace FQCS.Admin.Business.Services
             entity.SampleImage = relPath;
         }
 
-        public async Task SaveReplaceDefectTypeImage(UpdateDefectTypeImageModel model, 
+        public async Task SaveReplaceDefectTypeImage(UpdateDefectTypeImageModel model,
             string fullPath, string rootPath, string oldRelPath)
         {
             var fileService = provider.GetRequiredService<FileService>();
@@ -180,13 +180,35 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateCreateDefectType(ClaimsPrincipal principal,
             CreateDefectTypeModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (string.IsNullOrWhiteSpace(model.Code))
+                validationData.Fail("Defect code must not be null", Constants.AppResultCode.FailValidation);
+            else if (DefectTypes.Exists(model.Code))
+                validationData.Fail("Defect code existed", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.QCMappingCode))
+                validationData.Fail("QC Defect code must not be null", Constants.AppResultCode.FailValidation);
+            else if (DefectTypes.ExistsQCMappingCode(model.QCMappingCode))
+                validationData.Fail("QC Defect code existed", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.Name))
+                validationData.Fail("Name must not be null", Constants.AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateUpdateDefectType(ClaimsPrincipal principal,
             DefectType entity, UpdateDefectTypeModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (string.IsNullOrWhiteSpace(model.Code))
+                validationData.Fail("Defect code must not be null", Constants.AppResultCode.FailValidation);
+            else if (DefectTypes.Exists(model.Code))
+                validationData.Fail("Defect code existed", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.QCMappingCode))
+                validationData.Fail("QC Defect code must not be null", Constants.AppResultCode.FailValidation);
+            else if (DefectTypes.ExistsQCMappingCode(model.QCMappingCode))
+                validationData.Fail("QC Defect code existed", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.Name))
+                validationData.Fail("Name must not be null", Constants.AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateUpdateDefectTypeImage(ClaimsPrincipal principal,

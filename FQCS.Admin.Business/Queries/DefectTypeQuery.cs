@@ -25,6 +25,16 @@ namespace FQCS.Admin.Business.Queries
             return query.Any(o => o.Id == id);
         }
 
+        public static bool Exists(this IQueryable<DefectType> query, string code)
+        {
+            return query.Any(o => o.Code == code);
+        }
+        public static bool ExistsQCMappingCode(this IQueryable<DefectType> query, string code)
+        {
+            return query.Any(o => o.QCMappingCode == code);
+        }
+
+
         public static IQueryable<DefectType> Ids(this IQueryable<DefectType> query, IEnumerable<int> ids)
         {
             return query.Where(o => ids.Contains(o.Id));
