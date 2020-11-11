@@ -57,8 +57,9 @@ namespace FQCS.Admin.EventHandler
                                     validationResult.Results.Select(o => o.Message)));
                                 return;
                             }
+                            DefectType defectType = validationResult.GetTempData<DefectType>(nameof(defectType));
                             var (entity, leftImg, rightImg, leftFullPath, rightFullPath) =
-                                ProcessQCMessage(sProvider, model, savePath);
+                                ProcessQCMessage(sProvider, model, savePath, defectType);
                             if (leftImg != null)
                                 await fileService.SaveFile(leftImg, leftFullPath);
                             if (rightImg != null)
@@ -73,7 +74,7 @@ namespace FQCS.Admin.EventHandler
         }
 
         protected (QCEvent, byte[], byte[], string, string) ProcessQCMessage(IServiceProvider sProvider,
-            QCEventMessage model, string savePath)
+            QCEventMessage model, string savePath, DefectType defectType)
         {
             var qcEventService = sProvider.GetRequiredService<QCEventService>();
             var qcDeviceService = sProvider.GetRequiredService<QCDeviceService>();
@@ -85,7 +86,8 @@ namespace FQCS.Admin.EventHandler
                 Code = o.Code,
                 ProductionLineId = o.ProductionLineId
             }).First();
-            var (entity, defectType) = qcEventService.ConvertToQCEvent(model, device);
+
+            var entity = qcEventService.ConvertToQCEvent(model, device, defectType);
             byte[] leftImg = null; byte[] rightImg = null;
             string leftFullPath = null; string rightFullPath = null;
             if (model.LeftB64Image != null && model.RightB64Image != null)

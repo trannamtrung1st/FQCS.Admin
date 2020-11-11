@@ -226,20 +226,11 @@ namespace FQCS.Admin.Business.Services
             return context.QCEvent.Add(entity).Entity;
         }
         #endregion
-        public (QCEvent, DefectType) ConvertToQCEvent(QCEventMessage model, QCDevice device)
+        public QCEvent ConvertToQCEvent(QCEventMessage model, QCDevice device,
+            DefectType defectType)
         {
-            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
             var proBatchService = provider.GetRequiredService<ProductionBatchService>();
 
-            var defectType = model.QCDefectCode != null ?
-                defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
-                .Select(o => new DefectType
-                {
-                    Id = o.Id,
-                    Code = o.Code,
-                    Name = o.Name,
-                    QCMappingCode = o.QCMappingCode
-                }).First() : null;
             var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
                 .RunningAtTime(model.CreatedTime).Select(o => new ProductionBatch
                 {
@@ -258,7 +249,7 @@ namespace FQCS.Admin.Business.Services
                     : $"Pass at batch: {proBatch.Id} at {model.CreatedTime}",
                 ProductionBatchId = proBatch.Id,
             };
-            return (entity, defectType);
+            return entity;
         }
 
         public QCEvent ConvertToQCEvent(QCEventDeviceModel model, QCDevice device)
@@ -301,10 +292,25 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateQCMessage(
             QCEventMessage model)
         {
+            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
             var validationData = new ValidationData();
             var existed = QCEvents.Exists(model.Id);
             if (existed)
-                validationData.Fail(mess: "Existed ID", AppResultCode.FailValidation);
+                return validationData.Fail(mess: "Existed ID", AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.Identifier))
+                return validationData.Fail(mess: "Identifier must not be null", AppResultCode.FailValidation);
+            var defectType = model.QCDefectCode == null ? null :
+                defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
+                .Select(o => new DefectType
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    Code = o.Code,
+                    QCMappingCode = o.QCMappingCode
+                }).FirstOrDefault();
+            if (model.QCDefectCode != null && defectType == null)
+                return validationData.Fail(mess: "Invalid defect type code", AppResultCode.FailValidation);
+            else validationData.TempData[nameof(defectType)] = defectType;
             return validationData;
         }
 
