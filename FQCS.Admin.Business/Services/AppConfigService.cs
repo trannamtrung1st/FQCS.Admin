@@ -193,19 +193,36 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateCreateAppConfig(ClaimsPrincipal principal,
             CreateAppConfigModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (string.IsNullOrWhiteSpace(model.ClientId))
+                validationData.Fail("Client ID must not be null", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.ClientSecret))
+                validationData.Fail("Client secret must not be null", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.Name))
+                validationData.Fail("Name must not be null", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.Id))
+                validationData.Fail("Config ID must not be null", Constants.AppResultCode.FailValidation);
+            else if (AppConfigs.Exists(model.Id))
+                validationData.Fail("Config ID existed", Constants.AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateUpdateAppConfig(ClaimsPrincipal principal,
             AppConfig entity, UpdateAppConfigModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (string.IsNullOrWhiteSpace(model.ClientId))
+                validationData.Fail("Client ID must not be null", Constants.AppResultCode.FailValidation);
+            if (string.IsNullOrWhiteSpace(model.Name))
+                validationData.Fail("Name must not be null", Constants.AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateChangeDefaultConfig(ClaimsPrincipal principal,
             AppConfig entity, ChangeDefaultConfigModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            return validationData;
         }
 
 
