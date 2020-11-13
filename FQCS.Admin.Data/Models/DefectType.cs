@@ -13,6 +13,6 @@ namespace FQCS.Admin.Data.Models
         public string Description { get; set; }
         public string SampleImage { get; set; }
 
-        public virtual IList<QCEvent> Events { get; set; }
+        public virtual IList<QCEventDetail> Details { get; set; }
     }
 }

@@ -11,7 +11,6 @@ namespace FQCS.Admin.ConsoleClient
 {
     class Program
     {
-        static IProducer<Null, string> producer;
         static Settings settings;
         static Random random = new Random();
         static void Main(string[] args)
@@ -31,7 +30,6 @@ namespace FQCS.Admin.ConsoleClient
                 Console.WriteLine("3/ Reset Kafka data");
                 Console.WriteLine("4/ Stop Kafka");
                 Console.WriteLine("5/ Stop Zoo");
-                Console.WriteLine("6/ Produce test QC message");
                 Console.WriteLine("Other/ EXIT");
                 Console.Write("Your choice: ");
                 var choice = Console.ReadLine();
@@ -60,8 +58,6 @@ namespace FQCS.Admin.ConsoleClient
                         break;
                     case "4":
                         {
-                            if (producer != null)
-                                producer.Dispose();
                             string strCmdText;
                             strCmdText = $"/C start {settings.StopKafkaCmd}";
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
@@ -74,43 +70,12 @@ namespace FQCS.Admin.ConsoleClient
                             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                         }
                         break;
-                    case "6":
-                        {
-                            if (producer == null)
-                                producer = KafkaHelper.GetPlainProducer(settings.KafkaServer,
-                                    settings.KafkaUsername, settings.KafkaPassword);
-                            SendTest(settings);
-                        }
-                        break;
                     default:
                         return;
                 }
             }
         }
 
-        static void SendTest(Settings settings)
-        {
-            var mess = new Message<Null, string>();
-            var imgPath = Program.settings.TestImage.Replace("{no}", random.Next(156, 165).ToString());
-            var img = File.ReadAllBytes(imgPath);
-            var leftImgB64 = Convert.ToBase64String(img);
-            imgPath = Program.settings.TestImage.Replace("{no}", random.Next(156, 165).ToString());
-            img = File.ReadAllBytes(imgPath);
-            var rightImgB64 = Convert.ToBase64String(img);
-            mess.Value = JsonConvert.SerializeObject(new QCEventMessage
-            {
-                CreatedTime = DateTime.UtcNow,
-                QCDefectCode = settings.TestDefectCode,
-                Identifier = settings.TestDeviceId,
-                LeftB64Image = leftImgB64,
-                RightB64Image = rightImgB64,
-            });
-            producer.Produce(Kafka.Constants.KafkaTopic.TOPIC_QC_EVENT, mess, rep =>
-            {
-                Console.WriteLine(rep.Status);
-            });
-        }
     }
-
 
 }

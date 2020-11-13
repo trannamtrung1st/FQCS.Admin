@@ -142,7 +142,7 @@
                         d.count_total = true;
                         d.search = d.search?.value;
                         d.page = d.start / d.length + 1;
-                        d.fields = '@QCEventQueryProjection.INFO,@QCEventQueryProjection.D_TYPE,@QCEventQueryProjection.BATCH';
+                        d.fields = '@QCEventQueryProjection.INFO,@QCEventQueryProjection.BATCH';
                         d.limit = d.length;
                         if (d.order?.length) {
                             const sorts = [];

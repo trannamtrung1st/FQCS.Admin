@@ -13,6 +13,7 @@ using System.IO;
 using ClosedXML.Excel;
 using static FQCS.Admin.Business.Constants;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -30,10 +31,17 @@ namespace FQCS.Admin.Business.Services
                 return context.QCEvent;
             }
         }
+        public IQueryable<QCEventDetail> QCEventDetails
+        {
+            get
+            {
+                return context.QCEventDetail;
+            }
+        }
 
         public IDictionary<string, object> GetQCEventDynamic(
             QCEvent row, QCEventQueryProjection projection,
-            QCEventQueryOptions options, string qcFolderPath)
+            QCEventQueryOptions options, string qcFolderPath, FileService fileService)
         {
             var obj = new Dictionary<string, object>();
             foreach (var f in projection.GetFieldsArr())
@@ -44,7 +52,17 @@ namespace FQCS.Admin.Business.Services
                         {
                             var entity = row;
                             obj["id"] = entity.Id;
-                            obj["defect_type_id"] = entity.DefectTypeId;
+                            var details = entity.Details.Select(o => new
+                            {
+                                id = o.Id,
+                                defect_type_id = o.DefectTypeId,
+                                defect_type = new
+                                {
+                                    id = o.DefectType.Id,
+                                    code = o.DefectType.Code,
+                                    name = o.DefectType.Name
+                                }
+                            }).ToList();
                             obj["description"] = entity.Description;
                             obj["production_batch_id"] = entity.ProductionBatchId;
                             obj["qc_device_id"] = entity.QCDeviceId;
@@ -77,18 +95,6 @@ namespace FQCS.Admin.Business.Services
                                 };
                         }
                         break;
-                    case QCEventQueryProjection.D_TYPE:
-                        {
-                            var entity = row.DefectType;
-                            if (entity != null)
-                                obj["defect_type"] = new
-                                {
-                                    id = entity.Id,
-                                    code = entity.Code,
-                                    name = entity.Name
-                                };
-                        }
-                        break;
                     case QCEventQueryProjection.IMAGE:
                         {
                             if (!options.single_only)
@@ -114,6 +120,22 @@ namespace FQCS.Admin.Business.Services
                                     obj["right_image"] = img64;
                                 }
                             }
+                            if (entity.SideImages != null)
+                            {
+                                var sideImages = JsonConvert.DeserializeObject<IEnumerable<string>>(entity.SideImages);
+                                var sideImagesB64 = new List<string>();
+                                obj["side_images"] = sideImagesB64;
+                                foreach (var iPath in sideImages)
+                                {
+                                    var fullPath = fileService.GetFilePath(qcFolderPath, null, iPath).Item2;
+                                    if (File.Exists(fullPath))
+                                    {
+                                        var img = File.ReadAllBytes(fullPath);
+                                        var img64 = Convert.ToBase64String(img);
+                                        sideImagesB64.Add(img64);
+                                    }
+                                }
+                            }
                         }
                         break;
                 }
@@ -123,12 +145,12 @@ namespace FQCS.Admin.Business.Services
 
         public List<IDictionary<string, object>> GetQCEventDynamic(
             IEnumerable<QCEvent> rows, QCEventQueryProjection projection,
-            QCEventQueryOptions options, string qcFolderPath)
+            QCEventQueryOptions options, string qcFolderPath, FileService fileService)
         {
             var list = new List<IDictionary<string, object>>();
             foreach (var o in rows)
             {
-                var obj = GetQCEventDynamic(o, projection, options, qcFolderPath);
+                var obj = GetQCEventDynamic(o, projection, options, qcFolderPath, fileService);
                 list.Add(obj);
             }
             return list;
@@ -141,6 +163,7 @@ namespace FQCS.Admin.Business.Services
             QCEventQuerySort sort = null,
             QCEventQueryPaging paging = null)
         {
+            var fileService = provider.GetRequiredService<FileService>();
             var query = QCEvents;
             #region General
             if (filter != null) query = query.Filter(filter);
@@ -161,14 +184,14 @@ namespace FQCS.Admin.Business.Services
             {
                 var single = query.SingleOrDefault();
                 if (single == null) return null;
-                var singleResult = GetQCEventDynamic(single, projection, options, qcFolderPath);
+                var singleResult = GetQCEventDynamic(single, projection, options, qcFolderPath, fileService);
                 return new QueryResult<IDictionary<string, object>>()
                 {
                     Single = singleResult
                 };
             }
             var entities = query.ToList();
-            var list = GetQCEventDynamic(entities, projection, options, qcFolderPath);
+            var list = GetQCEventDynamic(entities, projection, options, qcFolderPath, fileService);
             var result = new QueryResult<IDictionary<string, object>>();
             result.List = list;
             if (options.count_total) result.Count = totalCount;
@@ -226,9 +249,9 @@ namespace FQCS.Admin.Business.Services
             return context.QCEvent.Add(entity).Entity;
         }
         #endregion
-        public QCEvent ConvertToQCEvent(QCEventMessage model, QCDevice device,
-            DefectType defectType)
+        public QCEvent ConvertToQCEvent(QCEventMessage model, QCDevice device)
         {
+            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
             var proBatchService = provider.GetRequiredService<ProductionBatchService>();
 
             var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
@@ -237,17 +260,24 @@ namespace FQCS.Admin.Business.Services
                     Id = o.Id,
                     ProductModelId = o.ProductModelId
                 }).First();
-
+            var defCodes = model.Details.Select(o => o.QCDefectCode).ToList();
+            var defectTypesMap = defectTypeService.DefectTypes.QCMappingCodes(defCodes)
+                .Select(o => new
+                {
+                    o.Id,
+                    o.QCMappingCode
+                }).ToDictionary(o => o.QCMappingCode);
             var entity = new QCEvent
             {
                 Id = model.Id,
                 CreatedTime = model.CreatedTime,
                 QCDeviceId = device.Id,
-                DefectTypeId = defectType?.Id,
-                Description = defectType != null ?
-                    $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime}"
-                    : $"Pass at batch: {proBatch.Id} at {model.CreatedTime}",
                 ProductionBatchId = proBatch.Id,
+                Details = model.Details.Select(o => new QCEventDetail
+                {
+                    DefectTypeId = defectTypesMap[o.QCDefectCode].Id,
+                    Id = o.Id,
+                }).ToList()
             };
             return entity;
         }
@@ -257,33 +287,34 @@ namespace FQCS.Admin.Business.Services
             var defectTypeService = provider.GetRequiredService<DefectTypeService>();
             var proBatchService = provider.GetRequiredService<ProductionBatchService>();
 
-            var defectType = model.DefectTypeCode != null ?
-                defectTypeService.DefectTypes.QCMappingCode(model.DefectTypeCode)
-                .Select(o => new DefectType
-                {
-                    Id = o.Id,
-                    Code = o.Code,
-                    Name = o.Name
-                }).First() : null;
             var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
                 .RunningAtTime(model.CreatedTime.Utc.Value).Select(o => new ProductionBatch
                 {
                     Id = o.Id,
                     ProductModelId = o.ProductModelId
                 }).First();
-
+            var defCodes = model.Details.Select(o => o.DefectTypeCode).ToList();
+            var defectTypesMap = defectTypeService.DefectTypes.QCMappingCodes(defCodes)
+                .Select(o => new
+                {
+                    o.Id,
+                    o.QCMappingCode
+                }).ToDictionary(o => o.QCMappingCode);
             var entity = new QCEvent
             {
                 Id = model.Id,
                 CreatedTime = model.CreatedTime.Utc.Value,
                 QCDeviceId = device.Id,
-                DefectTypeId = defectType?.Id,
-                Description = defectType != null ?
-                    $"Defect type at batch: {proBatch.Id}-{defectType.Name}-{defectType.Code} at {model.CreatedTime.Utc}"
-                    : $"Pass at batch: {proBatch.Id} at {model.CreatedTime.Utc}",
                 ProductionBatchId = proBatch.Id,
+                Details = model.Details.Select(o => new QCEventDetail
+                {
+                    DefectTypeId = defectTypesMap[o.DefectTypeCode].Id,
+                    Id = o.Id,
+                }).ToList(),
                 LeftImage = model.LeftImage,
                 RightImage = model.RightImage,
+                SideImages = model.SideImages == null ? null :
+                    JsonConvert.SerializeObject(model.SideImages)
             };
             return entity;
         }
@@ -292,25 +323,12 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateQCMessage(
             QCEventMessage model)
         {
-            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
             var validationData = new ValidationData();
             var existed = QCEvents.Exists(model.Id);
             if (existed)
                 return validationData.Fail(mess: "Existed ID", AppResultCode.FailValidation);
             if (string.IsNullOrWhiteSpace(model.Identifier))
                 return validationData.Fail(mess: "Identifier must not be null", AppResultCode.FailValidation);
-            var defectType = model.QCDefectCode == null ? null :
-                defectTypeService.DefectTypes.QCMappingCode(model.QCDefectCode)
-                .Select(o => new DefectType
-                {
-                    Id = o.Id,
-                    Name = o.Name,
-                    Code = o.Code,
-                    QCMappingCode = o.QCMappingCode
-                }).FirstOrDefault();
-            if (model.QCDefectCode != null && defectType == null)
-                return validationData.Fail(mess: "Invalid defect type code", AppResultCode.FailValidation);
-            else validationData.TempData[nameof(defectType)] = defectType;
             return validationData;
         }
 

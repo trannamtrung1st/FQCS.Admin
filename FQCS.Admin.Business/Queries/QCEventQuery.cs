@@ -77,7 +77,7 @@ namespace FQCS.Admin.Business.Queries
             foreach (var f in projection.GetFieldsArr())
                 if (QCEventQueryProjection.MAPS.ContainsKey(f))
                     foreach (var prop in QCEventQueryProjection.MAPS[f])
-                        query = query.Include(prop);
+                        query = prop.Compile()(query);
             return query;
         }
         #endregion

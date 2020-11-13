@@ -1,8 +1,11 @@
-﻿using FQCS.Admin.Data.Models;
+﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using FQCS.Admin.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace FQCS.Admin.Business.Models
@@ -11,18 +14,29 @@ namespace FQCS.Admin.Business.Models
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("defect_type_code")]
-        public string DefectTypeCode { get; set; }
         [JsonProperty("noti_sent")]
         public bool NotiSent { get; set; }
         [JsonProperty("left_image")]
         public string LeftImage { get; set; }
         [JsonProperty("right_image")]
         public string RightImage { get; set; }
+        [JsonProperty("side_images")]
+        public IEnumerable<string> SideImages { get; set; }
         [JsonProperty("created_time")]
         public ApiDateTime CreatedTime { get; set; }
         [JsonProperty("last_updated")]
         public ApiDateTime LastUpdated { get; set; }
+        [JsonProperty("details")]
+        public IEnumerable<QCEventDetailDeviceModel> Details { get; set; }
+
+    }
+
+    public class QCEventDetailDeviceModel
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("defect_type_code")]
+        public string DefectTypeCode { get; set; }
     }
 
     public class QCEventMessage
@@ -30,8 +44,6 @@ namespace FQCS.Admin.Business.Models
         // this is code from QC device
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("qc_defect_code")]
-        public string QCDefectCode { get; set; }
         [JsonProperty("created_time")]
         public DateTime CreatedTime { get; set; }
         [JsonProperty("identifier")]
@@ -40,6 +52,18 @@ namespace FQCS.Admin.Business.Models
         public string LeftB64Image { get; set; }
         [JsonProperty("right_b64_image")]
         public string RightB64Image { get; set; }
+        [JsonProperty("side_b64_images")]
+        public IEnumerable<string> SideB64Images { get; set; }
+        [JsonProperty("details")]
+        public IEnumerable<QCEventDetailMessage> Details { get; set; }
+    }
+
+    public class QCEventDetailMessage
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("qc_defect_code")]
+        public string QCDefectCode { get; set; }
     }
 
 
@@ -74,15 +98,17 @@ namespace FQCS.Admin.Business.Models
 
         public const string INFO = "info";
         public const string BATCH = "batch";
-        public const string D_TYPE = "dtype";
         public const string IMAGE = "image";
         public const string SELECT = "select";
 
-        public static readonly IDictionary<string, string[]> MAPS = new Dictionary<string, string[]>
-        {
-            {BATCH, new []{ $"{nameof(QCEvent.Batch)}" }},
-            {D_TYPE, new []{ $"{nameof(QCEvent.DefectType)}" }},
-        };
+        public static readonly IDictionary<string, Expression<Func<IQueryable<QCEvent>, IQueryable<QCEvent>>>[]> MAPS =
+            new Dictionary<string, Expression<Func<IQueryable<QCEvent>, IQueryable<QCEvent>>>[]>
+            {
+                {INFO, new Expression<Func<IQueryable<QCEvent>, IQueryable<QCEvent>>>[]{
+                    (IQueryable<QCEvent> query) => query.Include(o=>o.Details).ThenInclude(o=>o.DefectType) }},
+                {BATCH, new Expression<Func<IQueryable<QCEvent>, IQueryable<QCEvent>>>[]{
+                    (IQueryable<QCEvent> query) => query.Include(o=>o.Batch) }},
+            };
     }
 
     public class QCEventQuerySort

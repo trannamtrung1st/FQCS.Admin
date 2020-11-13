@@ -57,13 +57,11 @@ namespace FQCS.Admin.EventHandler
                                     validationResult.Results.Select(o => o.Message)));
                                 return;
                             }
-                            DefectType defectType = validationResult.GetTempData<DefectType>(nameof(defectType));
-                            var (entity, leftImg, rightImg, leftFullPath, rightFullPath) =
-                                ProcessQCMessage(sProvider, model, savePath, defectType);
-                            if (leftImg != null)
-                                await fileService.SaveFile(leftImg, leftFullPath);
-                            if (rightImg != null)
-                                await fileService.SaveFile(rightImg, rightFullPath);
+                            var (entity, imagesB64) =
+                                ProcessQCMessage(sProvider, model, savePath);
+                            var tasks = imagesB64.Select(async (img) =>
+                                await fileService.SaveFile(img.Item1, img.Item2));
+                            await Task.WhenAll(tasks);
                             entity = qcEventService.CreateQCEvent(entity);
                             context.SaveChanges();
                             Console.WriteLine(entity.Description);
@@ -73,8 +71,8 @@ namespace FQCS.Admin.EventHandler
             }
         }
 
-        protected (QCEvent, byte[], byte[], string, string) ProcessQCMessage(IServiceProvider sProvider,
-            QCEventMessage model, string savePath, DefectType defectType)
+        protected (QCEvent, List<(byte[], string)>) ProcessQCMessage(IServiceProvider sProvider,
+            QCEventMessage model, string savePath)
         {
             var qcEventService = sProvider.GetRequiredService<QCEventService>();
             var qcDeviceService = sProvider.GetRequiredService<QCDeviceService>();
@@ -87,22 +85,34 @@ namespace FQCS.Admin.EventHandler
                 ProductionLineId = o.ProductionLineId
             }).First();
 
-            var entity = qcEventService.ConvertToQCEvent(model, device, defectType);
-            byte[] leftImg = null; byte[] rightImg = null;
-            string leftFullPath = null; string rightFullPath = null;
+            var entity = qcEventService.ConvertToQCEvent(model, device);
+            var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
+            var folderPath = Path.Combine(savePath, dateStr, model.Id);
+            var imagesB64 = new List<(byte[], string)>();
             if (model.LeftB64Image != null && model.RightB64Image != null)
             {
-                var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
-                var folderPath = Path.Combine(savePath, defectType?.QCMappingCode ?? "");
-                leftImg = Convert.FromBase64String(model.LeftB64Image);
-                rightImg = Convert.FromBase64String(model.RightB64Image);
+                var leftImg = Convert.FromBase64String(model.LeftB64Image);
+                var rightImg = Convert.FromBase64String(model.RightB64Image);
                 var (leftRel, lFull) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
                 var (rightRel, rFull) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
                 entity.LeftImage = leftRel;
                 entity.RightImage = rightRel;
-                leftFullPath = lFull; rightFullPath = rFull;
+                imagesB64.Add((leftImg, lFull));
+                imagesB64.Add((rightImg, rFull));
             }
-            return (entity, leftImg, rightImg, leftFullPath, rightFullPath);
+            if (model.SideB64Images != null)
+            {
+                var sideImages = new List<string>();
+                foreach (var b64 in model.SideB64Images)
+                {
+                    var img = Convert.FromBase64String(b64);
+                    var (rel, full) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
+                    sideImages.Add(rel);
+                    imagesB64.Add((img, full));
+                }
+                entity.SideImages = JsonConvert.SerializeObject(sideImages);
+            }
+            return (entity, imagesB64);
         }
 
         public Task StartConsuming(CancellationToken cancellation,

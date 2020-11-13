@@ -27,6 +27,7 @@ namespace FQCS.Admin.Business.Services
         {
             var proBatchService = provider.GetRequiredService<ProductionBatchService>();
             var qcEventService = provider.GetRequiredService<QCEventService>();
+            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
             var proBatch = proBatchService.ProductionBatchs.Id(options.batch_id)
                 .Select(o => new ProductionBatch
                 {
@@ -42,19 +43,47 @@ namespace FQCS.Admin.Business.Services
             var header = sheet1.SetRowData(currentRow++, headerTitle);
             header.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             header.Style.Font.SetBold();
-            var entities = qcEventService.QCEvents.OfBatch(options.batch_id)
+            var defectTypesMap = defectTypeService.DefectTypes.Select(o => new DefectType
+            {
+                Id = o.Id,
+                QCMappingCode = o.QCMappingCode,
+                Code = o.Code,
+                Name = o.Name,
+            }).ToDictionary(o => o.Id);
+            var defRecords = qcEventService.QCEvents.OfBatch(options.batch_id)
+                .SortByTime(false)
+                .Join(qcEventService.QCEventDetails, o => o.Id, o => o.EventId, (ev, dt) => new
+                {
+                    ev.Id,
+                    ev.CreatedTime,
+                    dt.DefectTypeId,
+                    BatchCode = ev.Batch.Code
+                }).ToList();
+            var defRecordsFinal = defRecords.Select(o => new
+            {
+                o.Id,
+                o.CreatedTime,
+                o.BatchCode,
+                DefectTypeName = defectTypesMap[o.DefectTypeId].Name,
+                DefectTypeCode = defectTypesMap[o.DefectTypeId].Code,
+            });
+            var passRecords = qcEventService.QCEvents.OfBatch(options.batch_id)
                 .SortByTime(false)
                 .Select(o => new
                 {
                     o.Id,
                     o.CreatedTime,
-                    DefectTypeCode = o.DefectType != null ? o.DefectType.Code : null,
-                    DefectTypeName = o.DefectType != null ? o.DefectType.Name : null,
-                    BatchCode = o.Batch.Code
+                    BatchCode = o.Batch.Code,
+                    DefectTypeName = "",
+                    DefectTypeCode = "",
                 }).ToList();
             var no = 1;
-            foreach (var o in entities)
-                sheet1.SetRowData(currentRow++, no++, o.Id, o.CreatedTime, o.DefectTypeCode, o.DefectTypeName, o.BatchCode);
+            IEnumerable<dynamic> allRecords = new List<dynamic>();
+            allRecords = allRecords.Concat(defRecordsFinal).Concat(passRecords).ToList();
+            foreach (var o in allRecords)
+                Business.Helpers.XLHelper.SetRowData(sheet1, currentRow++,
+                    no++, o.Id, o.CreatedTime, o.DefectTypeCode, o.DefectTypeName, o.BatchCode);
+
             for (var i = 1; i <= headerTitle.Length; i++)
                 sheet1.Column(i).AdjustToContents();
 
@@ -70,7 +99,7 @@ namespace FQCS.Admin.Business.Services
 
             row.Style.Font.SetBold();
             row.Cell(headerTitle.Length).Style.Font.SetBold(false);
-            var groups = entities.GroupBy(o => new
+            var groups = allRecords.GroupBy(o => new
             {
                 o.DefectTypeCode,
                 o.DefectTypeName
@@ -80,7 +109,8 @@ namespace FQCS.Admin.Business.Services
             {
                 var count = g.Count();
                 var avg = Math.Round((double)count / proBatch.TotalAmount * 100, 2);
-                sheet2.SetRowData(currentRow++, no++, g.Key.DefectTypeCode ?? "", g.Key.DefectTypeName ?? "", count, avg);
+                Business.Helpers.XLHelper.SetRowData(sheet1, currentRow++, no++,
+                    g.Key.DefectTypeCode ?? "", g.Key.DefectTypeName ?? "", count, avg);
             }
             for (var i = 1; i <= headerTitle.Length; i++)
                 sheet2.Column(i).AdjustToContents();

@@ -28,6 +28,7 @@ namespace FQCS.Admin.Data.Models
         public virtual DbSet<ProductModel> ProductModel { get; set; }
         public virtual DbSet<QCDevice> QCDevice { get; set; }
         public virtual DbSet<QCEvent> QCEvent { get; set; }
+        public virtual DbSet<QCEventDetail> QCEventDetail { get; set; }
         public virtual DbSet<AppConfig> AppConfig { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -168,11 +169,24 @@ namespace FQCS.Admin.Data.Models
                     .HasForeignKey(e => e.QCDeviceId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_QCDevice_QCEvent");
+            });
+            modelBuilder.Entity<QCEventDetail>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .IsUnicode(false)
+                    .HasMaxLength(255);
+                entity.HasOne(e => e.Event)
+                    .WithMany(e => e.Details)
+                    .HasForeignKey(e => e.EventId)
+                    .IsRequired(true)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_QCEvent_QCEventDetail");
                 entity.HasOne(e => e.DefectType)
-                    .WithMany(e => e.Events)
+                    .WithMany(e => e.Details)
                     .HasForeignKey(e => e.DefectTypeId)
+                    .IsRequired(true)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_DefectType_QCEvent");
+                    .HasConstraintName("FK_DefectType_QCEventDetail");
             });
             modelBuilder.Entity<DefectType>(entity =>
             {
