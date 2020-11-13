@@ -13,8 +13,8 @@ namespace FQCS.Admin.WebAdmin.Pages.AppConfig
     [InjectionFilter]
     public class DetailModel : BasePageModel<DetailModel>
     {
-        public string Id { get; set; }
-        public void OnGet(string id)
+        public int Id { get; set; }
+        public void OnGet(int id)
         {
             SetPageInfo();
             Id = id;

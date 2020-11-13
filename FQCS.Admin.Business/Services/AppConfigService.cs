@@ -200,10 +200,6 @@ namespace FQCS.Admin.Business.Services
                 validationData.Fail("Client secret must not be null", Constants.AppResultCode.FailValidation);
             if (string.IsNullOrWhiteSpace(model.Name))
                 validationData.Fail("Name must not be null", Constants.AppResultCode.FailValidation);
-            if (string.IsNullOrWhiteSpace(model.Id))
-                validationData.Fail("Config ID must not be null", Constants.AppResultCode.FailValidation);
-            else if (AppConfigs.Exists(model.Id))
-                validationData.Fail("Config ID existed", Constants.AppResultCode.FailValidation);
             return validationData;
         }
 

@@ -205,9 +205,6 @@ namespace FQCS.Admin.Data.Models
             });
             modelBuilder.Entity<AppConfig>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .IsUnicode(false)
-                    .HasMaxLength(255);
                 entity.Property(e => e.Name)
                     .HasMaxLength(255);
                 entity.Property(e => e.ClientId)

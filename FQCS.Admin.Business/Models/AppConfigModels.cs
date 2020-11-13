@@ -17,8 +17,6 @@ namespace FQCS.Admin.Business.Models
         {
         }
 
-        [JsonProperty("id")]
-        public string Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("client_id")]
@@ -49,7 +47,7 @@ namespace FQCS.Admin.Business.Models
     public class ChangeDefaultConfigModel
     {
         [JsonProperty("config_id")]
-        public string ConfigId { get; set; }
+        public int ConfigId { get; set; }
     }
 
     #region Query
@@ -121,7 +119,7 @@ namespace FQCS.Admin.Business.Models
 
     public class AppConfigQueryFilter
     {
-        public string id { get; set; }
+        public int? id { get; set; }
         public string name_contains { get; set; }
         public bool? is_default { get; set; }
     }

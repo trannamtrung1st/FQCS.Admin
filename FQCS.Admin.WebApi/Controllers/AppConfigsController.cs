@@ -65,7 +65,7 @@ namespace FQCS.Admin.WebApi.Controllers
 
         [Authorize]
         [HttpPatch("{id}")]
-        public IActionResult Update(string id, UpdateAppConfigModel model)
+        public IActionResult Update(int id, UpdateAppConfigModel model)
         {
             var entity = _service.AppConfigs.Id(id).FirstOrDefault();
             if (entity == null)
@@ -102,7 +102,7 @@ namespace FQCS.Admin.WebApi.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
             try
             {

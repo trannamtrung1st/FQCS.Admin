@@ -10,7 +10,7 @@ namespace FQCS.Admin.Business.Queries
 {
     public static class AppConfigQuery
     {
-        public static IQueryable<AppConfig> Id(this IQueryable<AppConfig> query, string id)
+        public static IQueryable<AppConfig> Id(this IQueryable<AppConfig> query, int id)
         {
             return query.Where(o => o.Id == id);
         }
@@ -25,12 +25,12 @@ namespace FQCS.Admin.Business.Queries
             return query.Select(o => new AppConfig { Id = o.Id });
         }
 
-        public static bool Exists(this IQueryable<AppConfig> query, string id)
+        public static bool Exists(this IQueryable<AppConfig> query, int id)
         {
             return query.Any(o => o.Id == id);
         }
 
-        public static IQueryable<AppConfig> Ids(this IQueryable<AppConfig> query, IEnumerable<string> ids)
+        public static IQueryable<AppConfig> Ids(this IQueryable<AppConfig> query, IEnumerable<int> ids)
         {
             return query.Where(o => ids.Contains(o.Id));
         }

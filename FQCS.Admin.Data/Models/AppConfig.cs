@@ -6,7 +6,7 @@ namespace FQCS.Admin.Data.Models
 {
     public class AppConfig
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
