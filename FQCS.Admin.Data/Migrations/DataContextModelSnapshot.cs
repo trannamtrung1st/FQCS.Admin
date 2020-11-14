@@ -21,10 +21,10 @@ namespace FQCS.Admin.Data.Migrations
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.AppConfig", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)")
-                        .HasMaxLength(255)
-                        .IsUnicode(false);
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClientId")
                         .HasColumnType("varchar(255)")
@@ -116,8 +116,8 @@ namespace FQCS.Admin.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "de61be4a-b1f5-414e-ae8b-66b9a9779027",
-                            ConcurrencyStamp = "2d80ad9d-5724-47de-8811-d59384ff62bc",
+                            Id = "358109eb-d236-4410-86b6-0c9a88136a5c",
+                            ConcurrencyStamp = "b3eb9030-8310-4fdf-986b-07813e4e468e",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -351,8 +351,8 @@ namespace FQCS.Admin.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AppConfigId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int?>("AppConfigId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Archived")
                         .HasColumnType("bit");
@@ -398,9 +398,6 @@ namespace FQCS.Admin.Data.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DefectTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
@@ -424,15 +421,39 @@ namespace FQCS.Admin.Data.Migrations
                         .HasMaxLength(2000)
                         .IsUnicode(false);
 
-                    b.HasKey("Id");
+                    b.Property<string>("SideImages")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("DefectTypeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductionBatchId");
 
                     b.HasIndex("QCDeviceId");
 
                     b.ToTable("QCEvent");
+                });
+
+            modelBuilder.Entity("FQCS.Admin.Data.Models.QCEventDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)")
+                        .HasMaxLength(255)
+                        .IsUnicode(false);
+
+                    b.Property<int>("DefectTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EventId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DefectTypeId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("QCEventDetail");
                 });
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.Resource", b =>
@@ -598,12 +619,6 @@ namespace FQCS.Admin.Data.Migrations
 
             modelBuilder.Entity("FQCS.Admin.Data.Models.QCEvent", b =>
                 {
-                    b.HasOne("FQCS.Admin.Data.Models.DefectType", "DefectType")
-                        .WithMany("Events")
-                        .HasForeignKey("DefectTypeId")
-                        .HasConstraintName("FK_DefectType_QCEvent")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("FQCS.Admin.Data.Models.ProductionBatch", "Batch")
                         .WithMany("Events")
                         .HasForeignKey("ProductionBatchId")
@@ -616,6 +631,23 @@ namespace FQCS.Admin.Data.Migrations
                         .HasForeignKey("QCDeviceId")
                         .HasConstraintName("FK_QCDevice_QCEvent")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FQCS.Admin.Data.Models.QCEventDetail", b =>
+                {
+                    b.HasOne("FQCS.Admin.Data.Models.DefectType", "DefectType")
+                        .WithMany("Details")
+                        .HasForeignKey("DefectTypeId")
+                        .HasConstraintName("FK_DefectType_QCEventDetail")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FQCS.Admin.Data.Models.QCEvent", "Event")
+                        .WithMany("Details")
+                        .HasForeignKey("EventId")
+                        .HasConstraintName("FK_QCEvent_QCEventDetail")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

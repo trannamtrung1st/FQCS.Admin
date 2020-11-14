@@ -8,6 +8,24 @@ namespace FQCS.Admin.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AppConfig",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 255, nullable: true),
+                    ClientId = table.Column<string>(unicode: false, maxLength: 255, nullable: true),
+                    ClientSecret = table.Column<string>(unicode: false, maxLength: 500, nullable: true),
+                    IsDefault = table.Column<bool>(nullable: false),
+                    CreatedTime = table.Column<DateTime>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppConfig", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -251,6 +269,8 @@ namespace FQCS.Admin.Data.Migrations
                     Code = table.Column<string>(unicode: false, maxLength: 100, nullable: true),
                     Info = table.Column<string>(maxLength: 2000, nullable: true),
                     ProductionLineId = table.Column<int>(nullable: true),
+                    AppConfigId = table.Column<int>(nullable: true),
+                    DeviceAPIBaseUrl = table.Column<string>(maxLength: 255, nullable: true),
                     Archived = table.Column<bool>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     CreatedTime = table.Column<DateTime>(nullable: false)
@@ -258,6 +278,12 @@ namespace FQCS.Admin.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_QCDevice", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppConfig_QCDevice",
+                        column: x => x.AppConfigId,
+                        principalTable: "AppConfig",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductionLine_QCDevice",
                         column: x => x.ProductionLineId,
@@ -306,23 +332,17 @@ namespace FQCS.Admin.Data.Migrations
                 {
                     Id = table.Column<string>(unicode: false, maxLength: 255, nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
-                    DefectTypeId = table.Column<int>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     CreatedTime = table.Column<DateTime>(nullable: false),
                     ProductionBatchId = table.Column<int>(nullable: false),
                     QCDeviceId = table.Column<int>(nullable: false),
                     LeftImage = table.Column<string>(unicode: false, maxLength: 2000, nullable: true),
-                    RightImage = table.Column<string>(unicode: false, maxLength: 2000, nullable: true)
+                    RightImage = table.Column<string>(unicode: false, maxLength: 2000, nullable: true),
+                    SideImages = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_QCEvent", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DefectType_QCEvent",
-                        column: x => x.DefectTypeId,
-                        principalTable: "DefectType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductionBatch_QCEvent",
                         column: x => x.ProductionBatchId,
@@ -337,10 +357,35 @@ namespace FQCS.Admin.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "QCEventDetail",
+                columns: table => new
+                {
+                    Id = table.Column<string>(unicode: false, maxLength: 255, nullable: false),
+                    DefectTypeId = table.Column<int>(nullable: false),
+                    EventId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QCEventDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DefectType_QCEventDetail",
+                        column: x => x.DefectTypeId,
+                        principalTable: "DefectType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_QCEvent_QCEventDetail",
+                        column: x => x.EventId,
+                        principalTable: "QCEvent",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "7f5bb645-b211-45fd-8068-1a048947e97d", "8f3ed609-1863-45c3-bad8-527ff511c552", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "358109eb-d236-4410-86b6-0c9a88136a5c", "b3eb9030-8310-4fdf-986b-07813e4e468e", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppEvent_UserId",
@@ -397,14 +442,14 @@ namespace FQCS.Admin.Data.Migrations
                 column: "ProductionLineId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_QCDevice_AppConfigId",
+                table: "QCDevice",
+                column: "AppConfigId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_QCDevice_ProductionLineId",
                 table: "QCDevice",
                 column: "ProductionLineId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QCEvent_DefectTypeId",
-                table: "QCEvent",
-                column: "DefectTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QCEvent_ProductionBatchId",
@@ -415,6 +460,16 @@ namespace FQCS.Admin.Data.Migrations
                 name: "IX_QCEvent_QCDeviceId",
                 table: "QCEvent",
                 column: "QCDeviceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QCEventDetail_DefectTypeId",
+                table: "QCEventDetail",
+                column: "DefectTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QCEventDetail_EventId",
+                table: "QCEventDetail",
+                column: "EventId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -438,7 +493,7 @@ namespace FQCS.Admin.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "QCEvent");
+                name: "QCEventDetail");
 
             migrationBuilder.DropTable(
                 name: "Resource");
@@ -453,6 +508,9 @@ namespace FQCS.Admin.Data.Migrations
                 name: "DefectType");
 
             migrationBuilder.DropTable(
+                name: "QCEvent");
+
+            migrationBuilder.DropTable(
                 name: "ProductionBatch");
 
             migrationBuilder.DropTable(
@@ -460,6 +518,9 @@ namespace FQCS.Admin.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductModel");
+
+            migrationBuilder.DropTable(
+                name: "AppConfig");
 
             migrationBuilder.DropTable(
                 name: "ProductionLine");
