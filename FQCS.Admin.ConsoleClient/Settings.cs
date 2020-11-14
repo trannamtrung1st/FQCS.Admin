@@ -14,8 +14,5 @@ namespace FQCS.Admin.ConsoleClient
         public string KafkaServer { get; set; }
         public string KafkaUsername { get; set; }
         public string KafkaPassword { get; set; }
-        public string TestImage { get; set; }
-        public string TestDefectCode { get; set; }
-        public string TestDeviceId { get; set; }
     }
 }

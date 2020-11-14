@@ -68,6 +68,7 @@ namespace FQCS.Admin.Business.Services
                 DefectTypeCode = defectTypesMap[o.DefectTypeId].Code,
             });
             var passRecords = qcEventService.QCEvents.OfBatch(options.batch_id)
+                .Passed()
                 .SortByTime(false)
                 .Select(o => new
                 {
@@ -109,7 +110,7 @@ namespace FQCS.Admin.Business.Services
             {
                 var count = g.Count();
                 var avg = Math.Round((double)count / proBatch.TotalAmount * 100, 2);
-                Business.Helpers.XLHelper.SetRowData(sheet1, currentRow++, no++,
+                Business.Helpers.XLHelper.SetRowData(sheet2, currentRow++, no++,
                     g.Key.DefectTypeCode ?? "", g.Key.DefectTypeName ?? "", count, avg);
             }
             for (var i = 1; i <= headerTitle.Length; i++)

@@ -35,6 +35,11 @@ namespace FQCS.Admin.Business.Queries
             return query.Where(o => o.ProductionBatchId == batchId);
         }
 
+        public static IQueryable<QCEvent> Passed(this IQueryable<QCEvent> query)
+        {
+            return query.Where(o => !o.Details.Any());
+        }
+
         public static IQueryable<QCEvent> SortByTime(this IQueryable<QCEvent> query, bool asc)
         {
             return asc ? query.OrderBy(o => o.CreatedTime) :

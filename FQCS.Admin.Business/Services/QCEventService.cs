@@ -63,6 +63,7 @@ namespace FQCS.Admin.Business.Services
                                     name = o.DefectType.Name
                                 }
                             }).ToList();
+                            obj["details"] = details;
                             obj["description"] = entity.Description;
                             obj["production_batch_id"] = entity.ProductionBatchId;
                             obj["qc_device_id"] = entity.QCDeviceId;

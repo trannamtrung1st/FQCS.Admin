@@ -87,7 +87,7 @@ namespace FQCS.Admin.EventHandler
 
             var entity = qcEventService.ConvertToQCEvent(model, device);
             var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
-            var folderPath = Path.Combine(savePath, dateStr, model.Id);
+            var folderPath = Path.Combine(savePath, dateStr);
             var imagesB64 = new List<(byte[], string)>();
             if (model.LeftB64Image != null && model.RightB64Image != null)
             {
