@@ -86,31 +86,32 @@ namespace FQCS.Admin.EventHandler
             }).First();
 
             var entity = qcEventService.ConvertToQCEvent(model, device);
-            var dateStr = model.CreatedTime.Date.ToString("yyyyMMdd");
-            var folderPath = Path.Combine(savePath, dateStr);
             var imagesB64 = new List<(byte[], string)>();
             if (model.LeftB64Image != null && model.RightB64Image != null)
             {
                 var leftImg = Convert.FromBase64String(model.LeftB64Image);
                 var rightImg = Convert.FromBase64String(model.RightB64Image);
-                var (leftRel, lFull) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
-                var (rightRel, rFull) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
-                entity.LeftImage = leftRel;
-                entity.RightImage = rightRel;
+                var (leftDir, leftFile) = (Path.GetDirectoryName(model.LeftImage), Path.GetFileName(model.LeftImage));
+                var (rightDir, rightFile) = (Path.GetDirectoryName(model.RightImage), Path.GetFileName(model.RightImage));
+                var (leftRel, lFull) = fileService.GetFilePath(Path.Combine(savePath, leftDir), savePath, leftFile, ext: ".jpg");
+                var (rightRel, rFull) = fileService.GetFilePath(Path.Combine(savePath, rightDir), savePath, rightFile, ext: ".jpg");
+                entity.LeftImage = model.LeftImage;
+                entity.RightImage = model.RightImage;
                 imagesB64.Add((leftImg, lFull));
                 imagesB64.Add((rightImg, rFull));
             }
             if (model.SideB64Images != null)
             {
-                var sideImages = new List<string>();
-                foreach (var b64 in model.SideB64Images)
+                for (var i = 0; i < model.SideB64Images.Count; i++)
                 {
+                    var b64 = model.SideB64Images[i];
+                    var imgPath = model.SideImages[i];
                     var img = Convert.FromBase64String(b64);
-                    var (rel, full) = fileService.GetFilePath(folderPath, savePath, ext: ".jpg");
-                    sideImages.Add(rel);
+                    var (dir, file) = (Path.GetDirectoryName(imgPath), Path.GetFileName(imgPath));
+                    var (rel, full) = fileService.GetFilePath(Path.Combine(savePath, dir), savePath, file, ext: ".jpg");
                     imagesB64.Add((img, full));
                 }
-                entity.SideImages = JsonConvert.SerializeObject(sideImages);
+                entity.SideImages = JsonConvert.SerializeObject(model.SideImages);
             }
             return (entity, imagesB64);
         }

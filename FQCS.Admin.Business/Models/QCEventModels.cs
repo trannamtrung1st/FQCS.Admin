@@ -48,14 +48,20 @@ namespace FQCS.Admin.Business.Models
         public DateTime CreatedTime { get; set; }
         [JsonProperty("identifier")]
         public string Identifier { get; set; }
+        [JsonProperty("left_image")]
+        public string LeftImage { get; set; }
+        [JsonProperty("right_image")]
+        public string RightImage { get; set; }
+        [JsonProperty("side_images")]
+        public IList<string> SideImages { get; set; }
         [JsonProperty("left_b64_image")]
         public string LeftB64Image { get; set; }
         [JsonProperty("right_b64_image")]
         public string RightB64Image { get; set; }
         [JsonProperty("side_b64_images")]
-        public IEnumerable<string> SideB64Images { get; set; }
+        public IList<string> SideB64Images { get; set; }
         [JsonProperty("details")]
-        public IEnumerable<QCEventDetailMessage> Details { get; set; }
+        public IList<QCEventDetailMessage> Details { get; set; }
     }
 
     public class QCEventDetailMessage
