@@ -21,6 +21,7 @@ namespace FQCS.Admin.Data.Models
         public string LeftImage { get; set; }
         public string RightImage { get; set; }
         public string SideImages { get; set; }
+        public bool Seen { get; set; }
 
         public virtual ProductionBatch Batch { get; set; }
         public virtual QCDevice Device { get; set; }

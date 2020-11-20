@@ -14,6 +14,7 @@ using ClosedXML.Excel;
 using static FQCS.Admin.Business.Constants;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using EFCore.BulkExtensions;
 
 namespace FQCS.Admin.Business.Services
 {
@@ -83,6 +84,7 @@ namespace FQCS.Admin.Business.Services
                                 display = timeStr,
                                 iso = $"{time.ToUniversalTime():s}Z"
                             };
+                            obj["seen"] = entity.Seen;
                         }
                         break;
                     case QCEventQueryProjection.BATCH:
@@ -236,6 +238,26 @@ namespace FQCS.Admin.Business.Services
             if (options.count_total) result.Count = totalCount;
             return result;
         }
+
+        public IQueryable<QCEvent> GetQueryableQCEventForUpdate(
+            QCEventQueryOptions options,
+            QCEventQueryFilter filter = null,
+            QCEventQuerySort sort = null,
+            QCEventQueryPaging paging = null)
+        {
+            var query = QCEvents;
+            if (filter != null) query = query.Filter(filter);
+            if (!options.single_only)
+            {
+                if (paging != null && (!options.load_all || !QCEventQueryOptions.IsLoadAllAllowed))
+                {
+                    if (sort != null) query = query.Sort(sort);
+                    query = query.SelectPage(paging.page, paging.limit);
+                }
+            }
+            return query;
+        }
+
         #endregion
 
         #region Create QCEventService
@@ -250,6 +272,25 @@ namespace FQCS.Admin.Business.Services
             return context.QCEvent.Add(entity).Entity;
         }
         #endregion
+
+        #region Update
+        protected void PrepareUpdate(QCEvent entity)
+        {
+            entity.LastUpdated = DateTime.UtcNow;
+        }
+
+        public int UpdateEventsSeenStatus(IQueryable<QCEvent> entities, bool val)
+        {
+            var updated = new QCEvent
+            {
+                Seen = val
+            };
+            PrepareUpdate(updated);
+            return entities.BatchUpdate(updated, new List<string> {
+                nameof(QCEvent.Seen), nameof(QCEvent.LastUpdated) });
+        }
+        #endregion
+
         public QCEvent ConvertToQCEvent(QCEventMessage model, QCDevice device)
         {
             var defectTypeService = provider.GetRequiredService<DefectTypeService>();
@@ -331,6 +372,16 @@ namespace FQCS.Admin.Business.Services
             if (string.IsNullOrWhiteSpace(model.Identifier))
                 return validationData.Fail(mess: "Identifier must not be null", AppResultCode.FailValidation);
             return validationData;
+        }
+
+        public ValidationData ValidateUpdateSeenStatus(
+            ClaimsPrincipal principal,
+            QCEventQueryFilter filter,
+            QCEventQuerySort sort,
+            QCEventQueryPaging paging,
+            QCEventQueryOptions options)
+        {
+            return new ValidationData();
         }
 
         public ValidationData ValidateGetQCEvents(

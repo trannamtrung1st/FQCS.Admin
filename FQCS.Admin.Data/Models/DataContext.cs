@@ -159,6 +159,8 @@ namespace FQCS.Admin.Data.Models
                 entity.Property(e => e.RightImage)
                     .IsUnicode(false)
                     .HasMaxLength(2000);
+                entity.Property(e => e.Seen)
+                    .HasDefaultValue(false);
                 entity.HasOne(e => e.Batch)
                     .WithMany(e => e.Events)
                     .HasForeignKey(e => e.ProductionBatchId)

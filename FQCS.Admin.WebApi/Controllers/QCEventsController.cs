@@ -47,5 +47,23 @@ namespace FQCS.Admin.WebApi.Controllers
             return Ok(AppResult.Success(result));
         }
 
+
+        [Authorize]
+        [HttpPut("seen-status")]
+        public IActionResult UpdateSeenStatus([FromQuery][QueryObject]QCEventQueryFilter filter,
+            [FromQuery]QCEventQuerySort sort,
+            [FromQuery]QCEventQueryPaging paging,
+            [FromQuery]QCEventQueryOptions options)
+        {
+            var validationData = _service.ValidateUpdateSeenStatus(
+                User, filter, sort, paging, options);
+            if (!validationData.IsValid)
+                return BadRequest(AppResult.FailValidation(data: validationData));
+            var query = _service.GetQueryableQCEventForUpdate(options, filter, sort, paging);
+            var updated = _service.UpdateEventsSeenStatus(query, true);
+            return Ok(AppResult.Success(updated));
+        }
+
+
     }
 }

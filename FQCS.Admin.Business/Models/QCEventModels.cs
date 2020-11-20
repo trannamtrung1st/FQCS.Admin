@@ -149,6 +149,7 @@ namespace FQCS.Admin.Business.Models
     public class QCEventQueryFilter
     {
         public string id { get; set; }
+        public string[] ids { get; set; }
         public int? batch_id { get; set; }
     }
 
@@ -189,7 +190,9 @@ namespace FQCS.Admin.Business.Models
         public bool single_only { get; set; }
         public bool load_all { get; set; }
 
-        public const bool IsLoadAllAllowed = false;
+        // temp for update events status
+
+        public const bool IsLoadAllAllowed = true;
     }
     #endregion
 }
