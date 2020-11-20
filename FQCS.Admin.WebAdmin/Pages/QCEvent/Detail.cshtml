@@ -123,6 +123,7 @@
                 },
                 success: (respData) => {
                     console.log(respData);
+                    updateSeenStatus();
                     let data = respData.data.single;
                     tempData = data;
                     processData(data);
@@ -166,6 +167,21 @@
                     formMain.find('[name=side_images]').append(img);
                 }
             }
+        }
+
+        function updateSeenStatus() {
+            let queryString = 'load_all=true&id=@Model.Id';
+            $.ajax({
+                url: '@apiUrl/@Business.Constants.ApiEndpoint.QC_EVENT_API/seen-status?' + queryString,
+                type: 'put',
+                success: (data) => {
+                },
+                error: (resp) => {
+                    handleGeneralError(resp);
+                },
+                complete: () => {
+                }
+            });
         }
 
     </script>
