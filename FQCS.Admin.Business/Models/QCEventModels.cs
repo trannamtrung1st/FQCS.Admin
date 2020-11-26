@@ -151,6 +151,7 @@ namespace FQCS.Admin.Business.Models
         public string id { get; set; }
         public string[] ids { get; set; }
         public int? batch_id { get; set; }
+        public bool? seen { get; set; }
     }
 
     public class QCEventQueryPaging

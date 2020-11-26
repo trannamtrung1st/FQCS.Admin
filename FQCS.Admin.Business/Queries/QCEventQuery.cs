@@ -75,6 +75,8 @@ namespace FQCS.Admin.Business.Queries
                 query = query.Ids(filter.ids);
             if (filter.batch_id != null)
                 query = query.Where(o => o.ProductionBatchId == filter.batch_id);
+            if (filter.seen != null)
+                query = query.Where(o => o.Seen == filter.seen);
             return query;
         }
 
