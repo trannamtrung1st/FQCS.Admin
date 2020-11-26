@@ -63,7 +63,6 @@
                                 <option value="">Not selected</option>
                                 <option value="@Business.Constants.QCEventOps.GET_EVENTS">Manual get new QC events</option>
                                 <option value="@Business.Constants.QCEventOps.DOWNLOAD_IMAGES">Download images folder</option>
-                                <option value="@Business.Constants.QCEventOps.UPDATE_STATUS">Update sent status of events</option>
                                 <option value="@Business.Constants.QCEventOps.TRIGGER_SEND">Trigger sending new QC events</option>
                                 <option value="@Business.Constants.QCEventOps.CLEAR_ALL">Clear all events</option>
                             </select>
@@ -359,12 +358,6 @@
                         }
                     };
                     func = sendDownloadCommand;
-                    break;
-                case '@Business.Constants.QCEventOps.UPDATE_STATUS':
-                    success = (respData) => {
-                        successAlert("Success: " + respData.data);
-                    }
-                    func = sendGeneralCommand;
                     break;
                 case '@Business.Constants.QCEventOps.TRIGGER_SEND':
                     success = (respData) => {

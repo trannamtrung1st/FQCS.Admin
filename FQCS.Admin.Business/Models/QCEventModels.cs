@@ -14,8 +14,6 @@ namespace FQCS.Admin.Business.Models
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("noti_sent")]
-        public bool NotiSent { get; set; }
         [JsonProperty("left_image")]
         public string LeftImage { get; set; }
         [JsonProperty("right_image")]

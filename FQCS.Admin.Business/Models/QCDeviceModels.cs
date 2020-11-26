@@ -17,6 +17,12 @@ namespace FQCS.Admin.Business.Models
         public Dictionary<string, object> Settings { get; set; }
     }
 
+    public class UpdateLastEventTimeModel
+    {
+        [JsonProperty("utc_time")]
+        public DateTime UtcTime { get; set; }
+    }
+
     public class CreateQCDeviceModel : MappingModel<QCDevice>
     {
         public CreateQCDeviceModel()

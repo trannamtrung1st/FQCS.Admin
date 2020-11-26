@@ -249,7 +249,7 @@ namespace FQCS.Admin.Business.Services
         #endregion
 
         #region Send command
-        public async Task<(int, int)> SendCommandGetEvents(SendCommandToDeviceAPIModel model,
+        public async Task<(int, int, DateTime?)> SendCommandGetEvents(SendCommandToDeviceAPIModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
             var qcEventService = provider.GetRequiredService<QCEventService>();
@@ -257,7 +257,7 @@ namespace FQCS.Admin.Business.Services
             var queryStr = new Dictionary<string, object>()
             {
                 { "load_all", true },
-                { "sent", false }
+                { "latest", true },
             }.ToQueryString();
             var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events?{queryStr}";
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(url, UriKind.Absolute));
@@ -269,6 +269,7 @@ namespace FQCS.Admin.Business.Services
                 throw new Exception("Error sending command");
             var respObj = await resp.Content.ReadAsAsync<AppResultDeviceModel<QueryResult<QCEventDeviceModel>>>();
             int successCount = 0; int failCount = 0;
+            DateTime? latest = null;
             foreach (var e in respObj.Data.List)
             {
                 if (!qcEventService.QCEvents.Exists(e.Id))
@@ -278,12 +279,30 @@ namespace FQCS.Admin.Business.Services
                         var newEntity = qcEventService.ConvertToQCEvent(e, entity);
                         newEntity = qcEventService.CreateQCEvent(newEntity);
                         successCount++;
+                        if (latest == null || newEntity.CreatedTime > latest)
+                            latest = newEntity.CreatedTime;
                     }
                     catch (Exception) { failCount++; }
 
                 }
             }
-            return (successCount, failCount);
+            return (successCount, failCount, latest);
+        }
+
+        public async Task SendCommandUpdateLastEventTime(UpdateLastEventTimeModel model,
+            QCDevice entity, AppConfig deviceConfig)
+        {
+            var qcEventService = provider.GetRequiredService<QCEventService>();
+            var identityService = provider.GetRequiredService<IdentityService>();
+            var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/last-event-time";
+            var request = new HttpRequestMessage(HttpMethod.Put, new Uri(url, UriKind.Absolute));
+            request.Content = new JsonContent(model);
+            var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);
+            request.Headers.Authorization = new AuthenticationHeaderValue(
+                Constants.DeviceConstants.AppClientScheme, authHeader);
+            var resp = await Global.HttpDevice.SendAsync(request);
+            if (!resp.IsSuccessStatusCode)
+                throw new Exception("Error sending command");
         }
 
         public async Task<(Stream, string)> SendCommandDownloadImages(SendCommandToDeviceAPIModel model,
@@ -302,27 +321,6 @@ namespace FQCS.Admin.Business.Services
             var contentDisposition = resp.Content.Headers.ContentDisposition;
             if (contentDisposition != null) fileName = contentDisposition.FileName;
             return (await resp.Content.ReadAsStreamAsync(), fileName);
-        }
-
-        public async Task<int> SendCommandUpdateSentStatus(SendCommandToDeviceAPIModel model,
-            QCDevice entity, AppConfig deviceConfig)
-        {
-            var identityService = provider.GetRequiredService<IdentityService>();
-            var queryStr = new Dictionary<string, object>()
-            {
-                { "load_all", true },
-                { "sent", false }
-            }.ToQueryString();
-            var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/sent-status?{queryStr}";
-            var request = new HttpRequestMessage(HttpMethod.Put, new Uri(url, UriKind.Absolute));
-            var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);
-            request.Headers.Authorization = new AuthenticationHeaderValue(
-                Constants.DeviceConstants.AppClientScheme, authHeader);
-            var resp = await Global.HttpDevice.SendAsync(request);
-            if (!resp.IsSuccessStatusCode)
-                throw new Exception("Error sending command");
-            var respObj = await resp.Content.ReadAsAsync<AppResultDeviceModel<int>>();
-            return respObj.Data;
         }
 
         public async Task<DateTimeOffset> SendCommandTriggerSendUnsent(SendCommandToDeviceAPIModel model,

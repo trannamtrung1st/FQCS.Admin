@@ -140,12 +140,18 @@ namespace FQCS.Admin.WebApi.Controllers
             switch (model.Command)
             {
                 case Business.Constants.QCEventOps.GET_EVENTS:
-                    var (succ, fail) = await _service.SendCommandGetEvents(model, entity, entity.Config);
+                    var (succ, fail, latest) = await _service.SendCommandGetEvents(model, entity, entity.Config);
                     respData = new
                     {
                         success = succ,
                         fail = fail
                     };
+                    context.SaveChanges();
+                    if (latest != null)
+                        await _service.SendCommandUpdateLastEventTime(new UpdateLastEventTimeModel
+                        {
+                            UtcTime = latest.Value
+                        }, entity, entity.Config);
                     break;
                 case Business.Constants.QCEventOps.DOWNLOAD_IMAGES:
                     var (stream, fileName) = await _service.SendCommandDownloadImages(
@@ -160,11 +166,6 @@ namespace FQCS.Admin.WebApi.Controllers
                     var dateTimeOffset = await _service.SendCommandTriggerSendUnsent(
                         model, entity, entity.Config);
                     respData = dateTimeOffset;
-                    break;
-                case Business.Constants.QCEventOps.UPDATE_STATUS:
-                    var updated = await _service.SendCommandUpdateSentStatus(
-                        model, entity, entity.Config);
-                    respData = updated;
                     break;
             }
             // must be in transaction
