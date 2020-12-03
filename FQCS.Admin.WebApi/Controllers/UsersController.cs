@@ -129,7 +129,7 @@ namespace FQCS.Admin.WebApi.Controllers
             return Ok(AppResult.Success(data));
         }
 
-        [HttpPost("")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm]RegisterModel model)
         {
             if (ModelState.IsValid)
@@ -142,7 +142,8 @@ namespace FQCS.Admin.WebApi.Controllers
                 {
                     var entity = _service.ConvertToUser(model);
                     result = await _service
-                        .CreateUserWithRolesTransactionAsync(entity, model.password);
+                        .CreateUserWithRolesTransactionAsync(entity, model.password,
+                            new[] { Data.Constants.RoleName.ADMIN });
                     if (result.Succeeded)
                     {
                         trans.Commit();

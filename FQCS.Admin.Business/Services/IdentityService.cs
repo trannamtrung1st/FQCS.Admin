@@ -316,7 +316,10 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateRegister(
             ClaimsPrincipal principal, RegisterModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (Users.Any())
+                validationData.Fail("Access denied", Business.Constants.AppResultCode.AccessDenied);
+            return validationData;
         }
         #endregion
 
