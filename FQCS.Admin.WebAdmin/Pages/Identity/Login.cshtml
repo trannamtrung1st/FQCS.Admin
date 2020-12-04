@@ -102,42 +102,50 @@
     <!-- AdminLTE App -->
     <script src="/dist/js/adminlte.min.js"></script>
     <partial name="AppScript" />
-    <script>
-        clearToken();
-        $(document).ready(() => {
-            $('#form-main').validate({
-                submitHandler: function (form) {
-                    form.submit();
-                },
-                rules: {
-                    username: {
-                        required: true,
-                    },
-                    password: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    username: {
-                        required: "Username required",
-                    },
-                    password: {
+	<script>
+		clearToken();
+		$(document).ready(() => {
+			$('#form-main').validate({
+				submitHandler: function (form) {
+					form.submit();
+				},
+				rules: {
+					username: {
+						required: true,
+						minlength: 5,
+						maxlength: 30,
+					},
+					password: {
+						required: true,
+						minlength: 6,
+						maxlength: 30,
+					},
+				},
+				messages: {
+					username: {
+						required: "Username required",
+						minlength: "Minimum length for username is 5 characters",
+						maxlength: "Maximum length for username is 30 characters",
+					},
+					password: {
                         required: "Password required",
-                    },
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.input-group').append(error);
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }
-            });
-        });
-    </script>
+						minlength: "Minimum length for password is 6 characters",
+						maxlength: "Maximum length for password is 30 characters",
+					},
+				},
+				errorElement: 'span',
+				errorPlacement: function (error, element) {
+					error.addClass('invalid-feedback');
+					element.closest('.input-group').append(error);
+				},
+				highlight: function (element, errorClass, validClass) {
+					$(element).addClass('is-invalid');
+				},
+				unhighlight: function (element, errorClass, validClass) {
+					$(element).removeClass('is-invalid');
+				}
+			});
+		});
+	</script>
 </body>
 </html>

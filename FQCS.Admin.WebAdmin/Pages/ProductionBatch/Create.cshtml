@@ -95,7 +95,7 @@
     <script src="/plugins/jquery-validation/additional-methods.min.js"></script>
     <!-- Select2 -->
     <script src="/plugins/select2/js/select2.full.min.js"></script>
-    <script type="text/javascript">
+	<script type="text/javascript">
         $(document).ready(function () {
             $('.select2').select2();
             getProductionLines();
@@ -105,6 +105,8 @@
                 rules: {
                     code: {
                         required: true,
+                        minlength: 5,
+                        maxlength: 50,
                     },
                     production_line_id: {
                         required: true,
@@ -112,10 +114,17 @@
                     product_model_id: {
                         required: true,
                     },
+					total_amount: {
+						required: true,
+						min: 0,
+						max: 10000000,
+					},
                 },
                 messages: {
                     code: {
-                        required: "Code required",
+                        required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
                     },
                     production_line_id: {
                         required: "Must belong to a production line",
@@ -123,6 +132,11 @@
                     product_model_id: {
                         required: "Must define product model",
                     },
+					total_amount: {
+						required: "Total amount is required",
+						min: "Total amount must be between 0 and 10000000",
+						max: "Total amount must be between 0 and 10000000",
+					},
                 },
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
@@ -227,5 +241,5 @@
                 }
             });
         }
-    </script>
+	</script>
 }
