@@ -23,9 +23,9 @@ namespace FQCS.Admin.WebApi.Controllers
     public class AppConfigsController : BaseController
     {
         [Inject]
-        private readonly AppConfigService _service;
+        private readonly IAppConfigService _service;
         [Inject]
-        private readonly AppEventService _ev_service;
+        private readonly IAppEventService _ev_service;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [Authorize]

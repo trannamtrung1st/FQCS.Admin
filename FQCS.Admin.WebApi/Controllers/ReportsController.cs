@@ -25,7 +25,7 @@ namespace FQCS.Admin.WebApi.Controllers
     public class ReportsController : BaseController
     {
         [Inject]
-        private readonly ReportService _service;
+        private readonly IReportService _service;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
 #if RELEASE

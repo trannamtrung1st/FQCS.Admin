@@ -48,8 +48,8 @@ namespace FQCS.Admin.EventHandler
                         {
                             var sProvider = scope.ServiceProvider;
                             var context = sProvider.GetRequiredService<DataContext>();
-                            var qcEventService = sProvider.GetRequiredService<QCEventService>();
-                            var fileService = sProvider.GetRequiredService<FileService>();
+                            var qcEventService = sProvider.GetRequiredService<IQCEventService>();
+                            var fileService = sProvider.GetRequiredService<IFileService>();
                             var validationResult = qcEventService.ValidateQCMessage(model);
                             if (!validationResult.IsValid)
                             {
@@ -74,9 +74,9 @@ namespace FQCS.Admin.EventHandler
         protected (QCEvent, List<(byte[], string)>) ProcessQCMessage(IServiceProvider sProvider,
             QCEventMessage model, string savePath)
         {
-            var qcEventService = sProvider.GetRequiredService<QCEventService>();
-            var qcDeviceService = sProvider.GetRequiredService<QCDeviceService>();
-            var fileService = sProvider.GetRequiredService<FileService>();
+            var qcEventService = sProvider.GetRequiredService<IQCEventService>();
+            var qcDeviceService = sProvider.GetRequiredService<IQCDeviceService>();
+            var fileService = sProvider.GetRequiredService<IFileService>();
             var deviceCode = model.Identifier;
             var device = qcDeviceService.QCDevices.Code(deviceCode).Select(o => new QCDevice
             {

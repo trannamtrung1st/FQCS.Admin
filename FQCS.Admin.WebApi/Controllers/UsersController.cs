@@ -30,7 +30,7 @@ namespace FQCS.Admin.WebApi.Controllers
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [Inject]
-        private readonly IdentityService _service;
+        private readonly IIdentityService _service;
 
         #region OAuth
         [HttpPost("login")]

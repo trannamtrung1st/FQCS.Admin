@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FQCS.Admin.Kafka", "FQCS.Ad
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventHandler", "EventHandler", "{D19D81BF-8C3E-4B95-92FA-6D43D77FA9DF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{EF0F42BE-3195-49C5-BCD2-1A6900D065B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FQCS.Admin.Business.Test", "FQCS.Admin.Business.Test\FQCS.Admin.Business.Test.csproj", "{D26C942F-F495-432D-BADF-949573C6878C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,10 @@ Global
 		{3DF1F062-FB26-4024-BA5E-C8CC1CA6B28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF1F062-FB26-4024-BA5E-C8CC1CA6B28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF1F062-FB26-4024-BA5E-C8CC1CA6B28C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26C942F-F495-432D-BADF-949573C6878C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26C942F-F495-432D-BADF-949573C6878C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26C942F-F495-432D-BADF-949573C6878C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26C942F-F495-432D-BADF-949573C6878C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +74,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BEE1F61B-A709-4EF6-AFFC-65CF62684990} = {D19D81BF-8C3E-4B95-92FA-6D43D77FA9DF}
 		{3DF1F062-FB26-4024-BA5E-C8CC1CA6B28C} = {D19D81BF-8C3E-4B95-92FA-6D43D77FA9DF}
+		{D26C942F-F495-432D-BADF-949573C6878C} = {EF0F42BE-3195-49C5-BCD2-1A6900D065B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0B6C6BF3-B918-49B0-8F44-38F9458838EC}

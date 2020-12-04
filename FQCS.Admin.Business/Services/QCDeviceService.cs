@@ -21,7 +21,31 @@ using System.Net.Mime;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class QCDeviceService : Service
+    public interface IQCDeviceService
+    {
+        IQueryable<QCDevice> QCDevices { get; }
+
+        void ChangeQCDeviceStatus(QCDevice entity, ChangeQCDeviceStatusModel model);
+        QCDevice CreateQCDevice(CreateQCDeviceModel model);
+        QCDevice DeleteQCDevice(QCDevice entity);
+        List<IDictionary<string, object>> GetQCDeviceDynamic(IEnumerable<QCDevice> rows, QCDeviceQueryProjection projection, QCDeviceQueryOptions options);
+        IDictionary<string, object> GetQCDeviceDynamic(QCDevice row, QCDeviceQueryProjection projection, QCDeviceQueryOptions options);
+        Task<QueryResult<IDictionary<string, object>>> QueryQCDeviceDynamic(QCDeviceQueryProjection projection, QCDeviceQueryOptions options, QCDeviceQueryFilter filter = null, QCDeviceQuerySort sort = null, QCDeviceQueryPaging paging = null);
+        Task<int> SendCommandClearAllEvents(SendCommandToDeviceAPIModel model, QCDevice entity, AppConfig deviceConfig);
+        Task<(Stream, string)> SendCommandDownloadImages(SendCommandToDeviceAPIModel model, QCDevice entity, AppConfig deviceConfig);
+        Task<(int, int, DateTime?)> SendCommandGetEvents(SendCommandToDeviceAPIModel model, QCDevice entity, AppConfig deviceConfig);
+        Task<DateTimeOffset> SendCommandTriggerSendUnsent(SendCommandToDeviceAPIModel model, QCDevice entity, AppConfig deviceConfig);
+        Task SendCommandUpdateLastEventTime(UpdateLastEventTimeModel model, QCDevice entity, AppConfig deviceConfig);
+        void UpdateQCDevice(QCDevice entity, UpdateQCDeviceModel model);
+        ValidationData ValidateChangeQCDeviceStatus(ClaimsPrincipal principal, QCDevice entity, ChangeQCDeviceStatusModel model);
+        ValidationData ValidateCreateQCDevice(ClaimsPrincipal principal, CreateQCDeviceModel model);
+        ValidationData ValidateDeleteQCDevice(ClaimsPrincipal principal, QCDevice entity);
+        ValidationData ValidateGetQCDevices(ClaimsPrincipal principal, QCDeviceQueryFilter filter, QCDeviceQuerySort sort, QCDeviceQueryProjection projection, QCDeviceQueryPaging paging, QCDeviceQueryOptions options);
+        ValidationData ValidateSendCommandToDeviceAPI(ClaimsPrincipal principal, SendCommandToDeviceAPIModel model);
+        ValidationData ValidateUpdateQCDevice(ClaimsPrincipal principal, QCDevice entity, UpdateQCDeviceModel model);
+    }
+
+    public class QCDeviceService : Service, IQCDeviceService
     {
         public QCDeviceService(ServiceInjection inj) : base(inj)
         {
@@ -252,8 +276,8 @@ namespace FQCS.Admin.Business.Services
         public async Task<(int, int, DateTime?)> SendCommandGetEvents(SendCommandToDeviceAPIModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
-            var qcEventService = provider.GetRequiredService<QCEventService>();
-            var identityService = provider.GetRequiredService<IdentityService>();
+            var qcEventService = provider.GetRequiredService<IQCEventService>();
+            var identityService = provider.GetRequiredService<IIdentityService>();
             var queryStr = new Dictionary<string, object>()
             {
                 { "load_all", true },
@@ -292,8 +316,8 @@ namespace FQCS.Admin.Business.Services
         public async Task SendCommandUpdateLastEventTime(UpdateLastEventTimeModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
-            var qcEventService = provider.GetRequiredService<QCEventService>();
-            var identityService = provider.GetRequiredService<IdentityService>();
+            var qcEventService = provider.GetRequiredService<IQCEventService>();
+            var identityService = provider.GetRequiredService<IIdentityService>();
             var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/last-event-time";
             var request = new HttpRequestMessage(HttpMethod.Put, new Uri(url, UriKind.Absolute));
             request.Content = new JsonContent(model);
@@ -308,7 +332,7 @@ namespace FQCS.Admin.Business.Services
         public async Task<(Stream, string)> SendCommandDownloadImages(SendCommandToDeviceAPIModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
-            var identityService = provider.GetRequiredService<IdentityService>();
+            var identityService = provider.GetRequiredService<IIdentityService>();
             var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/images";
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(url, UriKind.Absolute));
             var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);
@@ -326,7 +350,7 @@ namespace FQCS.Admin.Business.Services
         public async Task<DateTimeOffset> SendCommandTriggerSendUnsent(SendCommandToDeviceAPIModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
-            var identityService = provider.GetRequiredService<IdentityService>();
+            var identityService = provider.GetRequiredService<IIdentityService>();
             var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/send-events";
             var request = new HttpRequestMessage(HttpMethod.Post, new Uri(url, UriKind.Absolute));
             var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);
@@ -342,7 +366,7 @@ namespace FQCS.Admin.Business.Services
         public async Task<int> SendCommandClearAllEvents(SendCommandToDeviceAPIModel model,
             QCDevice entity, AppConfig deviceConfig)
         {
-            var identityService = provider.GetRequiredService<IdentityService>();
+            var identityService = provider.GetRequiredService<IIdentityService>();
             var url = $"{entity.DeviceAPIBaseUrl}/api/qc-events/clear";
             var request = new HttpRequestMessage(HttpMethod.Post, new Uri(url, UriKind.Absolute));
             var authHeader = identityService.GetAppClientAuthHeader(deviceConfig);

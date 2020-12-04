@@ -15,7 +15,7 @@ namespace FQCS.Admin.WebAdmin.Pages.Identity
     public class LogoutModel : BasePageModel<LogoutModel>
     {
         [Inject]
-        protected readonly IdentityService identityService;
+        protected readonly IIdentityService identityService;
 
         public async Task<IActionResult> OnGet()
         {

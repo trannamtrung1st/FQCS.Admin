@@ -13,7 +13,25 @@ using TNT.Core.Helpers.General;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class ProductionBatchService : Service
+    public interface IProductionBatchService
+    {
+        IQueryable<ProductionBatch> ProductionBatchs { get; }
+
+        void ChangeProductionBatchStatus(ProductionBatch entity, ChangeProductionBatchStatusModel model);
+        ProductionBatch CreateProductionBatch(CreateProductionBatchModel model);
+        ProductionBatch DeleteProductionBatch(ProductionBatch entity);
+        List<IDictionary<string, object>> GetProductionBatchDynamic(IEnumerable<ProductionBatch> rows, ProductionBatchQueryProjection projection, ProductionBatchQueryOptions options);
+        IDictionary<string, object> GetProductionBatchDynamic(ProductionBatch row, ProductionBatchQueryProjection projection, ProductionBatchQueryOptions options);
+        Task<QueryResult<IDictionary<string, object>>> QueryProductionBatchDynamic(ProductionBatchQueryProjection projection, ProductionBatchQueryOptions options, ProductionBatchQueryFilter filter = null, ProductionBatchQuerySort sort = null, ProductionBatchQueryPaging paging = null);
+        void UpdateProductionBatch(ProductionBatch entity, UpdateProductionBatchModel model);
+        ValidationData ValidateChangeProductionBatchStatus(ClaimsPrincipal principal, ProductionBatch entity, ChangeProductionBatchStatusModel model);
+        ValidationData ValidateCreateProductionBatch(ClaimsPrincipal principal, CreateProductionBatchModel model);
+        ValidationData ValidateDeleteProductionBatch(ClaimsPrincipal principal, ProductionBatch entity);
+        ValidationData ValidateGetProductionBatchs(ClaimsPrincipal principal, ProductionBatchQueryFilter filter, ProductionBatchQuerySort sort, ProductionBatchQueryProjection projection, ProductionBatchQueryPaging paging, ProductionBatchQueryOptions options);
+        ValidationData ValidateUpdateProductionBatch(ClaimsPrincipal principal, ProductionBatch entity, UpdateProductionBatchModel model);
+    }
+
+    public class ProductionBatchService : Service, IProductionBatchService
     {
         public ProductionBatchService(ServiceInjection inj) : base(inj)
         {

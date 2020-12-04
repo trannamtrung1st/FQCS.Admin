@@ -12,7 +12,25 @@ using FQCS.Admin.Business.Helpers;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class ProductionLineService : Service
+    public interface IProductionLineService
+    {
+        IQueryable<ProductionLine> ProductionLines { get; }
+
+        void ChangeProductionLineStatus(ProductionLine entity, ChangeProductionLineStatusModel model);
+        ProductionLine CreateProductionLine(CreateProductionLineModel model);
+        ProductionLine DeleteProductionLine(ProductionLine entity);
+        List<IDictionary<string, object>> GetProductionLineDynamic(IEnumerable<ProductionLine> rows, ProductionLineQueryProjection projection, ProductionLineQueryOptions options);
+        IDictionary<string, object> GetProductionLineDynamic(ProductionLine row, ProductionLineQueryProjection projection, ProductionLineQueryOptions options);
+        Task<QueryResult<IDictionary<string, object>>> QueryProductionLineDynamic(ProductionLineQueryProjection projection, ProductionLineQueryOptions options, ProductionLineQueryFilter filter = null, ProductionLineQuerySort sort = null, ProductionLineQueryPaging paging = null);
+        void UpdateProductionLine(ProductionLine entity, UpdateProductionLineModel model);
+        ValidationData ValidateChangeProductionLineStatus(ClaimsPrincipal principal, ProductionLine entity, ChangeProductionLineStatusModel model);
+        ValidationData ValidateCreateProductionLine(ClaimsPrincipal principal, CreateProductionLineModel model);
+        ValidationData ValidateDeleteProductionLine(ClaimsPrincipal principal, ProductionLine entity);
+        ValidationData ValidateGetProductionLines(ClaimsPrincipal principal, ProductionLineQueryFilter filter, ProductionLineQuerySort sort, ProductionLineQueryProjection projection, ProductionLineQueryPaging paging, ProductionLineQueryOptions options);
+        ValidationData ValidateUpdateProductionLine(ClaimsPrincipal principal, ProductionLine entity, UpdateProductionLineModel model);
+    }
+
+    public class ProductionLineService : Service, IProductionLineService
     {
         public ProductionLineService(ServiceInjection inj) : base(inj)
         {

@@ -14,7 +14,28 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class ProductModelService : Service
+    public interface IProductModelService
+    {
+        IQueryable<ProductModel> ProductModels { get; }
+
+        ProductModel CreateProductModel(CreateProductModelModel model);
+        ProductModel DeleteProductModel(ProductModel entity);
+        void DeleteProductModelFolder(ProductModel entity, string uploadPath, string rootPath);
+        List<IDictionary<string, object>> GetProductModelDynamic(IEnumerable<ProductModel> rows, ProductModelQueryProjection projection, ProductModelQueryOptions options);
+        IDictionary<string, object> GetProductModelDynamic(ProductModel row, ProductModelQueryProjection projection, ProductModelQueryOptions options);
+        (string, string) GetProductModelImagePath(ProductModel entity, string uploadPath, string rootPath);
+        Task<QueryResult<IDictionary<string, object>>> QueryProductModelDynamic(ProductModelQueryProjection projection, ProductModelQueryOptions options, ProductModelQueryFilter filter = null, ProductModelQuerySort sort = null, ProductModelQueryPaging paging = null);
+        Task SaveReplaceProductModelImage(UpdateProductModelImageModel model, string fullPath, string rootPath, string oldRelPath);
+        void UpdateProductModel(ProductModel entity, UpdateProductModelModel model);
+        void UpdateProductModelImage(ProductModel entity, string relPath);
+        ValidationData ValidateCreateProductModel(ClaimsPrincipal principal, CreateProductModelModel model);
+        ValidationData ValidateDeleteProductModel(ClaimsPrincipal principal, ProductModel entity);
+        ValidationData ValidateGetProductModels(ClaimsPrincipal principal, ProductModelQueryFilter filter, ProductModelQuerySort sort, ProductModelQueryProjection projection, ProductModelQueryPaging paging, ProductModelQueryOptions options);
+        ValidationData ValidateUpdateProductModel(ClaimsPrincipal principal, ProductModel entity, UpdateProductModelModel model);
+        ValidationData ValidateUpdateProductModelImage(ClaimsPrincipal principal, ProductModel entity, UpdateProductModelImageModel model);
+    }
+
+    public class ProductModelService : Service, IProductModelService
     {
         public ProductModelService(ServiceInjection inj) : base(inj)
         {
@@ -154,7 +175,7 @@ namespace FQCS.Admin.Business.Services
         public (string, string) GetProductModelImagePath(ProductModel entity,
             string uploadPath, string rootPath)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             var folderPath = Path.Combine(rootPath, uploadPath, nameof(ProductModel), entity.Id.ToString(), "Image");
             var result = fileService.GetFilePath(folderPath, rootPath, ext: ".jpg");
             return result;
@@ -165,10 +186,10 @@ namespace FQCS.Admin.Business.Services
             entity.Image = relPath;
         }
 
-        public async Task SaveReplaceProductModelImage(UpdateProductModelImageModel model, 
+        public async Task SaveReplaceProductModelImage(UpdateProductModelImageModel model,
             string fullPath, string rootPath, string oldRelPath)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             if (oldRelPath != null)
                 fileService.DeleteFile(oldRelPath, rootPath);
             await fileService.SaveFile(model.image, fullPath);
@@ -183,7 +204,7 @@ namespace FQCS.Admin.Business.Services
         }
         public void DeleteProductModelFolder(ProductModel entity, string uploadPath, string rootPath)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             var folderPath = Path.Combine(uploadPath, nameof(ProductModel), entity.Id.ToString());
             fileService.DeleteDirectory(folderPath, rootPath);
         }

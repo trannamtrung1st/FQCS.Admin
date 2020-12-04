@@ -17,7 +17,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class ReportService : Service
+    public interface IReportService
+    {
+        XLWorkbook GenerateBatchEventReport(BatchReportOptions options);
+        byte[] SaveAsBytes(XLWorkbook workbook);
+        ValidationData ValidateGetBatchReport(ClaimsPrincipal principal, BatchReportOptions options);
+    }
+
+    public class ReportService : Service, IReportService
     {
         public ReportService(ServiceInjection inj) : base(inj)
         {
@@ -25,9 +32,9 @@ namespace FQCS.Admin.Business.Services
 
         public XLWorkbook GenerateBatchEventReport(BatchReportOptions options)
         {
-            var proBatchService = provider.GetRequiredService<ProductionBatchService>();
-            var qcEventService = provider.GetRequiredService<QCEventService>();
-            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
+            var proBatchService = provider.GetRequiredService<IProductionBatchService>();
+            var qcEventService = provider.GetRequiredService<IQCEventService>();
+            var defectTypeService = provider.GetRequiredService<IDefectTypeService>();
             var proBatch = proBatchService.ProductionBatchs.Id(options.batch_id)
                 .Select(o => new ProductionBatch
                 {

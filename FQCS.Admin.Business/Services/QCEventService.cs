@@ -18,7 +18,26 @@ using EFCore.BulkExtensions;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class QCEventService : Service
+    public interface IQCEventService
+    {
+        IQueryable<QCEventDetail> QCEventDetails { get; }
+        IQueryable<QCEvent> QCEvents { get; }
+
+        QCEvent ConvertToQCEvent(QCEventDeviceModel model, QCDevice device);
+        QCEvent ConvertToQCEvent(QCEventMessage model, QCDevice device);
+        QCEvent CreateQCEvent(QCEvent entity);
+        List<IDictionary<string, object>> GetQCEventDynamic(IEnumerable<QCEvent> rows, QCEventQueryProjection projection, QCEventQueryOptions options, string qcFolderPath, IFileService fileService);
+        IDictionary<string, object> GetQCEventDynamic(QCEvent row, QCEventQueryProjection projection, QCEventQueryOptions options, string qcFolderPath, IFileService fileService);
+        IQueryable<QCEvent> GetQueryableQCEventForUpdate(QCEventQueryOptions options, QCEventQueryFilter filter = null, QCEventQuerySort sort = null, QCEventQueryPaging paging = null);
+        Task<QueryResult<QCEvent>> QueryQCEvent(QCEventQueryProjection projection, QCEventQueryOptions options, QCEventQueryFilter filter = null, QCEventQuerySort sort = null, QCEventQueryPaging paging = null);
+        Task<QueryResult<IDictionary<string, object>>> QueryQCEventDynamic(QCEventQueryProjection projection, QCEventQueryOptions options, string qcFolderPath, QCEventQueryFilter filter = null, QCEventQuerySort sort = null, QCEventQueryPaging paging = null);
+        int UpdateEventsSeenStatus(IQueryable<QCEvent> entities, bool val);
+        ValidationData ValidateGetQCEvents(ClaimsPrincipal principal, QCEventQueryFilter filter, QCEventQuerySort sort, QCEventQueryProjection projection, QCEventQueryPaging paging, QCEventQueryOptions options);
+        ValidationData ValidateQCMessage(QCEventMessage model);
+        ValidationData ValidateUpdateSeenStatus(ClaimsPrincipal principal, QCEventQueryFilter filter, QCEventQuerySort sort, QCEventQueryPaging paging, QCEventQueryOptions options);
+    }
+
+    public class QCEventService : Service, IQCEventService
     {
         public QCEventService(ServiceInjection inj) : base(inj)
         {
@@ -42,7 +61,7 @@ namespace FQCS.Admin.Business.Services
 
         public IDictionary<string, object> GetQCEventDynamic(
             QCEvent row, QCEventQueryProjection projection,
-            QCEventQueryOptions options, string qcFolderPath, FileService fileService)
+            QCEventQueryOptions options, string qcFolderPath, IFileService fileService)
         {
             var obj = new Dictionary<string, object>();
             foreach (var f in projection.GetFieldsArr())
@@ -148,7 +167,7 @@ namespace FQCS.Admin.Business.Services
 
         public List<IDictionary<string, object>> GetQCEventDynamic(
             IEnumerable<QCEvent> rows, QCEventQueryProjection projection,
-            QCEventQueryOptions options, string qcFolderPath, FileService fileService)
+            QCEventQueryOptions options, string qcFolderPath, IFileService fileService)
         {
             var list = new List<IDictionary<string, object>>();
             foreach (var o in rows)
@@ -166,7 +185,7 @@ namespace FQCS.Admin.Business.Services
             QCEventQuerySort sort = null,
             QCEventQueryPaging paging = null)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             var query = QCEvents;
             #region General
             if (filter != null) query = query.Filter(filter);
@@ -293,8 +312,8 @@ namespace FQCS.Admin.Business.Services
 
         public QCEvent ConvertToQCEvent(QCEventMessage model, QCDevice device)
         {
-            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
-            var proBatchService = provider.GetRequiredService<ProductionBatchService>();
+            var defectTypeService = provider.GetRequiredService<IDefectTypeService>();
+            var proBatchService = provider.GetRequiredService<IProductionBatchService>();
 
             var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
                 .RunningAtTime(model.CreatedTime).Select(o => new ProductionBatch
@@ -326,8 +345,8 @@ namespace FQCS.Admin.Business.Services
 
         public QCEvent ConvertToQCEvent(QCEventDeviceModel model, QCDevice device)
         {
-            var defectTypeService = provider.GetRequiredService<DefectTypeService>();
-            var proBatchService = provider.GetRequiredService<ProductionBatchService>();
+            var defectTypeService = provider.GetRequiredService<IDefectTypeService>();
+            var proBatchService = provider.GetRequiredService<IProductionBatchService>();
 
             var proBatch = proBatchService.ProductionBatchs.InLine(device.ProductionLineId.Value)
                 .RunningAtTime(model.CreatedTime.Utc.Value).Select(o => new ProductionBatch

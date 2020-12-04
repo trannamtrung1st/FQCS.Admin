@@ -15,7 +15,16 @@ using System.IO;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class FileService : Service
+    public interface IFileService
+    {
+        void DeleteDirectory(string folderPath, string rootPath, bool recursive = true);
+        void DeleteFile(string filePath, string rootPath);
+        (string, string) GetFilePath(string folderPath, string rootPath = null, string fileName = null, string ext = null);
+        Task SaveFile(byte[] file, string fullPath);
+        Task SaveFile(IFormFile file, string fullPath);
+    }
+
+    public class FileService : Service, IFileService
     {
         public FileService(ServiceInjection inj) : base(inj)
         {

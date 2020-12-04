@@ -23,9 +23,9 @@ namespace FQCS.Admin.WebApi.Controllers
     public class ProductionBatchsController : BaseController
     {
         [Inject]
-        private readonly ProductionBatchService _service;
+        private readonly IProductionBatchService _service;
         [Inject]
-        private readonly AppEventService _ev_service;
+        private readonly IAppEventService _ev_service;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [Authorize]

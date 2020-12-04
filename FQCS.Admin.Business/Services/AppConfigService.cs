@@ -12,7 +12,26 @@ using FQCS.Admin.Business.Helpers;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class AppConfigService : Service
+    public interface IAppConfigService
+    {
+        IQueryable<AppConfig> AppConfigs { get; }
+
+        AppConfig ChangeDefaultConfig(AppConfig entity, AppConfig oldDefault);
+        AppConfig CreateAppConfig(CreateAppConfigModel model);
+        AppConfig DeleteAppConfig(AppConfig entity);
+        IDictionary<string, object> GetAppConfigDynamic(AppConfig row, AppConfigQueryProjection projection, AppConfigQueryOptions options);
+        List<IDictionary<string, object>> GetAppConfigDynamic(IEnumerable<AppConfig> rows, AppConfigQueryProjection projection, AppConfigQueryOptions options);
+        void PrepareUpdate(AppConfig entity);
+        Task<QueryResult<IDictionary<string, object>>> QueryAppConfigDynamic(AppConfigQueryProjection projection, AppConfigQueryOptions options, AppConfigQueryFilter filter = null, AppConfigQuerySort sort = null, AppConfigQueryPaging paging = null);
+        void UpdateAppConfig(AppConfig entity, UpdateAppConfigModel model);
+        ValidationData ValidateChangeDefaultConfig(ClaimsPrincipal principal, AppConfig entity, ChangeDefaultConfigModel model);
+        ValidationData ValidateCreateAppConfig(ClaimsPrincipal principal, CreateAppConfigModel model);
+        ValidationData ValidateDeleteAppConfig(ClaimsPrincipal principal, AppConfig entity);
+        ValidationData ValidateGetAppConfigs(ClaimsPrincipal principal, AppConfigQueryFilter filter, AppConfigQuerySort sort, AppConfigQueryProjection projection, AppConfigQueryPaging paging, AppConfigQueryOptions options);
+        ValidationData ValidateUpdateAppConfig(ClaimsPrincipal principal, AppConfig entity, UpdateAppConfigModel model);
+    }
+
+    public class AppConfigService : Service, IAppConfigService
     {
         public AppConfigService(ServiceInjection inj) : base(inj)
         {

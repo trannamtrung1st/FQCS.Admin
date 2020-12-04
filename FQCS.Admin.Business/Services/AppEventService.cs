@@ -14,7 +14,45 @@ using TNT.Core.Helpers.General;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class AppEventService : Service
+    public interface IAppEventService
+    {
+        IQueryable<AppEvent> AppEvents { get; }
+
+        AppEvent ChangeDefaultAppConfig(AppConfig entity, ClaimsPrincipal principal);
+        AppEvent ChangeProductionBatchStatus(ProductionBatch entity, ClaimsPrincipal principal);
+        AppEvent ChangeProductionLineStatus(ProductionLine entity, ClaimsPrincipal principal);
+        AppEvent ChangeQCDeviceStatus(QCDevice entity, ClaimsPrincipal principal);
+        AppEvent CreateAppConfig(AppConfig entity, ClaimsPrincipal principal);
+        AppEvent CreateDefectType(DefectType entity, ClaimsPrincipal principal);
+        AppEvent CreateProductionBatch(ProductionBatch entity, ClaimsPrincipal principal);
+        AppEvent CreateProductionLine(ProductionLine entity, ClaimsPrincipal principal);
+        AppEvent CreateProductModel(ProductModel entity, ClaimsPrincipal principal);
+        AppEvent CreateQCDevice(QCDevice entity, ClaimsPrincipal principal);
+        AppEvent CreateResource(Resource entity, ClaimsPrincipal principal);
+        AppEvent DeleteAppConfig(AppConfig entity, ClaimsPrincipal principal);
+        AppEvent DeleteDefectType(DefectType entity, ClaimsPrincipal principal);
+        AppEvent DeleteProductionBatch(ProductionBatch entity, ClaimsPrincipal principal);
+        AppEvent DeleteProductionLine(ProductionLine entity, ClaimsPrincipal principal);
+        AppEvent DeleteProductModel(ProductModel entity, ClaimsPrincipal principal);
+        AppEvent DeleteQCDevice(QCDevice entity, ClaimsPrincipal principal);
+        AppEvent DeleteResource(Resource entity, ClaimsPrincipal principal);
+        IDictionary<string, object> GetAppEventDynamic(AppEvent row, AppEventQueryProjection projection, AppEventQueryOptions options);
+        List<IDictionary<string, object>> GetAppEventDynamic(IEnumerable<AppEvent> rows, AppEventQueryProjection projection, AppEventQueryOptions options);
+        Task<QueryResult<IDictionary<string, object>>> QueryAppEventDynamic(AppEventQueryProjection projection, AppEventQueryOptions options, AppEventQueryFilter filter = null, AppEventQuerySort sort = null, AppEventQueryPaging paging = null);
+        AppEvent SendCommandToDeviceAPI(SendCommandToDeviceAPIModel model, QCDevice entity, ClaimsPrincipal principal);
+        AppEvent UpdateAppConfig(AppConfig entity, ClaimsPrincipal principal);
+        AppEvent UpdateDefectType(DefectType entity, ClaimsPrincipal principal);
+        AppEvent UpdateDefectTypeImage(DefectType entity, ClaimsPrincipal principal);
+        AppEvent UpdateProductionBatch(ProductionBatch entity, ClaimsPrincipal principal);
+        AppEvent UpdateProductionLine(ProductionLine entity, ClaimsPrincipal principal);
+        AppEvent UpdateProductModel(ProductModel entity, ClaimsPrincipal principal);
+        AppEvent UpdateProductModelImage(ProductModel entity, ClaimsPrincipal principal);
+        AppEvent UpdateQCDevice(QCDevice entity, ClaimsPrincipal principal);
+        AppEvent UpdateResource(Resource entity, ClaimsPrincipal principal);
+        ValidationData ValidateGetAppEvents(ClaimsPrincipal principal, AppEventQueryFilter filter, AppEventQuerySort sort, AppEventQueryProjection projection, AppEventQueryPaging paging, AppEventQueryOptions options);
+    }
+
+    public class AppEventService : Service, IAppEventService
     {
         public AppEventService(ServiceInjection inj) : base(inj)
         {

@@ -23,9 +23,9 @@ namespace FQCS.Admin.WebApi.Controllers
     public class QCEventsController : BaseController
     {
         [Inject]
-        private readonly QCEventService _service;
+        private readonly IQCEventService _service;
         [Inject]
-        private readonly AppEventService _ev_service;
+        private readonly IAppEventService _ev_service;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [Authorize]

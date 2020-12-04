@@ -13,7 +13,28 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FQCS.Admin.Business.Services
 {
-    public class DefectTypeService : Service
+    public interface IDefectTypeService
+    {
+        IQueryable<DefectType> DefectTypes { get; }
+
+        DefectType CreateDefectType(CreateDefectTypeModel model);
+        DefectType DeleteDefectType(DefectType entity);
+        void DeleteDefectTypeFolder(DefectType entity, string uploadPath, string rootPath);
+        IDictionary<string, object> GetDefectTypeDynamic(DefectType row, DefectTypeQueryProjection projection, DefectTypeQueryOptions options);
+        List<IDictionary<string, object>> GetDefectTypeDynamic(IEnumerable<DefectType> rows, DefectTypeQueryProjection projection, DefectTypeQueryOptions options);
+        (string, string) GetDefectTypeImagePath(DefectType entity, string uploadPath, string rootPath);
+        Task<QueryResult<IDictionary<string, object>>> QueryDefectTypeDynamic(DefectTypeQueryProjection projection, DefectTypeQueryOptions options, DefectTypeQueryFilter filter = null, DefectTypeQuerySort sort = null, DefectTypeQueryPaging paging = null);
+        Task SaveReplaceDefectTypeImage(UpdateDefectTypeImageModel model, string fullPath, string rootPath, string oldRelPath);
+        void UpdateDefectType(DefectType entity, UpdateDefectTypeModel model);
+        void UpdateDefectTypeImage(DefectType entity, string relPath);
+        ValidationData ValidateCreateDefectType(ClaimsPrincipal principal, CreateDefectTypeModel model);
+        ValidationData ValidateDeleteDefectType(ClaimsPrincipal principal, DefectType entity);
+        ValidationData ValidateGetDefectTypes(ClaimsPrincipal principal, DefectTypeQueryFilter filter, DefectTypeQuerySort sort, DefectTypeQueryProjection projection, DefectTypeQueryPaging paging, DefectTypeQueryOptions options);
+        ValidationData ValidateUpdateDefectType(ClaimsPrincipal principal, DefectType entity, UpdateDefectTypeModel model);
+        ValidationData ValidateUpdateDefectTypeImage(ClaimsPrincipal principal, DefectType entity, UpdateDefectTypeImageModel model);
+    }
+
+    public class DefectTypeService : Service, IDefectTypeService
     {
         public DefectTypeService(ServiceInjection inj) : base(inj)
         {
@@ -130,7 +151,7 @@ namespace FQCS.Admin.Business.Services
         public (string, string) GetDefectTypeImagePath(DefectType entity,
             string uploadPath, string rootPath)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             var folderPath = Path.Combine(rootPath, uploadPath, nameof(DefectType), entity.Id.ToString(), "Sample");
             var result = fileService.GetFilePath(folderPath, rootPath, ext: ".jpg");
             return result;
@@ -144,7 +165,7 @@ namespace FQCS.Admin.Business.Services
         public async Task SaveReplaceDefectTypeImage(UpdateDefectTypeImageModel model,
             string fullPath, string rootPath, string oldRelPath)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             if (oldRelPath != null)
                 fileService.DeleteFile(oldRelPath, rootPath);
             await fileService.SaveFile(model.image, fullPath);
@@ -159,7 +180,7 @@ namespace FQCS.Admin.Business.Services
         }
         public void DeleteDefectTypeFolder(DefectType entity, string uploadPath, string rootPath)
         {
-            var fileService = provider.GetRequiredService<FileService>();
+            var fileService = provider.GetRequiredService<IFileService>();
             var folderPath = Path.Combine(uploadPath, nameof(DefectType), entity.Id.ToString());
             fileService.DeleteDirectory(folderPath, rootPath);
         }

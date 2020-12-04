@@ -23,7 +23,7 @@ namespace FQCS.Admin.WebApi.Controllers
     public class AppEventsController : BaseController
     {
         [Inject]
-        private readonly AppEventService _service;
+        private readonly IAppEventService _service;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [Authorize]
