@@ -1,3 +1,3 @@
 N:
-cd N:\Servers\Kafka-Capstone\bin\windows
+cd N:\Servers\Kafka-Capstone\source\bin\windows
 kafka-server-stop.bat
