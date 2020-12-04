@@ -11,8 +11,5 @@ namespace FQCS.Admin.ConsoleClient
         public string StopKafkaCmd { get; set; }
         public string StartKafkaCmd { get; set; }
         public string ResetKafkaCmd { get; set; }
-        public string KafkaServer { get; set; }
-        public string KafkaUsername { get; set; }
-        public string KafkaPassword { get; set; }
     }
 }

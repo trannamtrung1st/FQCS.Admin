@@ -225,13 +225,19 @@ namespace FQCS.Admin.Business.Services
         public ValidationData ValidateCreateProductionBatch(ClaimsPrincipal principal,
             CreateProductionBatchModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (model.TotalAmount <= 0)
+                validationData.Fail("Invalid total amount", Constants.AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateUpdateProductionBatch(ClaimsPrincipal principal,
             ProductionBatch entity, UpdateProductionBatchModel model)
         {
-            return new ValidationData();
+            var validationData = new ValidationData();
+            if (model.TotalAmount <= 0)
+                validationData.Fail("Invalid total amount", Constants.AppResultCode.FailValidation);
+            return validationData;
         }
 
         public ValidationData ValidateChangeProductionBatchStatus(ClaimsPrincipal principal,

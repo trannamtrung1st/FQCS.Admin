@@ -339,3 +339,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /FQCS.Admin.WebApi/wwwroot/upload/
+/FQCS.Admin.WebAdmin/.config
+/FQCS.Admin.WebApi/.config
