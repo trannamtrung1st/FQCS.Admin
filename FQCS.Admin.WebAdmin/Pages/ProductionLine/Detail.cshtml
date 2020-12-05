@@ -98,16 +98,20 @@
             $('#form-main input[name=enabled]').change(confirmSubmitChangeStatus);
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
-                rules: {
-                    code: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    code: {
-                        required: "Code required",
-                    },
-                },
+				rules: {
+					code: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+					},
+				},
+				messages: {
+					code: {
+						required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
+					},
+				},
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
                     error.addClass('invalid-feedback');

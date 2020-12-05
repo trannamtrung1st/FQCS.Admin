@@ -105,12 +105,36 @@
                 rules: {
                     code: {
                         required: true,
+						minlength: 5,
+						maxlength: 50,
+                    },
+					production_line_id: {
+						required: true,
+                    },
+					device_api_base_url: {
+                        required: true,
+                        url: true,
+                    },
+					app_config_id: {
+						required: true,
                     },
                 },
                 messages: {
                     code: {
-                        required: "Code required",
+                        required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
                     },
+					production_line_id: {
+						required: "Production Line is required",
+                    },
+					device_api_base_url: {
+                        required: "Base API URL is required",
+                        url: "Must be a URL"
+                    },
+					app_config_id: {
+						required: "App config is required",
+					},
                 },
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
