@@ -117,16 +117,40 @@
             $('#form-main input[name=active]').change(confirmSubmitChangeStatus);
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
-                rules: {
-                    code: {
+				rules: {
+					code: {
                         required: true,
-                    },
-                },
-                messages: {
-                    code: {
-                        required: "Code required",
-                    },
-                },
+						minlength: 5,
+						maxlength: 50,
+					},
+					production_line_id: {
+						required: true,
+					},
+					device_api_base_url: {
+						required: true,
+						url2: true,
+					},
+					app_config_id: {
+						required: true,
+					},
+				},
+				messages: {
+					code: {
+						required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
+					},
+					production_line_id: {
+						required: "Production Line is required",
+					},
+					device_api_base_url: {
+						required: "Base API URL is required",
+						url2: "Must be a URL"
+					},
+					app_config_id: {
+						required: "App config is required",
+					},
+				},
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
                     error.addClass('invalid-feedback');

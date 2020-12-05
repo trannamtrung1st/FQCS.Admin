@@ -94,16 +94,38 @@
             getData();
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
-                rules: {
-                    name: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    name: {
-                        required: "Name required",
-                    },
-                },
+				rules: {
+					name: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+					},
+					client_id: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+					},
+					client_secret_reset: {
+						minlength: 5,
+						maxlength: 50,
+					},
+				},
+				messages: {
+					name: {
+						required: "Name is required",
+						minlength: "Name must be at least 5 characters long",
+						maxlength: "Name must be at most 50 characters long",
+					},
+					client_id: {
+						required: "Client ID is required",
+						minlength: "Client ID must be at least 5 characters long",
+						maxlength: "Client ID must be at most 50 characters long",
+					},
+					client_secret_reset: {
+						minlength: "Client secret must be at least 5 characters long",
+						maxlength: "Client secret must be at most 50 characters long",
+					},
+				},
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
                     error.addClass('invalid-feedback');

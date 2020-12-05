@@ -95,12 +95,36 @@
                 rules: {
                     name: {
                         required: true,
+						minlength: 5,
+						maxlength: 50,
                     },
+					code: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+                    },
+					qc_mapping_code: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+					},
                 },
                 messages: {
                     name: {
-                        required: "Name required",
+                        required: "Name is required",
+						minlength: "Name must be at least 5 characters long",
+						maxlength: "Name must be at most 50 characters long",
                     },
+					code: {
+						required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
+                    },
+					qc_mapping_code: {
+						required: "QC mapping code is required",
+						minlength: "QC mapping code must be at least 5 characters long",
+						maxlength: "QC mapping code must be at most 50 characters long",
+					},
                 },
                 errorElement: 'span',
                 errorPlacement: function (error, element) {

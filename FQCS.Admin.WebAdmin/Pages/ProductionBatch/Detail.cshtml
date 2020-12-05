@@ -115,16 +115,30 @@
             getData();
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
-                rules: {
-                    code: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    code: {
-                        required: "Code required",
-                    },
-                },
+				rules: {
+					code: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+					},
+					total_amount: {
+						required: true,
+						min: 0,
+						max: 10000000,
+					},
+				},
+				messages: {
+					code: {
+						required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
+					},
+					total_amount: {
+						required: "Total amount is required",
+						min: "Total amount must be between 0 and 10000000",
+						max: "Total amount must be between 0 and 10000000",
+					},
+				},
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
                     error.addClass('invalid-feedback');

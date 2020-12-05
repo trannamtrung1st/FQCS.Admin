@@ -105,6 +105,8 @@
                 rules: {
                     code: {
                         required: true,
+						minlength: 5,
+						maxlength: 50,
                     },
 					production_line_id: {
 						required: true,
@@ -131,7 +133,7 @@
                         url: "Must be a URL"
                     },
 					app_config_id: {
-						required: "Production Line is required",
+						required: "App config is required",
 					},
                 },
                 errorElement: 'span',
