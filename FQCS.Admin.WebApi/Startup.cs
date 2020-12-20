@@ -184,13 +184,8 @@ namespace FQCS.Admin.WebApi
             {
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
-                builder.AllowCredentials();
                 builder.WithExposedHeaders(Microsoft.Net.Http.Headers.HeaderNames.ContentDisposition);
-                //builder.AllowAnyOrigin();
-                builder.SetIsOriginAllowed(origin =>
-                {
-                    return true;
-                });
+                builder.AllowAnyOrigin();
             });
             app.UseAuthentication();
             app.UseAuthorization();
