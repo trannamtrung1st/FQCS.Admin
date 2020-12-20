@@ -79,7 +79,7 @@
     <script src="/plugins/jquery-validation/additional-methods.min.js"></script>
     <!-- Select2 -->
     <script src="/plugins/select2/js/select2.full.min.js"></script>
-    <script type="text/javascript">
+	<script type="text/javascript">
         $(document).ready(function () {
             $('.select2').select2();
             $('#form-main').validate({
@@ -87,11 +87,15 @@
                 rules: {
                     code: {
                         required: true,
+                        minlength: 5,
+						maxlength: 50,
                     },
                 },
                 messages: {
                     code: {
-                        required: "Code required",
+                        required: "Code is required",
+						minlength: "Code must be at least 5 characters long",
+						maxlength: "Code must be at most 50 characters long",
                     },
                 },
                 errorElement: 'span',
@@ -138,5 +142,5 @@
                 }
             });
         }
-    </script>
+	</script>
 }

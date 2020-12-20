@@ -89,14 +89,38 @@
             $('#form-main').validate({
                 submitHandler: confirmSubmit,
                 rules: {
-                    name: {
-                        required: true,
+					name: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
                     },
+					client_id: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+                    },
+					client_secret: {
+						required: true,
+						minlength: 5,
+						maxlength: 50,
+					},
                 },
                 messages: {
-                    name: {
-                        required: "Name required",
+					name: {
+						required: "Name is required",
+						minlength: "Name must be at least 5 characters long",
+						maxlength: "Name must be at most 50 characters long",
                     },
+					client_id: {
+						required: "Client ID is required",
+						minlength: "Client ID must be at least 5 characters long",
+						maxlength: "Client ID must be at most 50 characters long",
+                    },
+					client_secret: {
+						required: "Client secret is required",
+						minlength: "Client secret must be at least 5 characters long",
+						maxlength: "Client secret must be at most 50 characters long",
+					},
                 },
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
